@@ -1,0 +1,15 @@
+# Hacking on DeployDB
+
+## System requirements
+
+* JDK7
+
+
+## Running the tests
+
+ * `./gradlew spec cucumber`
+
+
+## Building the documentation
+
+ * `./gradlew asciidoctor`
