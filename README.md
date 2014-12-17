@@ -2,7 +2,8 @@
 
 **Who, what, where and when.**
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lookout/deploydb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lookout/deploydb)
+[![Build Status](https://travis-ci.org/lookout/deploydb.svg?branch=master)](https://travis-ci.org/lookout/deploydb)
 
 **To learn more please visit the [DeployDB website](http://hackers.lookout.com/deploydb/)**
 

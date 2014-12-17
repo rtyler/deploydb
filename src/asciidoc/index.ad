@@ -1,6 +1,7 @@
 = #DeployDB
 
-image::https://badges.gitter.im/Join%20Chat.svg[link="https://gitter.im/lookout/deploydb" title="Join Gitter Chat"]
+image::https://badges.gitter.im/Join%20Chat.svg[link="https://gitter.im/lookout/deploydb"]
+image:https://travis-ci.org/lookout/deploydb.svg?branch=master["Build Status", link="https://travis-ci.org/lookout/deploydb"]
 
 
 **Who, what, where and when.**
