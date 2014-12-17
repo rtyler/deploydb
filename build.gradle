@@ -22,6 +22,9 @@ dependencies {
     jrubyExec 'rubygems:timecop:0.7.1+'
     jrubyExec 'rubygems:liquid:3.0.0+'
     jrubyExec 'rubygems:rack-test:0.6.2+'
+
+    // Needed for periodic exploratory hacking
+    jrubyExec 'rubygems:pry:0.10.1+'
 }
 
 configurations {
