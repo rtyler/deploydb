@@ -596,13 +596,17 @@ suitable to progress to the next environment in the pipeline</p>
 <ul>
 <li>
 <p>Provide a single source of truth for:</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p>which artifacts have been deployed to which environments</p>
 </li>
 <li>
 <p>the success of a deployment, between the act of deployment and the
 follow-on validation of the artifacts deployed</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Provide a centralized synchronization point for coordinating deployments
@@ -618,7 +622,8 @@ a particular environment</p>
 </li>
 <li>
 <p>Integration points for external tools for:</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p>providing verification data around a specific deployment (e.g.
 "Deployment X was verified by Jenkins job &lt;jobname~ build =5")</p>
@@ -629,6 +634,9 @@ a particular environment</p>
 <li>
 <p>providing read access to deployment, artifact and environment information
 contained with DeployDB</p>
+</li>
+</ul>
+</div>
 </li>
 <li>
 <p>Integration points should be exposed via a command line, Ops-friendly,
@@ -697,7 +705,7 @@ the entire environment doesn&#8217;t have to be promoted together</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-17 11:58:39 PST
+Last updated 2014-12-17 12:50:43 PST
 </div>
 </div>
 </body>
