@@ -33,3 +33,19 @@
    * providing deployment start/finish information for environments
    * providing read access to deployment, artifact and environment information
      contained with DeployDB
+ * Integration points should be exposed via a command line, Ops-friendly,
+   interface
+ * Configuration should not live in the data store and be easily driven by
+   configuration management tools (e.g. Chef, Puppet)
+
+
+
+## Use-cases/questions
+
+  * How do we set up a new application/service in DeployDB?
+  * How does promotion of one application through an environment work so that
+    the entire environment doesn't have to be promoted together
+  * Deployment failures should have one of three outcomes:
+    * Deploy the last known good Deployment to the environment
+    * Hit these webhooks (e.g. pagerduty)
+    * Do nothing/record and ignore it
