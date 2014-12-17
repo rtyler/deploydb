@@ -2,6 +2,12 @@
 
 **Who, what, where and when.**
 
+DeployDB is a tool to provide a single source of truth for artifact-based
+deployments through multiple environments. It is intended to fit within an
+existing infrastructure where CI and deployment orchestration are already
+provided by other tools (e.g. Jenkins, Rundeck).
+
+
 ## Terminology
 
  * **Artifact**: a singular versioned file which represents an
@@ -49,3 +55,23 @@
     * Deploy the last known good Deployment to the environment
     * Hit these webhooks (e.g. pagerduty)
     * Do nothing/record and ignore it
+
+
+
+## An awful diagram
+
+                                        2) publish                                            
+                            +----------+   artifact +----------+                              
+          +---------------> | TravisCI +------------+  Bintray |                              
+          |                 +----+-----+            +-----+----+                              
+          |                      |                        |                                   
+          | 1) webhook           |                        |    3) webhook                     
+          |  (run tests)         |                        | (artifact available)              
+          |                      |                        |                                   
+          |                      |                        |                                   
+    +-----+----+                 |                 +------+------+                +----------+
+    |  GitHub  |                 +---------------> |  #DeployDB  +--------------> |  Heroku  |
+    +----------+                                   +-------------+                +----------+
+                   5) report deploy/verification                4) webhook                  
+                       success                                 (deploy artifact               
+                                                                to environment)               
