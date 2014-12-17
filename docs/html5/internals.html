@@ -506,8 +506,10 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#_web_hooks">Web hooks</a></li>
 <li><a href="#_events">Events</a>
 <ul class="sectlevel2">
+<li><a href="#_notifications">Notifications</a></li>
 <li><a href="#_triggers">Triggers</a></li>
 </ul>
 </li>
@@ -529,24 +531,87 @@ components within the conceptual "DeployDB box."</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_web_hooks">Web hooks</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
 <h2 id="_events">Events</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="_notifications">Notifications</h3>
+<div class="paragraph">
+<p>Outgoing events</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifact is ready/available</p>
+</li>
+<li>
+<p>Deploy completed</p>
+</li>
+<li>
+<p>Verification of a deployment completed</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_triggers">Triggers</h3>
-
+<div class="paragraph">
+<p>Inbound events, there&#8217;s a large symmetry between <a href="#_notifications">Notifications</a> and Triggers.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Artifact of a new version is available</p>
+</li>
+<li>
+<p>Deployment has completed</p>
+</li>
+<li>
+<p>Verficiation completed</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_queueing">Queueing</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Queueing is largely required to ensure the delivery of <a href="#_notifications">Notifications</a> and
+other out-bound web hooks.</p>
+</div>
+<div class="paragraph">
+<p>The queueing interface from the application should be abstracted enough to
+allow queueing to be backed by different queue providers, e.g.:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Redis (e.g. <a href="https://aws.amazon.com/elasticache/">ElastiCache</a>)</p>
+</li>
+<li>
+<p>Kafka</p>
+</li>
+<li>
+<p>etc</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_data_storage">Data storage</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>The data storage layer is what is responsible for persisting runtime
+information into a database. This should be abstracted through a JDBC connector.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -558,7 +623,7 @@ components within the conceptual "DeployDB box."</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-17 11:00:39 PST
+Last updated 2014-12-17 12:00:49 PST
 </div>
 </div>
 </body>

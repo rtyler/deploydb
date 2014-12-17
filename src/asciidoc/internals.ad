@@ -5,16 +5,45 @@ application. This does not include the interactions with other services (e.g. CI
 deployment orchestration) but rather the interactions between different
 components within the conceptual "DeployDB box."
 
+== Web hooks
+
 
 == Events
 
+=== Notifications
+
+Outgoing events
+
+ * Artifact is ready/available
+ * Deploy completed
+ * Verification of a deployment completed
+
 === Triggers
+
+Inbound events, there's a large symmetry between <<Notifications>> and Triggers.
+
+ * Artifact of a new version is available
+ * Deployment has completed
+ * Verficiation completed
 
 
 == Queueing
 
+Queueing is largely required to ensure the delivery of <<Notifications>> and
+other out-bound web hooks.
+
+The queueing interface from the application should be abstracted enough to
+allow queueing to be backed by different queue providers, e.g.:
+
+ * Redis (e.g. link:https://aws.amazon.com/elasticache/[ElastiCache])
+ * Kafka
+ * etc
+
 
 == Data storage
+
+The data storage layer is what is responsible for persisting runtime
+information into a database. This should be abstracted through a JDBC connector.
 
 
 == Configuration

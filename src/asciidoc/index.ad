@@ -1,5 +1,7 @@
 = #DeployDB
 
+image::https://badges.gitter.im/Join%20Chat.svg[link="https://gitter.im/lookout/deploydb" title="Join Gitter Chat"]
+
 
 **Who, what, where and when.**
 
@@ -48,7 +50,7 @@ As a user of DeployDB, you should be able to understand exactly:
    across environments as defined by a pipeline.
  * *Not* provide redundant functionality already provided by orchestration
    tools such as Rundeck or Jenkins.
- * Intergrate with existing orchestration tools to drive deployments to
+ * Integrate with existing orchestration tools to drive deployments to
    a particular environment
  * Integration points for external tools for:
    * providing verification data around a specific deployment (e.g.
@@ -87,7 +89,7 @@ As a user of DeployDB, you should be able to understand exactly:
           |                      |                        |                                   
           |                      |                        |                                   
     +-----+----+                 |                 +------+------+                +----------+
-    |  GitHub  |                 +---------------> |  =DeployDB  +--------------> |  Heroku  |
+    |  GitHub  |                 +---------------> |  #DeployDB  +--------------> |  Heroku  |
     +----------+                                   +-------------+                +----------+
                    5) report deploy/verification                4) webhook                  
                        success                                 (deploy artifact               
