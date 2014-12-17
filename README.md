@@ -15,5 +15,21 @@
  * **Promotion**: a set of criteria for determining whether a deployment is
    suitable to progress to the next environment in the pipeline
 
-## Goals
+## Goals/Requirements
 
+ * Provide a single source of truth for:
+   * which artifacts have been deployed to which environments
+   * the success of a deployment, between the act of deployment and the
+     follow-on validation of the artifacts deployed
+ * Provide a centralized synchronization point for coordinating deployments
+   across environments as defined by a pipeline.
+ * *Not* provide redundant functionality already provided by orchestration
+   tools such as Rundeck or Jenkins.
+ * Intergrate with existing orchestration tools to drive deployments to
+   a particular environment
+ * Integration points for external tools for:
+   * providing verification data around a specific deployment (e.g.
+     "Deployment X was verified by Jenkins job <jobname~ build #5")
+   * providing deployment start/finish information for environments
+   * providing read access to deployment, artifact and environment information
+     contained with DeployDB
