@@ -31,6 +31,9 @@ task cucumber(type: JRubyExec) {
 asciidoctor {
     sourceDir 'src/asciidoc'
     outputDir 'docs'
+    attributes 'toc': 'right',
+                'source-highlighter': 'coderay',
+                'toc-title': 'Table of Contents'
 }
 
 
