@@ -2,10 +2,26 @@
 
 **Who, what, where and when.**
 
+## The Problem
+
+As a service-oriented infrastructure grows, testing and managing/driving
+deployments with the oft used  "all together now" approach becomes untenable.
+
+Tracking versions of application and configuration management code through a
+consistent pipeline of tiered environments where verification of those changes
+can occur is difficult. 
+
+## The Solution
+
 DeployDB is a tool to provide a single source of truth for artifact-based
 deployments through multiple environments. It is intended to fit within an
 existing infrastructure where CI and deployment orchestration are already
 provided by other tools (e.g. Jenkins, Rundeck).
+
+As a user of DeployDB, you should be able to understand exactly:
+  * where a particular version of code has been deployed
+  * when that artifact was deployed and why
+  * what the verification status is of the artifact
 
 
 ## Terminology
