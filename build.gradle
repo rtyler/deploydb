@@ -20,6 +20,7 @@ task spec(type: JRubyExec) {
     script 'rspec'
 }
 
+
 task cucumber(type: JRubyExec) {
     group 'JRuby'
     description 'Run the Cucumber features'
@@ -44,6 +45,11 @@ task publishDocs(type: Exec) {
     args 'subtree', 'push', '--prefix', 'docs/html5', 'origin', 'gh-pages'
     dependsOn asciidoctor
 }
+
+
+// Add some task dependencies to the `check` task so Travis CI will run the
+// right tests when code is committed
+check.dependsOn spec, cucumber, asciidoctor
 ////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////
