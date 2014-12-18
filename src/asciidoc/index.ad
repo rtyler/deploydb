@@ -23,9 +23,10 @@ existing infrastructure where CI and deployment orchestration are already
 provided by other tools (e.g. Jenkins, Rundeck).
 
 As a user of DeployDB, you should be able to understand exactly:
-  * where a particular version of code has been deployed
-  * when that artifact was deployed and why
-  * what the verification status is of the artifact
+
+ * where a particular version of code has been deployed
+ * when that artifact was deployed and why
+ * what the verification status is of the artifact
 
 
 == Terminology
