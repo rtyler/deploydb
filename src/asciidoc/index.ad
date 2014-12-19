@@ -41,6 +41,9 @@ As a user of DeployDB, you should be able to understand exactly:
    between each environment
  * **Promotion**: a set of criteria for determining whether a deployment is
    suitable to progress to the next environment in the pipeline
+ * **Service**: a collection of artifacts representing a conceptual service
+   provided to customers (e.g. "the authentication service" which might consist
+   of the "auth.war", "puppet-mysql", "puppet-jetty" artifacts)
 
 == Goals/Requirements
 

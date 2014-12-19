@@ -515,7 +515,7 @@ table.CodeRay td.code>pre{padding:0}
 </li>
 <li><a href="#_queueing">Queueing</a></li>
 <li><a href="#_data_storage">Data storage</a></li>
-<li><a href="#_configuration">Configuration</a></li>
+<li><a href="#_environments_pipelines">Environments/Pipelines</a></li>
 </ul>
 </div>
 </div>
@@ -615,15 +615,47 @@ information into a database. This should be abstracted through a JDBC connector.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration">Configuration</h2>
+<h2 id="_environments_pipelines">Environments/Pipelines</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Current thinking: if pipelines are defined in "configuration" as are
+"environments" then the actual registration of an artifact probably shouldn&#8217;t
+be in configuration but rather registered via an API.</p>
+</div>
+<div class="paragraph">
+<p>It might make sense to have that registration API write some YAML to disk or
+something and allow DeployDB to register artifacts from the same place on disk</p>
+</div>
+<div class="listingblock">
+<div class="title">pipelines/devtoprod.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">environments</span>:
+  - <span class="string"><span class="content">dev-alpha</span></span>
+  - <span class="string"><span class="content">dev-beta</span></span>
+  - <span class="string"><span class="content">integ</span></span>
+  - <span class="string"><span class="content">preprod</span></span>
+  - <span class="string"><span class="content">prod</span></span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">services/foas.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Fun as a Service</span><span class="delimiter">&quot;</span></span>
+<span class="key">artifacts</span>:
+  - <span class="string"><span class="content">foas</span></span>
+  - <span class="string"><span class="content">puppet-foas</span></span>
+  - <span class="string"><span class="content">puppet-mysql</span></span>
+<span class="key">pipelines</span>:
+  - <span class="string"><span class="content">devtoprod</span></span>
+<span class="key">promotions</span>:</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-17 16:11:28 PST
+Last updated 2014-12-18 18:19:18 PST
 </div>
 </div>
 </body>

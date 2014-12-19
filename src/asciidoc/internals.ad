@@ -46,4 +46,38 @@ The data storage layer is what is responsible for persisting runtime
 information into a database. This should be abstracted through a JDBC connector.
 
 
-== Configuration
+
+== Environments/Pipelines
+
+Current thinking: if pipelines are defined in "configuration" as are
+"environments" then the actual registration of an artifact probably shouldn't
+be in configuration but rather registered via an API.
+
+It might make sense to have that registration API write some YAML to disk or
+something and allow DeployDB to register artifacts from the same place on disk
+
+[source,yaml]
+.pipelines/devtoprod.yml
+----
+environments:
+  - dev-alpha
+  - dev-beta
+  - integ
+  - preprod
+  - prod
+----
+
+
+[source,yaml]
+.services/foas.yml
+----
+
+name: "Fun as a Service"
+artifacts:
+  - foas
+  - puppet-foas
+  - puppet-mysql
+pipelines:
+  - devtoprod
+promotions:
+----
