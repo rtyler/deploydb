@@ -16,8 +16,20 @@ description = 'DeployDB is a tool to provide a single source of truth for artifa
 ////////////////////////////////////////////////////////////////////////////////
 
 dependencies {
-    compile 'io.dropwizard:dropwizard-core:0.7.1+'
-    compile 'org.flywaydb:flyway-core:3.1+'
+    compile 'org.codehaus.groovy:groovy-all:2.3.9+'
+
+    [
+     'dropwizard-core',
+     'dropwizard-assets',
+     'dropwizard-hibernate',
+     'dropwizard-views-mustache',
+     'dropwizard-testing',
+     ].each {
+        compile "io.dropwizard:${it}:0.7.1+"
+    }
+
+    compile 'io.dropwizard.modules:dropwizard-flyway:0.7.0-1'
+
     compile 'com.h2database:h2:1.3.+'
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'

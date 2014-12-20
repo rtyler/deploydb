@@ -99,5 +99,6 @@ jobs:
   - end2end-smoke-test
 ----
 
+
 `JenkinsPromotion` as a typed concept would require a list of Jenkins job names
 that would be required to succeed in order to execute the promotion.
