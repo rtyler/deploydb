@@ -80,4 +80,24 @@ artifacts:
 pipelines:
   - devtoprod
 promotions:
+  - manual
+  - jenkins-smoke
 ----
+
+
+NOTE: The "promotion" concepts described below are not final and really just
+brainstorming to flesh out how configuration of promotions as a concept *might*
+work.
+
+[source,yaml]
+.promotions/jenkins-smoke.yml
+----
+type: JenkinsPromotion
+jobs:
+  - basic-smokes-test
+  - basic-perf-test
+  - end2end-smoke-test
+----
+
+`JenkinsPromotion` as a typed concept would require a list of Jenkins job names
+that would be required to succeed in order to execute the promotion.
