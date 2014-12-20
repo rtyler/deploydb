@@ -60,6 +60,15 @@ asciidoctor {
                 'toc-title': 'Table of Contents'
 }
 check.dependsOn asciidoctor
+
+
+shadowJar {
+    exclude 'META-INF/*.RSA', 'META-INF/*.DSA'
+    manifest {
+        attributes 'Main-Class' : 'deploydb.DeployDBApp'
+    }
+}
+assemble.dependsOn shadowJar
 ////////////////////////////////////////////////////////////////////////////////
 
 
