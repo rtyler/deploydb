@@ -647,15 +647,45 @@ something and allow DeployDB to register artifacts from the same place on disk</
   - <span class="string"><span class="content">puppet-mysql</span></span>
 <span class="key">pipelines</span>:
   - <span class="string"><span class="content">devtoprod</span></span>
-<span class="key">promotions</span>:</code></pre>
+<span class="key">promotions</span>:
+  - <span class="string"><span class="content">manual</span></span>
+  - <span class="string"><span class="content">jenkins-smoke</span></span></code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The "promotion" concepts described below are not final and really just
+brainstorming to flesh out how configuration of promotions as a concept <strong>might</strong>
+work.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">promotions/jenkins-smoke.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">type</span>: <span class="string"><span class="content">JenkinsPromotion</span></span>
+<span class="key">jobs</span>:
+  - <span class="string"><span class="content">basic-smokes-test</span></span>
+  - <span class="string"><span class="content">basic-perf-test</span></span>
+  - <span class="string"><span class="content">end2end-smoke-test</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>JenkinsPromotion</code> as a typed concept would require a list of Jenkins job names
+that would be required to succeed in order to execute the promotion.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-18 18:19:18 PST
+Last updated 2014-12-20 08:31:39 PST
 </div>
 </div>
 </body>
