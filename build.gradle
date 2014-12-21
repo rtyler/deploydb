@@ -51,6 +51,13 @@ repositories {
 ////////////////////////////////////////////////////////////////////////////////
 
 cucumber {
+    formats = ['pretty',
+                // .toString() required here to make sure we convert a Groovy
+                // string to a java.lang.String otherwise the underlying plugin
+                // will explode
+                "junit:${project.buildDir}/cucumber-results.xml".toString(),
+                "html:docs/html5/restapi"]
+
     glueDirs = ['src/cucumber/groovy/step_definitions']
     featureDirs = ['features']
 }
