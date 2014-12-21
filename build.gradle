@@ -6,6 +6,7 @@ plugins {
 }
 
 apply plugin: 'groovy'
+apply plugin: 'eclipse'
 
 version = '0.1.0'
 group = 'com.github.lookout'
@@ -100,11 +101,13 @@ asciidoctor {
     attributes 'toc': 'right',
                 'source-highlighter': 'coderay',
                 'toc-title': 'Table of Contents'
+    shouldRunAfter test
 }
 check.dependsOn asciidoctor
 
 groovydoc {
     destinationDir file('docs/html5/groovydoc')
+    shouldRunAfter test
 }
 check.dependsOn groovydoc
 
@@ -144,5 +147,10 @@ bintray {
 bintrayUpload.dependsOn assemble
 ////////////////////////////////////////////////////////////////////////////////
 
+eclipse {
+    classpath {
+        downloadSources = true
+    }
+}
 
 // vim: ft=groovy
