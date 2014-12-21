@@ -71,16 +71,6 @@ project.tasks.cucumber.dependsOn = project.tasks.cucumber.dependsOn.findAll {
 check.dependsOn project.tasks.cucumber
 
 
-asciidoctor {
-    sourceDir 'src/asciidoc'
-    outputDir 'docs'
-    attributes 'toc': 'right',
-                'source-highlighter': 'coderay',
-                'toc-title': 'Table of Contents'
-}
-check.dependsOn asciidoctor
-
-
 test {
     testLogging {
         events "passed", "skipped", "failed", "standardOut", "standardError"
@@ -100,6 +90,23 @@ shadowJar {
 assemble.dependsOn shadowJar
 ////////////////////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////////////////////
+// DOCUMENTATION TASKS
+////////////////////////////////////////////////////////////////////////////////
+
+asciidoctor {
+    sourceDir 'src/asciidoc'
+    outputDir 'docs'
+    attributes 'toc': 'right',
+                'source-highlighter': 'coderay',
+                'toc-title': 'Table of Contents'
+}
+check.dependsOn asciidoctor
+
+groovydoc {
+    destinationDir file('docs/html5/groovydoc')
+}
+check.dependsOn groovydoc
 
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLISHING TASKS

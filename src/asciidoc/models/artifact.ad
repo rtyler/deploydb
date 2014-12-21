@@ -1,0 +1,13 @@
+= Artifact
+
+*An artifact is a singular versioned file which represents an iteration of code
+that should be deployed.
+
+
+== Properties
+
+=== Internal identifier
+
+=== Group
+
+=== Name
