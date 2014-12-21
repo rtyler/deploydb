@@ -51,7 +51,6 @@ repositories {
 ////////////////////////////////////////////////////////////////////////////////
 
 cucumber {
-    formats = ['asyougo']
     glueDirs = ['src/cucumber/groovy/step_definitions']
     featureDirs = ['features']
 }
