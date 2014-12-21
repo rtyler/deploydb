@@ -1,3 +1,4 @@
 deploydb
+deploydb.health
 deploydb.models
 deploydb.resources
