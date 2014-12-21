@@ -122,6 +122,11 @@ check.dependsOn groovydoc
 ////////////////////////////////////////////////////////////////////////////////
 
 task publishDocs(type: Exec) {
+    /* If for whatever reason you need to force-push the gh-pages branch this
+     * command will work:
+     *    % git push origin `git subtree split --prefix docs/html5 master`:gh-pages --force
+     */
+
     group 'Publishing'
     description 'Publish the Asciidoctor docs to gh-pages'
     commandLine 'git'
