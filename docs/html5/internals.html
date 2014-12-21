@@ -649,7 +649,8 @@ something and allow DeployDB to register artifacts from the same place on disk</
   - <span class="string"><span class="content">devtoprod</span></span>
 <span class="key">promotions</span>:
   - <span class="string"><span class="content">manual</span></span>
-  - <span class="string"><span class="content">jenkins-smoke</span></span></code></pre>
+  - <span class="string"><span class="content">jenkins-smoke</span></span>
+  - <span class="string"><span class="content">status-check</span></span></code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -680,12 +681,26 @@ work.
 <p><code>JenkinsPromotion</code> as a typed concept would require a list of Jenkins job names
 that would be required to succeed in order to execute the promotion.</p>
 </div>
+<div class="listingblock">
+<div class="title">promotions/status-check.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">type</span>: <span class="string"><span class="content">WebhookPromotion</span></span>
+<span class="key">url</span>: <span class="string"><span class="content">/healhcheck</span></span>
+<span class="key">status</span>: <span class="string"><span class="content">200</span></span>
+<span class="key">timeout</span>: <span class="string"><span class="content">15</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>WebhookPromotion</code> would be something that would make a HTTP GET request to the
+application and see if it&#8217;s online before identifying it as "promoted." How
+this might work with a cluster of applications in one service, I&#8217;m not yet sure.</p>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-20 08:39:31 PST
+Last updated 2014-12-22 08:37:01 PST
 </div>
 </div>
 </body>

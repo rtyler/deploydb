@@ -27,10 +27,11 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     }
 
     @Override
-    public void run(DeployDBConfiguration configuration, 
+    public void run(DeployDBConfiguration configuration,
                     Environment environment) {
 
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.jersey().register(new RootResource())
+        environment.jersey().register(new ArtifactResource())
     }
 }

@@ -82,6 +82,7 @@ pipelines:
 promotions:
   - manual
   - jenkins-smoke
+  - status-check
 ----
 
 
@@ -102,3 +103,18 @@ jobs:
 
 `JenkinsPromotion` as a typed concept would require a list of Jenkins job names
 that would be required to succeed in order to execute the promotion.
+
+
+[source,yaml]
+.promotions/status-check.yml
+----
+type: WebhookPromotion
+url: /healhcheck
+status: 200
+timeout: 15
+----
+
+
+`WebhookPromotion` would be something that would make a HTTP GET request to the
+application and see if it's online before identifying it as "promoted." How
+this might work with a cluster of applications in one service, I'm not yet sure.

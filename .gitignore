@@ -2,3 +2,7 @@ build/
 .gradle/
 tmp/
 *.sw*
+.classpath
+.project
+.settings/
+/bin/
