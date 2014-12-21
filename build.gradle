@@ -59,6 +59,13 @@ project.tasks.cucumber.doFirst {
     // plugin we're using does not properly create its own output dirs
     file("${buildDir}/resources/cucumber").mkdirs()
 }
+// The cucumber plugin makes the cucumber task depend on 'assemble' which is
+// unnecessary and causes a cyclic task graph for the `shadowJar` task. We
+// really just want to run our `cucumber` task under the `check` task and not
+// require assembly
+project.tasks.cucumber.dependsOn = project.tasks.cucumber.dependsOn.findAll {
+    !((it instanceof ArrayList) && (it.get(0) == 'assemble'))
+}
 // Need a goofy way to refer to the task, see:
 // https://github.com/samueltbrown/gradle-cucumber-plugin/issues/38
 check.dependsOn project.tasks.cucumber
@@ -74,11 +81,21 @@ asciidoctor {
 check.dependsOn asciidoctor
 
 
+test {
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+    }
+}
+
+
 shadowJar {
     exclude 'META-INF/*.RSA', 'META-INF/*.DSA'
     manifest {
         attributes 'Main-Class' : 'deploydb.DeployDBApp'
     }
+
+    // Only run after we've successfully completed our tests
+    dependsOn check
 }
 assemble.dependsOn shadowJar
 ////////////////////////////////////////////////////////////////////////////////
