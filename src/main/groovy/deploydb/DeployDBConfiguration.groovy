@@ -9,9 +9,13 @@ import javax.validation.Valid
 import javax.validation.constraints.NotNull
 
 class DeployDBConfiguration extends Configuration {
-    //@Valid
-    //@NotNull
-    //@JsonProperty("database")
-    //private DataSourceFactory database = new DataSourceFactory()
+    @Valid
+    @NotNull
+    @JsonProperty("database")
+    private DataSourceFactory database = new DataSourceFactory()
+
+    DataSourceFactory getDataSourceFactory() {
+        return database
+    }
 }
 
