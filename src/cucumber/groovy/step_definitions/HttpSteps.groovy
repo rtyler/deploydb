@@ -1,4 +1,3 @@
-import groovy.transform.InheritConstructors
 import cucumber.api.*
 import com.sun.jersey.api.client.*
 
@@ -14,7 +13,7 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
  * Hooks to ensure that we're setting our test application up properly
  */
 Before {
-    app = new StubAppRunner(DeployDBApp.class, null)
+    app = new StubAppRunner(DeployDBApp.class, 'deploydb.cucumber.yml')
     app.start()
     client = new Client()
 }
