@@ -10,20 +10,31 @@ import org.slf4j.LoggerFactory
 import javax.validation.Valid
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.HttpHeaders
+import javax.ws.rs.core.Context
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
+import deploydb.dao.ArtifactDAO
+import deploydb.models.Artifact
+
 @Path("/api/v1/artifacts")
-@Produces(MediaType.APPLICATION_JSON)
+//@Produces(MediaType.APPLICATION_JSON)
+@Produces('application/json')
+@Consumes(MediaType.APPLICATION_JSON)
 public class ArtifactResource {
-    public ArtifactResource() {
+    private final ArtifactDAO dao
+
+    public ArtifactResource(ArtifactDAO dao) {
+        this.dao = dao
     }
 
     @GET
     @Path("{id}")
     @Timed(name = "get-requests")
-    public String byIdentifier(@PathParam("id") LongParam artifactId) {
-        return ""
+    public Artifact byIdentifier(@Context HttpHeaders headers,
+                               @PathParam("id") LongParam artifactId) {
+        return this.dao.findById(artifactId.get())
     }
 
     @GET

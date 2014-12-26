@@ -19,6 +19,12 @@ class Artifact {
     Artifact() {
     }
 
+    Artifact(long id, String group, String name) {
+        this.id = id
+        this.group = group
+        this.name = name
+    }
+
 
     /**
      * The internal identifier for the artifact

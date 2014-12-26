@@ -9,16 +9,11 @@ import deploydb.models.Artifact
 
 @InheritConstructors
 class ArtifactDAO extends AbstractDAO<Artifact> {
-    
-    //public Optional<Person> findById(Long id) {
-    //    return Optional.fromNullable(get(id));
-    //}
 
-    //public Person create(Person person) {
-    //    return persist(person);
-    //}
-
-    //public List<Person> findAll() {
-    //    return list(namedQuery("com.example.helloworld.core.Person.findAll"));
-    //}
+    /**
+     * Locate a Artifact based on the artifactId passed in
+     */
+    Artifact findById(Long artifactId) {
+        return Optional.fromNullable(get(artifactId))
+    }
 }
