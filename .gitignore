@@ -6,3 +6,5 @@ tmp/
 .project
 .settings/
 /bin/
+workbench.xmi
+.idea
