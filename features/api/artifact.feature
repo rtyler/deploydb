@@ -4,6 +4,7 @@ Feature: Artifact APIs
   I should be able to read information about artifacts
 
 
+  @wip
   Scenario: Fetching an artifact by ID that exists
 
     Given there is an artifact with ID 1
@@ -17,6 +18,7 @@ Feature: Artifact APIs
     Then the response should be 404
 
 
+  @wip
   Scenario: Fetching an artifact by the name that exists
 
     Given there is an artifact named "cucumber-artifact"

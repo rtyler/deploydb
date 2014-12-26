@@ -65,6 +65,7 @@ cucumber {
                 // will explode
                 "junit:${project.buildDir}/cucumber-results.xml".toString(),
                 "html:docs/html5/restapi"]
+    tags = ['~@wip']
 
     glueDirs = ['src/cucumber/groovy/step_definitions']
     featureDirs = ['features']
