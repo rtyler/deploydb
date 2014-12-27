@@ -19,8 +19,7 @@ import deploydb.dao.ArtifactDAO
 import deploydb.models.Artifact
 
 @Path("/api/v1/artifacts")
-//@Produces(MediaType.APPLICATION_JSON)
-@Produces('application/json')
+@Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ArtifactResource {
     private final ArtifactDAO dao

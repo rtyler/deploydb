@@ -4,7 +4,6 @@ Feature: Artifact APIs
   I should be able to read information about artifacts
 
 
-  @wip
   Scenario: Fetching an artifact by ID that exists
 
     Given there is an artifact with ID 1

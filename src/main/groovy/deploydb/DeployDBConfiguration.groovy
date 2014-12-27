@@ -11,11 +11,16 @@ import javax.validation.constraints.NotNull
 class DeployDBConfiguration extends Configuration {
     @Valid
     @NotNull
-    @JsonProperty("database")
     private DataSourceFactory database = new DataSourceFactory()
 
+    @JsonProperty("database")
     DataSourceFactory getDataSourceFactory() {
         return database
+    }
+
+    @JsonProperty("database")
+    void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
+        this.database = dataSourceFactory;
     }
 }
 

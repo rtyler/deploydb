@@ -6,7 +6,6 @@ import io.dropwizard.hibernate.AbstractDAO
 
 import deploydb.models.Artifact
 
-
 @InheritConstructors
 class ArtifactDAO extends AbstractDAO<Artifact> {
 

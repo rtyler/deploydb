@@ -13,5 +13,5 @@ Feature: The health endpoint
     Then the response should be 200
     And the response body should be:
     """
-    {"deadlocks":{"healthy":true},"sanity":{"healthy":true}}
+    {"deadlocks":{"healthy":true},"hibernate":{"healthy":true},"sanity":{"healthy":true}}
     """
