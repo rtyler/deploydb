@@ -28,15 +28,17 @@ class AppHelper {
     }
 
     void startAppWithConfiguration(String config) {
-      if (this.runner == null) {
-          this.runner = new StubAppRunner(DeployDBApp.class, config)
-          this.runner.start()
-      }
+        if (this.runner != null) {
+            return
+        }
+        this.runner = new StubAppRunner(DeployDBApp.class, config)
+        this.runner.start()
     }
 
+
     void stopApp() {
-      if (this.runner != null) {
-        this.runner.stop()
-      }
+        if (this.runner != null) {
+            this.runner.stop()
+        }
     }
 }

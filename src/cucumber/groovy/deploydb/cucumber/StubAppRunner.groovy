@@ -13,6 +13,7 @@ import com.google.common.collect.ImmutableMap
 import net.sourceforge.argparse4j.inf.Namespace
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
+import org.flywaydb.core.Flyway
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -72,6 +73,15 @@ public class StubAppRunner<C extends Configuration> {
           @Override
           public void serverStarted(Server server) {
             jettyServer = server
+
+            /* We're running the DB migrations here to make sure we're running
+             * them in the same classloader environment as the DeployDB
+             * application, otherwise the Hibernate code running inside of
+             * DeployDB won't be able to "see" the in-memory DB
+             */
+            Flyway flyway = new Flyway()
+            flyway.setDataSource('jdbc:h2:mem:cucumber', 'nobody', '')
+            flyway.migrate()
           }
           })
 
