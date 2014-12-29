@@ -32,8 +32,7 @@ class Artifact {
     /**
      * Empty constructor used by Jackson for object deserialization
      */
-    Artifact() {
-    }
+    Artifact() { }
 
     Artifact(long id, String group, String name) {
         this.id = id

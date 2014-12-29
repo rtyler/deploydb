@@ -2,6 +2,7 @@ package deploydb
 
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.flyway.FlywayFactory
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.NotEmpty
@@ -13,6 +14,9 @@ class DeployDBConfiguration extends Configuration {
     @NotNull
     private DataSourceFactory database = new DataSourceFactory()
 
+    @Valid
+    private FlywayFactory flyway = new FlywayFactory()
+
     @JsonProperty("database")
     DataSourceFactory getDataSourceFactory() {
         return database
@@ -21,6 +25,16 @@ class DeployDBConfiguration extends Configuration {
     @JsonProperty("database")
     void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
         this.database = dataSourceFactory;
+    }
+
+    @JsonProperty("flyway")
+    FlywayFactory getFlywayFactory() {
+        return flyway
+    }
+
+    @JsonProperty("flyway")
+    void setFlywayFactory(FlywayFactory flywayFactory) {
+        this.flyway = FlywayFactory
     }
 }
 
