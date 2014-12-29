@@ -4,6 +4,7 @@ Feature: Artifact APIs
   I should be able to read information about artifacts
 
 
+  @freezetime
   Scenario: Fetching an artifact by ID that exists
 
     Given there is an artifact
