@@ -10,7 +10,6 @@ Feature: Artifact APIs
     When I GET "/api/v1/artifacts/1"
     Then the response should be 200
 
-  @wip
   Scenario: Fetching an artifact by ID that doesn't exist
 
     When I GET "/api/v1/artifacts/1"

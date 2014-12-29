@@ -64,4 +64,26 @@ class Artifact {
     String getName() {
         return name
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true
+        }
+
+        if (!(o instanceof Artifact)) {
+            return false
+        }
+
+        final Artifact that = (Artifact)o
+
+        return Objects.equals(this.id, that.id) &&
+                Objects.equals(this.group, that.group) &&
+                Objects.equals(this.name, that.name)
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id, this.group, this.name)
+    }
 }

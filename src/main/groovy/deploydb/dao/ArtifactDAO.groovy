@@ -13,6 +13,6 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
      * Locate a Artifact based on the artifactId passed in
      */
     Artifact findById(Long artifactId) {
-        return Optional.fromNullable(get(artifactId))
+        return get(artifactId)
     }
 }

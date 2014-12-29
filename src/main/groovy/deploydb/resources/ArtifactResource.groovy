@@ -4,6 +4,7 @@ import com.codahale.metrics.annotation.Timed
 import com.google.common.base.Optional
 import io.dropwizard.jersey.caching.CacheControl
 import io.dropwizard.jersey.params.*
+import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -12,6 +13,7 @@ import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Context
+import javax.ws.rs.core.Response
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
 
@@ -30,10 +32,16 @@ public class ArtifactResource {
 
     @GET
     @Path("{id}")
+    @UnitOfWork
     @Timed(name = "get-requests")
     public Artifact byIdentifier(@Context HttpHeaders headers,
                                @PathParam("id") LongParam artifactId) {
-        return this.dao.findById(artifactId.get())
+        Artifact artifact = this.dao.findById(artifactId.get())
+
+        if (artifact == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+        return artifact
     }
 
     @GET
