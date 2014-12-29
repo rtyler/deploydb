@@ -11,7 +11,17 @@ Feature: The health endpoint
 
     When I GET "/healthcheck" from the admin app
     Then the response should be 200
-    And the response body should be:
+    And the body should be JSON:
     """
-    {"deadlocks":{"healthy":true},"hibernate":{"healthy":true},"sanity":{"healthy":true}}
+    {
+      "deadlocks" : {
+        "healthy" : true
+      },
+      "sanity" : {
+        "healthy" : true
+      },
+      "hibernate" : {
+        "healthy" : true
+      }
+    }
     """

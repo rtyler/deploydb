@@ -7,7 +7,7 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 3083987252,
+  "duration": 4337321227,
   "status": "passed"
 });
 formatter.scenario({
@@ -47,7 +47,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 241379234,
+  "duration": 310995127,
   "status": "passed"
 });
 formatter.match({
@@ -60,7 +60,7 @@ formatter.match({
   "location": "HttpSteps.groovy:14"
 });
 formatter.result({
-  "duration": 383270019,
+  "duration": 492235203,
   "status": "passed"
 });
 formatter.match({
@@ -73,23 +73,23 @@ formatter.match({
   "location": "HttpSteps.groovy:18"
 });
 formatter.result({
-  "duration": 10358338,
+  "duration": 14131016,
   "status": "passed"
 });
 formatter.match({
   "location": "HttpSteps.groovy:26"
 });
 formatter.result({
-  "duration": 49641542,
+  "duration": 82445793,
   "error_message": "Assertion failed: \n\nassert bodyNode \u003d\u003d expectedNode\n       |        |  |\n       |        |  {\"id\":1,\"group\":\"com.example.cucumber\",\"name\":\"cucumber-artifact\",\"version\":\"1.0.1\",\"sourceUrl\":\"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\"}\n       |        false\n       {\"id\":1,\"group\":\"com.example.cucumber\",\"name\":\"cucumber-artifact\"}\n\n\tat HttpSteps$_run_closure5.doCall(HttpSteps.groovy:32)\n\tat ✽.And the body should be JSON:(api/artifact.feature:12)\n",
   "status": "failed"
 });
 formatter.after({
-  "duration": 24369514,
+  "duration": 31842087,
   "status": "passed"
 });
 formatter.before({
-  "duration": 381468595,
+  "duration": 611908308,
   "status": "passed"
 });
 formatter.scenario({
@@ -120,7 +120,7 @@ formatter.match({
   "location": "HttpSteps.groovy:14"
 });
 formatter.result({
-  "duration": 191058230,
+  "duration": 229650642,
   "status": "passed"
 });
 formatter.match({
@@ -133,15 +133,15 @@ formatter.match({
   "location": "HttpSteps.groovy:18"
 });
 formatter.result({
-  "duration": 259616,
+  "duration": 276199,
   "status": "passed"
 });
 formatter.after({
-  "duration": 37142790,
+  "duration": 40629712,
   "status": "passed"
 });
 formatter.before({
-  "duration": 322874818,
+  "duration": 693448396,
   "status": "passed"
 });
 formatter.scenario({
@@ -172,7 +172,7 @@ formatter.match({
   "location": "HttpSteps.groovy:14"
 });
 formatter.result({
-  "duration": 109345737,
+  "duration": 99345305,
   "status": "passed"
 });
 formatter.match({
@@ -185,11 +185,11 @@ formatter.match({
   "location": "HttpSteps.groovy:18"
 });
 formatter.result({
-  "duration": 196909,
+  "duration": 336500,
   "status": "passed"
 });
 formatter.after({
-  "duration": 9606630,
+  "duration": 11594088,
   "status": "passed"
 });
 formatter.uri("api/health.feature");
@@ -201,7 +201,7 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 324842262,
+  "duration": 456162822,
   "status": "passed"
 });
 formatter.scenario({
@@ -224,12 +224,12 @@ formatter.step({
 });
 formatter.step({
   "line": 14,
-  "name": "the response body should be:",
+  "name": "the body should be JSON:",
   "keyword": "And ",
   "doc_string": {
     "content_type": "",
     "line": 15,
-    "value": "{\"deadlocks\":{\"healthy\":true},\"hibernate\":{\"healthy\":true},\"sanity\":{\"healthy\":true}}"
+    "value": "{\n  \"deadlocks\" : {\n    \"healthy\" : true\n  },\n  \"sanity\" : {\n    \"healthy\" : true\n  },\n  \"hibernate\" : {\n    \"healthy\" : true\n  }\n}"
   }
 });
 formatter.match({
@@ -242,7 +242,7 @@ formatter.match({
   "location": "HttpSteps.groovy:10"
 });
 formatter.result({
-  "duration": 145490712,
+  "duration": 147817304,
   "status": "passed"
 });
 formatter.match({
@@ -255,18 +255,18 @@ formatter.match({
   "location": "HttpSteps.groovy:18"
 });
 formatter.result({
-  "duration": 230623,
+  "duration": 195878,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:22"
+  "location": "HttpSteps.groovy:26"
 });
 formatter.result({
-  "duration": 559296,
+  "duration": 1198052,
   "status": "passed"
 });
 formatter.after({
-  "duration": 13857447,
+  "duration": 25327349,
   "status": "passed"
 });
 });
