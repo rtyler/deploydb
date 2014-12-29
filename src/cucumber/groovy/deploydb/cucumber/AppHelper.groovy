@@ -3,7 +3,10 @@ package deploydb.cucumber
 import deploydb.DeployDBApp
 import com.sun.jersey.api.client.Client
 import com.sun.jersey.api.client.ClientResponse
+import org.hibernate.Session
 import org.hibernate.SessionFactory
+import org.hibernate.Transaction
+import org.hibernate.context.internal.ManagedSessionContext
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -12,6 +15,23 @@ class AppHelper {
 
     SessionFactory getSessionFactory() {
         return this.runner.sessionFactory
+    }
+
+    /**
+     *  Execute the {@link Closure} with a properly set up
+     *  {@link org.hibernate.Session}
+     *
+     * @param c (required) Closure to execute with a session
+     */
+    void withSession(Closure c) {
+        final Session session = sessionFactory.openSession()
+        try {
+            ManagedSessionContext.bind(session)
+            c.call()
+        }
+        finally {
+            session.close()
+        }
     }
 
     Client getClient() {
