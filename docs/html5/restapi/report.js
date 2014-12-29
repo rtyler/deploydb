@@ -7,35 +7,29 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 3286337018,
+  "duration": 3031020575,
   "status": "passed"
 });
 formatter.scenario({
-  "line": 8,
+  "line": 7,
   "name": "Fetching an artifact by ID that exists",
   "description": "",
   "id": "artifact-apis;fetching-an-artifact-by-id-that-exists",
   "type": "scenario",
-  "keyword": "Scenario",
-  "tags": [
-    {
-      "line": 7,
-      "name": "@h2"
-    }
-  ]
+  "keyword": "Scenario"
 });
 formatter.step({
-  "line": 10,
+  "line": 9,
   "name": "there is an artifact with ID 1",
   "keyword": "Given "
 });
 formatter.step({
-  "line": 11,
+  "line": 10,
   "name": "I GET \"/api/v1/artifacts/1\"",
   "keyword": "When "
 });
 formatter.step({
-  "line": 12,
+  "line": 11,
   "name": "the response should be 200",
   "keyword": "Then "
 });
@@ -49,8 +43,8 @@ formatter.match({
   "location": "ArtifactSteps.groovy:6"
 });
 formatter.result({
-  "duration": 105843134,
-  "error_message": "cucumber.api.PendingException: TODO: implement me\n\tat ArtifactSteps$_run_closure1.doCall(ArtifactSteps.groovy:7)\n\tat ✽.Given there is an artifact with ID 1(api/artifact.feature:10)\n",
+  "duration": 94050913,
+  "error_message": "cucumber.api.PendingException: TODO: implement me\n\tat ArtifactSteps$_run_closure1.doCall(ArtifactSteps.groovy:7)\n\tat ✽.Given there is an artifact with ID 1(api/artifact.feature:9)\n",
   "status": "pending"
 });
 formatter.match({
@@ -78,7 +72,59 @@ formatter.result({
   "status": "skipped"
 });
 formatter.after({
-  "duration": 44795400,
+  "duration": 37867953,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 438105616,
+  "status": "passed"
+});
+formatter.scenario({
+  "line": 13,
+  "name": "Fetching an artifact by ID that doesn\u0027t exist",
+  "description": "",
+  "id": "artifact-apis;fetching-an-artifact-by-id-that-doesn\u0027t-exist",
+  "type": "scenario",
+  "keyword": "Scenario"
+});
+formatter.step({
+  "line": 15,
+  "name": "I GET \"/api/v1/artifacts/1\"",
+  "keyword": "When "
+});
+formatter.step({
+  "line": 16,
+  "name": "the response should be 404",
+  "keyword": "Then "
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/1",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:11"
+});
+formatter.result({
+  "duration": 428226477,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "404",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 10444662,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 24220355,
   "status": "passed"
 });
 formatter.uri("api/health.feature");
@@ -90,7 +136,7 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 367887065,
+  "duration": 335809174,
   "status": "passed"
 });
 formatter.scenario({
@@ -131,7 +177,7 @@ formatter.match({
   "location": "HttpSteps.groovy:7"
 });
 formatter.result({
-  "duration": 432378603,
+  "duration": 156794928,
   "status": "passed"
 });
 formatter.match({
@@ -144,18 +190,18 @@ formatter.match({
   "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 12385898,
+  "duration": 253996,
   "status": "passed"
 });
 formatter.match({
   "location": "HttpSteps.groovy:19"
 });
 formatter.result({
-  "duration": 3283153,
+  "duration": 1901690,
   "status": "passed"
 });
 formatter.after({
-  "duration": 18936631,
+  "duration": 7427832,
   "status": "passed"
 });
 });
