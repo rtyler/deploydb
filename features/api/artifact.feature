@@ -16,7 +16,8 @@ Feature: Artifact APIs
         "group" : "com.example.cucumber",
         "name" : "cucumber-artifact",
         "version" : "1.0.1",
-        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
+        "createdAt" : "{{created_timestamp}}"
       }
     """
 

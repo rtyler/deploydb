@@ -25,7 +25,7 @@ class ArtifactResourceSpec extends Specification {
     def "byIdentifier when the item exists"() {
         given:
         Long artifactId = 12
-        Artifact artifact = new Artifact('spock.group', 'spock-artifact')
+        Artifact artifact = new Artifact('spock.group', 'spock-artifact', '1.0.1')
         Artifact fetched = null
         when(dao.findById(artifactId)).thenReturn(artifact)
 
@@ -35,7 +35,6 @@ class ArtifactResourceSpec extends Specification {
                            .get(Artifact.class)
 
         then:
-        fetched.name == artifact.name
-        fetched.group == artifact.group
+        fetched == artifact
     }
 }

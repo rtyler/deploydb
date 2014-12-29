@@ -19,24 +19,42 @@ import org.hibernate.validator.constraints.Length;
 @Table(name='artifacts')
 class Artifact {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id
 
-    @Column(name = "groupName", nullable = false)
+    @Column(name="groupName", nullable=false)
     private String group
 
-    @Column(name = "name", nullable = false)
+    @Column(name="name", nullable=false)
     private String name
 
+    @Column(name='version', nullable=false)
+    private String version
+
+    @Column(name='sourceUrl')
+    private String sourceUrl
+
+    @Column(name='createdAt', nullable=false)
+    private DateTime createdAt = DateTime.now()
+
+    @Column(name='deletedAt')
+    private DateTime deletedAt
 
     /**
      * Empty constructor used by Jackson for object deserialization
      */
     Artifact() { }
 
-    Artifact(String group, String name) {
+    /**
+     *  Default constructor to be used by DeployDB internally. It accepts all
+     *  of the required parameters for the database
+     */
+    Artifact(String group,
+             String name,
+             String version) {
         this.group = group
         this.name = name
+        this.version = version
     }
 
 
@@ -64,9 +82,40 @@ class Artifact {
         return name
     }
 
+    /**
+     *  The version of the artifact (e.g. '1.0.1+0xbef')
+     */
+    @JsonProperty
+    String getVersion() {
+        return version
+    }
+
+    /**
+     *  The URL where one might find this artifact (e.g.
+     *  'http://example.com/dist/artifact.jar
+     */
+    @JsonProperty
+    String getSourceUrl() {
+        return sourceUrl
+    }
+
+    /**
+     *
+     */
+    void setSourceUrl(String newSourceUrl) {
+        this.sourceUrl = newSourceUrl
+    }
+
+    @JsonProperty
+    String getCreatedAt() {
+        /* toString on DateTime returns ISO-8601 by default */
+        return createdAt.toString()
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
+        /* First object identity */
+        if (this.is(o)) {
             return true
         }
 

@@ -16,12 +16,15 @@ class ArtifactWithArgsSpec extends Specification {
     private Artifact artifact
 
     def setup() {
-        this.artifact = new Artifact('spock.group', 'spock-test-name')
+        artifact = new Artifact('spock.group',
+                                'spock-test-name',
+                                'v1.0.0')
     }
 
     def "its properties should be correct"() {
         expect:
         artifact.group == 'spock.group'
         artifact.name == 'spock-test-name'
+        artifact.version == 'v1.0.0'
     }
 }
