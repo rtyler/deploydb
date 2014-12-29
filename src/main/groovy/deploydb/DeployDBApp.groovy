@@ -11,6 +11,7 @@ import io.dropwizard.hibernate.SessionFactoryFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import io.dropwizard.views.ViewBundle
+import org.hibernate.SessionFactory
 
 import deploydb.resources.*
 import deploydb.health.*
@@ -28,6 +29,16 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     String getName() {
         return 'deploydb'
+    }
+
+    /** Return the current org.hibernate.SessionFactory
+     *
+     * This is really only ever intended to be used in integration tests as a
+     * means of getting a hold of the same SessionFactory that Resources will
+     * be using
+     */
+    SessionFactory getSessionFactory() {
+        return hibernate.sessionFactory
     }
 
     private final HibernateBundle<DeployDBConfiguration> hibernate =
@@ -61,7 +72,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
-        final ArtifactDAO adao = new ArtifactDAO(hibernate.getSessionFactory())
+        final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
 
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.jersey().register(new RootResource())

@@ -3,10 +3,16 @@ package deploydb.cucumber
 import deploydb.DeployDBApp
 import com.sun.jersey.api.client.Client
 import com.sun.jersey.api.client.ClientResponse
+import org.hibernate.SessionFactory
 
 class AppHelper {
     private StubAppRunner runner = null
     private Client jerseyClient = null
+
+
+    SessionFactory getSessionFactory() {
+        return this.runner.sessionFactory
+    }
 
     Client getClient() {
         if (this.jerseyClient == null) {
