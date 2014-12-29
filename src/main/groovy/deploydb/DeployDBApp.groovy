@@ -12,6 +12,7 @@ import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import io.dropwizard.views.ViewBundle
 import org.hibernate.SessionFactory
+import org.joda.time.DateTimeZone
 
 import deploydb.resources.*
 import deploydb.health.*
@@ -55,6 +56,11 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new AssetsBundle())
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
+
+        /*
+         * Force our default timezone to always be UTC
+         */
+        DateTimeZone.setDefault(DateTimeZone.UTC)
 
         bootstrap.addBundle(new FlywayBundle<DeployDBConfiguration>() {
             @Override
