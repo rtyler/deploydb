@@ -1,5 +1,8 @@
 import cucumber.api.*
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
+
 // Add functions to register hooks and steps to this script.
 this.metaClass.mixin(cucumber.api.groovy.Hooks)
 this.metaClass.mixin(cucumber.api.groovy.EN)
@@ -18,4 +21,13 @@ Then(~/^the response should be (\d+)$/) { int statusCode ->
 
 Then(~/^the response body should be:$/) { String expectedBody ->
     assert response.getEntity(String.class) == expectedBody
+}
+
+Then(~/^the body should be JSON:$/) { String expectedBody ->
+    ObjectMapper mapper = new ObjectMapper()
+    String body = response.getEntity(String.class)
+    JsonNode expectedNode = mapper.readTree(expectedBody)
+    JsonNode bodyNode = mapper.readTree(body)
+
+    assert bodyNode == expectedNode
 }
