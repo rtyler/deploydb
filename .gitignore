@@ -8,3 +8,4 @@ tmp/
 /bin/
 workbench.xmi
 .idea
+logs/

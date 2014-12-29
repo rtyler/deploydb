@@ -3,6 +3,14 @@ database:
   user: nobody
   url: "jdbc:h2:mem:cucumber"
 logging:
+  level: INFO
   loggers:
     org.hibernate.SQL: ALL
-
+  appenders:
+    - type: file
+      currentLogFilename: ./logs/deploydb-cucumber.log
+      threshold: ALL
+      archive: true
+      archivedLogFilenamePattern: ./logs/deploydb-cucumber-%d.log
+      archivedFileCount: 5
+      timeZone: UTC
