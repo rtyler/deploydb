@@ -23,7 +23,6 @@ Feature: Artifact APIs
     When I GET "/api/v1/artifacts/named/cucumber-artifact"
     Then the response should be 200
 
-  @wip
   Scenario: Fetching an artifact by the name that doesn't exist
 
     When I GET "/api/v1/artifacts/named/cucumber-artifact"

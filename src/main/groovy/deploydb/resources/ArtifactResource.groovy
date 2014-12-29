@@ -48,7 +48,7 @@ public class ArtifactResource {
     @Path("named/{name}")
     @Timed(name = "get-requests")
     public String byName(@PathParam("name") String artifactId) {
-        return ""
+        throw new WebApplicationException(Response.Status.NOT_FOUND)
     }
 }
 
