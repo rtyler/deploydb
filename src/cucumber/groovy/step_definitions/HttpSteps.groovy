@@ -2,6 +2,8 @@ import cucumber.api.*
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.joda.time.DateTime
+
 
 // Add functions to register hooks and steps to this script.
 this.metaClass.mixin(cucumber.api.groovy.Hooks)
@@ -26,6 +28,11 @@ Then(~/^the response body should be:$/) { String expectedBody ->
 Then(~/^the body should be JSON:$/) { String expectedBody ->
     ObjectMapper mapper = new ObjectMapper()
     String body = response.getEntity(String.class)
+    templateVariables = [
+        'created_timestamp' : DateTime.now(),
+    ]
+    expectedBody = processTemplate(expectedBody, templateVariables)
+
     JsonNode expectedNode = mapper.readTree(expectedBody)
     JsonNode bodyNode = mapper.readTree(body)
 

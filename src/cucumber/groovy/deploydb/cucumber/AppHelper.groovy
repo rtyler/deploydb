@@ -1,6 +1,9 @@
 package deploydb.cucumber
 
 import deploydb.DeployDBApp
+import com.github.mustachejava.DefaultMustacheFactory
+import com.github.mustachejava.Mustache
+import com.github.mustachejava.MustacheFactory
 import com.sun.jersey.api.client.Client
 import com.sun.jersey.api.client.ClientResponse
 import org.hibernate.Session
@@ -32,6 +35,17 @@ class AppHelper {
         finally {
             session.close()
         }
+    }
+
+
+    String processTemplate(String buffer, Map scope) {
+        DefaultMustacheFactory mf = new DefaultMustacheFactory()
+        StringWriter writer = new StringWriter()
+        Mustache m = mf.compile(new StringReader(buffer),
+                                'cuke-stash-compiler')
+        m.execute(writer, scope)
+
+        return writer.toString()
     }
 
     Client getClient() {
