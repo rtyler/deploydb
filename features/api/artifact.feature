@@ -9,6 +9,16 @@ Feature: Artifact APIs
     Given there is an artifact
     When I GET "/api/v1/artifacts/1"
     Then the response should be 200
+    And the body should be JSON:
+    """
+      {
+        "id" : 1,
+        "group" : "com.example.cucumber",
+        "name" : "cucumber-artifact",
+        "version" : "1.0.1",
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
+      }
+    """
 
   Scenario: Fetching an artifact by ID that doesn't exist
 

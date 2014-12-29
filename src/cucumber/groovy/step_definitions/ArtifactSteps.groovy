@@ -8,7 +8,8 @@ import deploydb.models.Artifact
 Given(~/^there is an artifact$/) { ->
     withSession {
         ArtifactDAO dao = new ArtifactDAO(sessionFactory)
-        dao.create(new Artifact('cucumber-group', 'cucumber-name'))
+        dao.create(new Artifact('com.example.cucumber',
+                                'cucumber-artifact'))
     }
 }
 
