@@ -15,4 +15,8 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
     Artifact findById(Long artifactId) {
         return get(artifactId)
     }
+
+    long create(Artifact artifact) {
+        return persist(artifact).id
+    }
 }

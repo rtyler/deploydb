@@ -20,7 +20,7 @@ import org.hibernate.validator.constraints.Length;
 class Artifact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id
+    private Long id
 
     @Column(name = "groupName", nullable = false)
     private String group
@@ -34,8 +34,7 @@ class Artifact {
      */
     Artifact() { }
 
-    Artifact(long id, String group, String name) {
-        this.id = id
+    Artifact(String group, String name) {
         this.group = group
         this.name = name
     }
@@ -45,7 +44,7 @@ class Artifact {
      * The internal identifier for the artifact
      */
     @JsonProperty
-    long getId() {
+    Long getId() {
         return id
     }
 

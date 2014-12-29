@@ -6,7 +6,7 @@ Feature: Artifact APIs
 
   Scenario: Fetching an artifact by ID that exists
 
-    Given there is an artifact with ID 1
+    Given there is an artifact
     When I GET "/api/v1/artifacts/1"
     Then the response should be 200
 
