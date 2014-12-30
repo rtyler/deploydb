@@ -506,16 +506,23 @@ table.CodeRay td.code>pre{padding:0}
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
+<li><a href="#_getting_started">Getting Started</a>
+<ul class="sectlevel2">
 <li><a href="#_system_requirements">System requirements</a></li>
 <li><a href="#_running_the_tests">Running the tests</a></li>
 <li><a href="#_building_the_documentation">Building the documentation</a></li>
+</ul>
+</li>
+<li><a href="#_code_structure">Code Structure</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_system_requirements">System requirements</h2>
+<h2 id="_getting_started">Getting Started</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_system_requirements">System requirements</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -524,22 +531,22 @@ table.CodeRay td.code>pre{padding:0}
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_running_the_tests">Running the tests</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_running_the_tests">Running the tests</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><code>./gradlew spec cucumber</code></p>
+<p><code>./gradlew check</code>: This will run both the <code>test</code> task, which runs
+<a href="https://code.google.com/p/spock/">Spock tests</a> and it will also run the
+<code>cucumber</code> task, which runs
+<a href="https://github.com/cucumber/cucumber-jvm#readme">Cucumber JVM</a>
+scenarios.</p>
 </li>
 </ul>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_building_the_documentation">Building the documentation</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_building_the_documentation">Building the documentation</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -550,9 +557,77 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_code_structure">Code Structure</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The DeployDB source code can be found in a few different directories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>features/</code> - REST API documentation</p>
+</li>
+<li>
+<p><code>src/</code> - source tree</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/asciidoc</code> - <a href="http://asciidoctor.org">Asciidoctor</a>-based documentation files</p>
+</li>
+<li>
+<p><code>/cucumber</code> - source code for executing the <a href="http://cukes.info">Cucumber</a> scenarios (also referred to as "acceptance tests" for the REST APIs)</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/groovy/step_definitions</code> - implementation for the various <a href="http://cukes.info/step-definitions.html">step definitions</a></p>
+</li>
+<li>
+<p><code>/groovy/deploydb</code> - Cucumber helper code</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>/main</code> - Primary directory for the DeployDB application</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/groovy/deploydb</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/dao</code> - Data access objects</p>
+</li>
+<li>
+<p><code>/health</code> - Dropwizard <a href="http://dropwizard.github.io/dropwizard/manual/core.html#health-checks">health checks</a> for the app</p>
+</li>
+<li>
+<p><code>/models</code> - Plain-old-Java-Objects for <a href="http://hibernate.org">Hibernate</a> to use for mapping data into and out of the database</p>
+</li>
+<li>
+<p><code>/resources</code> - Dropwizard <a href="http://dropwizard.github.io/dropwizard/manual/core.html#resources">resources</a> for performing the REST API actions</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>/test</code> - <a href="https://code.google.com/p/spock">Spock</a>-based unit tests</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-17 11:18:55 PST
+Last updated 2014-12-29 16:17:27 PST
 </div>
 </div>
 </body>
