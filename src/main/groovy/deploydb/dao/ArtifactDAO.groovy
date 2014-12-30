@@ -19,6 +19,16 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
         return get(artifactId)
     }
 
+    /**
+     * Locate an Artifact based on the (group, name) pair
+     *
+     * @param group A valid group name (e.g. "com.example")
+     * @param name The artifact's name (e.g. "dropwizard-core")
+     */
+    Artifact findByGroupAndName(String group, String name) {
+        return null
+    }
+
     long create(Artifact artifact) {
         return persist(artifact).id
     }

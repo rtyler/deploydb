@@ -45,10 +45,17 @@ public class ArtifactResource {
     }
 
     @GET
-    @Path("named/{name}")
+    @Path("by-module/{group}:{name}")
     @Timed(name = "get-requests")
-    public String byName(@PathParam("name") String artifactId) {
-        throw new WebApplicationException(Response.Status.NOT_FOUND)
+    public Artifact byName(@PathParam('group') String artifactGroup,
+                         @PathParam("name") String artifactName) {
+        Artifact artifact = this.dao.findByGroupAndName(artifactGroup,
+                                                        artifactName)
+
+        if (artifact == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+        return artifact
     }
 }
 
