@@ -1,15 +1,40 @@
-# Hacking on DeployDB
+= Hacking on DeployDB
 
-## System requirements
+== Getting Started
+
+=== System requirements
 
 * JDK7
 
+=== Running the tests
 
-## Running the tests
+ * `./gradlew check`: This will run both the `test` task, which runs
+   link:https://code.google.com/p/spock/[Spock tests] and it will also run the
+   `cucumber` task, which runs
+   link:https://github.com/cucumber/cucumber-jvm#readme[Cucumber JVM]
+   scenarios.
 
- * `./gradlew spec cucumber`
 
-
-## Building the documentation
+=== Building the documentation
 
  * `./gradlew asciidoctor`
+
+
+== Code Structure
+
+The DeployDB source code can be found in a few different directories:
+
+* `features/` - REST API documentation
+* `src/` - source tree
+** `/asciidoc` - link:http://asciidoctor.org[Asciidoctor]-based documentation files
+** `/cucumber` - source code for executing the link:http://cukes.info[Cucumber] scenarios (also referred to as "acceptance tests" for the REST APIs)
+*** `/groovy/step_definitions` - implementation for the various link:http://cukes.info/step-definitions.html[step definitions]
+*** `/groovy/deploydb` - Cucumber helper code
+** `/main` - Primary directory for the DeployDB application
+*** `/groovy/deploydb`
+**** `/dao` - Data access objects
+**** `/health` - Dropwizard link:http://dropwizard.github.io/dropwizard/manual/core.html#health-checks[health checks] for the app
+**** `/models` - Plain-old-Java-Objects for link:http://hibernate.org[Hibernate] to use for mapping data into and out of the database
+**** `/resources` - Dropwizard link:http://dropwizard.github.io/dropwizard/manual/core.html#resources[resources] for performing the REST API actions
+** `/test` - link:https://code.google.com/p/spock[Spock]-based unit tests
+
