@@ -1,7 +1,0 @@
-<%
-standard = "--color --expand -r features --format #{ENV['CUCUMBER_FORMAT'] || 'pretty'} --format junit --out #{ENV['CUCUMBER_JUNIT_OUT'] || 'build/reports/cucumber'}"
-%>
-
-default: <%= standard %> --tags ~@wip
-wip: <%= standard %> --tags @wip
-api: <%= standard %> --tags @api --tags ~@wip
