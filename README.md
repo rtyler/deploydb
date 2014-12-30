@@ -19,4 +19,6 @@ provided by other tools (e.g. Jenkins, Rundeck).
  * [Gitter chat room for DeployDB](https://gitter.im/lookout/deploydb)
  * [DeployDB homepage](http://hackers.lookout.com/deploydb/)
  * [Hacking DeployDB](http://hackers.lookout.com/deploydb/hacking.html)
+ * [REST API documentation](http://hackers.lookout.com/deploydb/restapi/)
+ * [Groovydocs](http://hackers.lookout.com/deploydb/groovydoc)
  * [Internal design](http://hackers.lookout.com/deploydb/internals.html)
