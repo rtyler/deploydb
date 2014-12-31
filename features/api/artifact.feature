@@ -64,3 +64,11 @@ Feature: Artifact APIs
     Given there is an artifact
     When I GET "/api/v1/artifacts/1/versions"
     Then the response should be 200
+
+
+  @wip @error
+  Scenario: Creating an artifact with too large of a group or name
+
+    Given an artifact with a name over 8192 characters
+    When I POST to "/api/v1/artifacts" with it
+    Then the response should be 400
