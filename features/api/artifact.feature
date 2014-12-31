@@ -36,7 +36,7 @@ Feature: Artifact APIs
   @freezetime
   Scenario: Fetching an artifact by the (group, name) tuple
 
-    Given there is an artifact named "cucumber-artifact"
+    Given there is an artifact
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact"
     Then the response should be 200
     And the body should be JSON:

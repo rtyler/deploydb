@@ -15,7 +15,3 @@ Given(~/^there is an artifact$/) { ->
         dao.create(a)
     }
 }
-
-Given(~/^there is an artifact named "(.*?)"$/) { String artifactName ->
-    // NOTE: no-op for now
-}

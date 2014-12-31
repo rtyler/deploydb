@@ -46,6 +46,7 @@ public class ArtifactResource {
 
     @GET
     @Path("by-module/{group}:{name}")
+    @UnitOfWork
     @Timed(name = "get-requests")
     public Artifact byName(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName) {

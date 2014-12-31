@@ -1,8 +1,10 @@
 package deploydb.dao
 
-import groovy.transform.InheritConstructors
 import com.google.common.base.Optional
+import groovy.transform.InheritConstructors
 import io.dropwizard.hibernate.AbstractDAO
+import org.hibernate.Criteria
+import org.hibernate.criterion.*
 
 import deploydb.models.Artifact
 
@@ -26,7 +28,10 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
      * @param name The artifact's name (e.g. "dropwizard-core")
      */
     Artifact findByGroupAndName(String group, String name) {
-        return null
+        return criteria().add(Restrictions.eq('group', group))
+                          .add(Restrictions.eq('name', name))
+                          .setMaxResults(1)
+                          .addOrder(Order.desc('createdAt')).list().first()
     }
 
     long create(Artifact artifact) {
