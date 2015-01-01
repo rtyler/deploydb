@@ -4,6 +4,7 @@ import spock.lang.*
 
 import io.dropwizard.hibernate.AbstractDAO
 import org.hibernate.SessionFactory
+import org.hibernate.Criteria
 
 import deploydb.models.Artifact
 
@@ -30,5 +31,17 @@ class ArtifactDAOSpec extends Specification {
 
         expect:
         dao.findById(artifactId) == null
+    }
+
+    def "findByGroupAndName() should return null if there are no results"() {
+        given:
+        ArtifactDAO dao = Spy(ArtifactDAO, constructorArgs: [sessionFactory])
+        def criteria = Mock(Criteria)
+        criteria./add|set|addOrder|setMaxResults/(_) >> criteria
+        _ * dao.criteria() >> criteria
+        1 * criteria.list() >> []
+
+        expect:
+        dao.findByGroupAndName('spock-group', 'spock-name') == null
     }
 }

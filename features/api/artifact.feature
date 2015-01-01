@@ -51,10 +51,9 @@ Feature: Artifact APIs
       }
     """
 
-  @wip
   Scenario: Fetching an artifact by the (group, name) tuple that doesn't exist
 
-    When I GET "/api/v1/artifacts/named/cucumber-artifact"
+    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact"
     Then the response should be 404
 
 
