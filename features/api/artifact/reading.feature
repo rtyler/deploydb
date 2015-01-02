@@ -1,4 +1,4 @@
-Feature: Artifact APIs
+Feature: Artifact READ APIs
 
   As a RESTful client or user
   I should be able to read information about artifacts
@@ -27,6 +27,7 @@ Feature: Artifact APIs
     When I GET "/api/v1/artifacts/1"
     Then the response should be 404
 
+  @error
   Scenario: Fetching an artifact by a non-numeric ID
 
     When I GET "/api/v1/artifacts/0xdeadbeef"
