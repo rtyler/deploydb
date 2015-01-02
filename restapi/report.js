@@ -7,11 +7,11 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 3198629594,
+  "duration": 3293319213,
   "status": "passed"
 });
 formatter.before({
-  "duration": 5455091,
+  "duration": 5940921,
   "status": "passed"
 });
 formatter.scenario({
@@ -57,7 +57,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 290819975,
+  "duration": 245051888,
   "status": "passed"
 });
 formatter.match({
@@ -70,7 +70,7 @@ formatter.match({
   "location": "HttpSteps.groovy:16"
 });
 formatter.result({
-  "duration": 406022797,
+  "duration": 384779779,
   "status": "passed"
 });
 formatter.match({
@@ -83,26 +83,26 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 11565733,
+  "duration": 7348393,
   "status": "passed"
 });
 formatter.match({
   "location": "HttpSteps.groovy:28"
 });
 formatter.result({
-  "duration": 121132611,
+  "duration": 109446496,
   "status": "passed"
 });
 formatter.after({
-  "duration": 25169474,
+  "duration": 14886200,
   "status": "passed"
 });
 formatter.after({
-  "duration": 702787,
+  "duration": 671057,
   "status": "passed"
 });
 formatter.before({
-  "duration": 660001956,
+  "duration": 396082877,
   "status": "passed"
 });
 formatter.scenario({
@@ -133,7 +133,7 @@ formatter.match({
   "location": "HttpSteps.groovy:16"
 });
 formatter.result({
-  "duration": 167979152,
+  "duration": 110678804,
   "status": "passed"
 });
 formatter.match({
@@ -146,15 +146,15 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 238771,
+  "duration": 226381,
   "status": "passed"
 });
 formatter.after({
-  "duration": 15958107,
+  "duration": 14729969,
   "status": "passed"
 });
 formatter.before({
-  "duration": 371924737,
+  "duration": 390148731,
   "status": "passed"
 });
 formatter.scenario({
@@ -185,7 +185,7 @@ formatter.match({
   "location": "HttpSteps.groovy:16"
 });
 formatter.result({
-  "duration": 108167936,
+  "duration": 103383356,
   "status": "passed"
 });
 formatter.match({
@@ -198,19 +198,19 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 176402,
+  "duration": 202420,
   "status": "passed"
 });
 formatter.after({
-  "duration": 6718906,
+  "duration": 11173590,
   "status": "passed"
 });
 formatter.before({
-  "duration": 343468960,
+  "duration": 305300529,
   "status": "passed"
 });
 formatter.before({
-  "duration": 99867,
+  "duration": 92858,
   "status": "passed"
 });
 formatter.scenario({
@@ -256,7 +256,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 6384220,
+  "duration": 3397024,
   "status": "passed"
 });
 formatter.match({
@@ -269,7 +269,7 @@ formatter.match({
   "location": "HttpSteps.groovy:16"
 });
 formatter.result({
-  "duration": 157092191,
+  "duration": 148267799,
   "status": "passed"
 });
 formatter.match({
@@ -282,26 +282,26 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 173917,
+  "duration": 172289,
   "status": "passed"
 });
 formatter.match({
   "location": "HttpSteps.groovy:28"
 });
 formatter.result({
-  "duration": 2523783,
+  "duration": 2756851,
   "status": "passed"
 });
 formatter.after({
-  "duration": 10111021,
+  "duration": 6091298,
   "status": "passed"
 });
 formatter.after({
-  "duration": 54811,
+  "duration": 50090,
   "status": "passed"
 });
 formatter.before({
-  "duration": 371327438,
+  "duration": 301220710,
   "status": "passed"
 });
 formatter.scenario({
@@ -332,7 +332,7 @@ formatter.match({
   "location": "HttpSteps.groovy:16"
 });
 formatter.result({
-  "duration": 126269791,
+  "duration": 102002872,
   "status": "passed"
 });
 formatter.match({
@@ -345,11 +345,11 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 169899,
+  "duration": 421582,
   "status": "passed"
 });
 formatter.after({
-  "duration": 10564140,
+  "duration": 10435939,
   "status": "passed"
 });
 formatter.uri("api/deployment.feature");
@@ -361,11 +361,11 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 326766079,
+  "duration": 373014659,
   "status": "passed"
 });
 formatter.before({
-  "duration": 81618,
+  "duration": 81229,
   "status": "passed"
 });
 formatter.scenario({
@@ -442,11 +442,11 @@ formatter.result({
   "status": "skipped"
 });
 formatter.after({
-  "duration": 8030380,
+  "duration": 10483510,
   "status": "passed"
 });
 formatter.after({
-  "duration": 32735,
+  "duration": 33152,
   "status": "passed"
 });
 formatter.uri("api/health.feature");
@@ -458,7 +458,7 @@ formatter.feature({
   "keyword": "Feature"
 });
 formatter.before({
-  "duration": 326987224,
+  "duration": 294592865,
   "status": "passed"
 });
 formatter.scenario({
@@ -499,7 +499,7 @@ formatter.match({
   "location": "HttpSteps.groovy:12"
 });
 formatter.result({
-  "duration": 138548683,
+  "duration": 132308837,
   "status": "passed"
 });
 formatter.match({
@@ -512,18 +512,18 @@ formatter.match({
   "location": "HttpSteps.groovy:20"
 });
 formatter.result({
-  "duration": 174111,
+  "duration": 162658,
   "status": "passed"
 });
 formatter.match({
   "location": "HttpSteps.groovy:28"
 });
 formatter.result({
-  "duration": 1368049,
+  "duration": 1467103,
   "status": "passed"
 });
 formatter.after({
-  "duration": 21228822,
+  "duration": 11133775,
   "status": "passed"
 });
 });
