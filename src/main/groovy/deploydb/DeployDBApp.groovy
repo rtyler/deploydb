@@ -22,6 +22,7 @@ import deploydb.dao.ArtifactDAO
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(Artifact)
+    private WebhookManager webhooks
 
     static void main(String[] args) throws Exception {
         new DeployDBApp().run(args)
@@ -57,6 +58,9 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
 
+
+        webhooks = new WebhookManager()
+
         /*
          * Force our default timezone to always be UTC
          */
@@ -80,8 +84,9 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
                     Environment environment) {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
 
+        environment.lifecycle().manage(webhooks)
         environment.healthChecks().register('sanity', new SanityHealthCheck())
-        environment.healthChecks().register('webhook', new WebhookHealthCheck())
+        environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
     }
