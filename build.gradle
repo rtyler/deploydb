@@ -30,7 +30,7 @@ dependencies {
      'dropwizard-views-mustache',
      'dropwizard-testing',
      ].each {
-        compile withSources("io.dropwizard:${it}:0.7.1+")
+        compile withSources("io.dropwizard:${it}:0.8.0-rc1")
     }
 
     compile withSources('io.dropwizard.modules:dropwizard-flyway:0.7.0-1')

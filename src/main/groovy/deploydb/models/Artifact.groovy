@@ -113,6 +113,10 @@ class Artifact {
         return createdAt.toString()
     }
 
+    void setCreatedAt(String iso8601String) {
+        this.createdAt = DateTime.parse(iso8601String)
+    }
+
     @Override
     public boolean equals(Object o) {
         /* First object identity */

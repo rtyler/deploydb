@@ -87,6 +87,7 @@ public class StubAppRunner<C extends Configuration> {
                             */
                             Flyway flyway = new Flyway()
                             flyway.setDataSource('jdbc:h2:mem:cucumber', 'nobody', '')
+                            flyway.clean()
                             flyway.migrate()
                         }
                     })

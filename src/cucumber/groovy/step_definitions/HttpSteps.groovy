@@ -22,12 +22,12 @@ Then(~/^the response should be (\d+)$/) { int statusCode ->
 }
 
 Then(~/^the response body should be:$/) { String expectedBody ->
-    assert response.getEntity(String.class) == expectedBody
+    assert response.readEntity(String.class) == expectedBody
 }
 
 Then(~/^the body should be JSON:$/) { String expectedBody ->
     ObjectMapper mapper = new ObjectMapper()
-    String body = response.getEntity(String.class)
+    String body = response.readEntity(String.class)
     templateVariables = [
         'created_timestamp' : DateTime.now(),
     ]
