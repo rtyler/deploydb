@@ -24,7 +24,7 @@ public class RootResource {
     @Timed(name = "get-requests")
     @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.DAYS)
     public View responder() {
-        return new View('views/index.mustache', Charsets.UTF_8) { }
+        return new View('/views/index.mustache', Charsets.UTF_8) { }
     }
 }
 
