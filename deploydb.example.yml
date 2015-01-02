@@ -1,0 +1,8 @@
+database:
+  driverClass: org.h2.Driver
+  user: nobody
+  url: "jdbc:h2:mem:"
+logging:
+  level: INFO
+  loggers:
+    org.hibernate.SQL: ALL

@@ -7,10 +7,13 @@ plugins {
 
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
+apply plugin: 'application'
 
 version = '0.1.0'
 group = 'com.github.lookout'
 description = 'DeployDB is a tool to provide a single source of truth for artifact-based deployments'
+// Needed for the application plugin's `run` task
+mainClassName = 'deploydb.DeployDBApp'
 
 ////////////////////////////////////////////////////////////////////////////////
 // DEPENDENCY MANAGEMENT
@@ -97,17 +100,15 @@ test {
     }
 }
 
+run {
+    args 'server', 'deploydb.example.yml'
+}
 
 shadowJar {
     exclude 'META-INF/*.RSA', 'META-INF/*.DSA'
     manifest {
-        attributes 'Main-Class' : 'deploydb.DeployDBApp'
+        attributes 'Main-Class' : mainClassName
     }
-
-    /* We need to import the resources into the right place so Dropwizard can
-     * look them up later, e.g. views
-     */
-    into('deploydb/resources') { from 'src/main/resources' }
 
     // Only run after we've successfully completed our tests
     dependsOn check
