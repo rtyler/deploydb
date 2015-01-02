@@ -15,8 +15,6 @@ import java.util.concurrent.atomic.AtomicLong
 @Path("/")
 @Produces(MediaType.TEXT_HTML)
 public class RootResource {
-    public RootResource() {
-    }
 
     @GET
     @Timed(name = "get-requests")

@@ -4,6 +4,8 @@ import io.dropwizard.lifecycle.Managed
 
 import com.github.lookout.whoas.InMemoryQueue
 import com.github.lookout.whoas.SequentialHookRunner
+import com.github.lookout.whoas.AbstractHookRunner
+import com.github.lookout.whoas.AbstractHookQueue
 
 class WebhookManager implements Managed {
     private Thread runnerThread
@@ -15,6 +17,7 @@ class WebhookManager implements Managed {
         runnerThread = new Thread({
             runner.run()
         })
+        runnerThread.name = 'WebhookManager Thread'
     }
 
     @Override
@@ -32,5 +35,13 @@ class WebhookManager implements Managed {
      */
     Boolean getRunning() {
         return runnerThread.isAlive()
+    }
+
+    AbstractHookRunner getRunner() {
+        return this.runner
+    }
+
+    AbstractHookQueue getQueue() {
+        return this.queue
     }
 }

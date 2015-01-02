@@ -87,7 +87,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.lifecycle().manage(webhooks)
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
-        environment.jersey().register(new RootResource(webhooks))
+        environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
     }
 }
