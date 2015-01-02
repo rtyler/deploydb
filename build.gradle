@@ -104,6 +104,11 @@ shadowJar {
         attributes 'Main-Class' : 'deploydb.DeployDBApp'
     }
 
+    /* We need to import the resources into the right place so Dropwizard can
+     * look them up later, e.g. views
+     */
+    into('deploydb/resources') { from 'src/main/resources' }
+
     // Only run after we've successfully completed our tests
     dependsOn check
 }
