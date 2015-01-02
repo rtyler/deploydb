@@ -8,7 +8,7 @@
 
 === Running the tests
 
- * `./gradlew check`: This will run both the `test` task, which runs
+* `./gradlew check`: This will run both the `test` task, which runs
    link:https://code.google.com/p/spock/[Spock tests] and it will also run the
    `cucumber` task, which runs
    link:https://github.com/cucumber/cucumber-jvm#readme[Cucumber JVM]
@@ -17,7 +17,12 @@
 
 === Building the documentation
 
- * `./gradlew asciidoctor`
+* `./gradlew asciidoctor`
+
+=== Running the app
+
+* `./gradlew run` will run the application locally, outside of a `.jar` file,
+  with the `deploydb.example.yml` configuration.
 
 
 == Code Structure
@@ -31,6 +36,8 @@ The DeployDB source code can be found in a few different directories:
 *** `/groovy/step_definitions` - implementation for the various link:http://cukes.info/step-definitions.html[step definitions]
 *** `/groovy/deploydb` - Cucumber helper code
 ** `/main` - Primary directory for the DeployDB application
+*** `/resources/db/migration` - Directory containing `SQL` files for creating the relational database schemas
+*** `/resources/views` - link:http://mustache.github.io/mustache.5.html[Mustache-based views]
 *** `/groovy/deploydb`
 **** `/dao` - Data access objects
 **** `/health` - Dropwizard link:http://dropwizard.github.io/dropwizard/manual/core.html#health-checks[health checks] for the app

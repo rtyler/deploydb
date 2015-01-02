@@ -3,8 +3,17 @@
 image::https://badges.gitter.im/Join%20Chat.svg[link="https://gitter.im/lookout/deploydb"]
 image:https://travis-ci.org/lookout/deploydb.svg?branch=master["Build Status", link="https://travis-ci.org/lookout/deploydb"]
 
-
 **Who, what, where and when.**
+
+---
+
+== Important Links
+
+
+* link:internals.html[DeployDB Internals]
+* link:hacking.html[Hacking on DeployDB]
+
+---
 
 == The Problem
 
@@ -13,7 +22,7 @@ deployments with the oft used  "all together now" approach becomes untenable.
 
 Tracking versions of application and configuration management code through a
 consistent pipeline of tiered environments where verification of those changes
-can occur is difficult. 
+can occur is difficult.
 
 == The Solution
 

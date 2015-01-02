@@ -511,6 +511,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_system_requirements">System requirements</a></li>
 <li><a href="#_running_the_tests">Running the tests</a></li>
 <li><a href="#_building_the_documentation">Building the documentation</a></li>
+<li><a href="#_running_the_app">Running the app</a></li>
 </ul>
 </li>
 <li><a href="#_code_structure">Code Structure</a></li>
@@ -555,6 +556,17 @@ scenarios.</p>
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_running_the_app">Running the app</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>./gradlew run</code> will run the application locally, outside of a <code>.jar</code> file,
+with the <code>deploydb.example.yml</code> configuration.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -593,6 +605,12 @@ scenarios.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><code>/resources/db/migration</code> - Directory containing <code>SQL</code> files for creating the relational database schemas</p>
+</li>
+<li>
+<p><code>/resources/views</code> - <a href="http://mustache.github.io/mustache.5.html">Mustache-based views</a></p>
+</li>
+<li>
 <p><code>/groovy/deploydb</code></p>
 <div class="ulist">
 <ul>
@@ -627,7 +645,7 @@ scenarios.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-12-29 16:17:27 PST
+Last updated 2015-01-02 14:39:25 PST
 </div>
 </div>
 </body>
