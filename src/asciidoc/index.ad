@@ -10,6 +10,8 @@ image:https://travis-ci.org/lookout/deploydb.svg?branch=master["Build Status", l
 == Important Links
 
 
+* link:https://github.com/lookout/deploydb[Source code]
+* link:https://github.com/lookout/deploydb/issues[Issue Tracker]
 * link:internals.html[DeployDB Internals]
 * link:hacking.html[Hacking on DeployDB]
 * link:restapi/index.html[REST API documentation]
