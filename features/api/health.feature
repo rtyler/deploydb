@@ -22,6 +22,9 @@ Feature: The health endpoint
       },
       "hibernate" : {
         "healthy" : true
+      },
+      "webhook" : {
+        "healthy" : true
       }
     }
     """

@@ -81,6 +81,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
 
         environment.healthChecks().register('sanity', new SanityHealthCheck())
+        environment.healthChecks().register('webhook', new WebhookHealthCheck())
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
     }
