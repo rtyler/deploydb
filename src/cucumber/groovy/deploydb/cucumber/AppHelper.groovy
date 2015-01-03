@@ -6,8 +6,10 @@ import com.github.mustachejava.DefaultMustacheFactory
 import com.github.mustachejava.Mustache
 import com.github.mustachejava.MustacheFactory
 
-import org.glassfish.jersey.client.JerseyClient
+import org.glassfish.jersey.client.ClientConfig
 import javax.ws.rs.client.Client
+import javax.ws.rs.client.ClientBuilder
+import org.glassfish.jersey.apache.connector.ApacheConnectorProvider
 import javax.ws.rs.core.Response
 import javax.ws.rs.client.Entity
 
@@ -55,22 +57,20 @@ class AppHelper {
 
     Client getClient() {
         if (this.jerseyClient == null) {
-            this.jerseyClient = new JerseyClient()
+            ClientConfig clientConfig = new ClientConfig()
+            clientConfig.connectorProvider(new ApacheConnectorProvider())
+            this.jerseyClient = ClientBuilder.newClient(clientConfig);
         }
         return this.jerseyClient
     }
 
-    /**
-     * Minor convenience method to make sure we're dispatching GET requests to the
-     * right port in our test application
-     */
-    Response getFromPath(String path, boolean isAdmin) {
-        int port = isAdmin ? runner.getAdminPort() : runner.getLocalPort()
+    Response makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
+        int port = isAdmin ? runner.adminPort : runner.localPort
         String url = String.format("http://localhost:%d${path}", port)
 
         return client.target(url)
                      .request()
-                     .buildGet()
+                     .build(method, entity)
                      .invoke()
     }
 
@@ -78,13 +78,25 @@ class AppHelper {
      * Execute a PUT to the test server for step definitions
      */
     Response putJsonToPath(String path, String requestBody) {
-        String url = String.format("http://localhost:%d${path}",
-                                    runner.localPort)
+        return this.makeRequestToPath(path, 'PUT', Entity.json(requestBody), false)
+    }
+    /**
+     * Execute a PATCH to the test server for step definitions
+     */
+    Response patchJsonToPath(String path, String requestBody) {
+        return this.makeRequestToPath(path, 'PATCH', Entity.json(requestBody), false)
+    }
 
-        return client.target(url)
-                     .request()
-                     .buildPut(Entity.json(requestBody))
-                     .invoke()
+    Response deleteFromPath(String path) {
+        return this.makeRequestToPath(path, 'DELETE', null, false)
+    }
+
+    /**
+     * Minor convenience method to make sure we're dispatching GET requests to the
+     * right port in our test application
+     */
+    Response getFromPath(String path, boolean isAdmin) {
+        return this.makeRequestToPath(path, 'GET', null , isAdmin)
     }
 
     void startAppWithConfiguration(String config) {

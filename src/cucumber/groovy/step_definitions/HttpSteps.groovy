@@ -17,8 +17,16 @@ When(~/^I GET "(.*?)"$/) { String path ->
     response = getFromPath(path, false)
 }
 
+When(~/^I DELETE "(.*?)"$/) { String path ->
+    response = deleteFromPath(path)
+}
+
 When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
     response = putJsonToPath(path, requestBody)
+}
+
+When(~/^I PATCH "(.*?)" with:$/) { String path, String requestBody ->
+    response = patchJsonToPath(path, requestBody)
 }
 
 

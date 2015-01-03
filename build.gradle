@@ -36,6 +36,8 @@ dependencies {
         compile withSources("io.dropwizard:${it}:0.8.0-rc1")
     }
 
+    compile withSources('org.glassfish.jersey.connectors:jersey-apache-connector:2.+')
+
     compile withSources('io.dropwizard.modules:dropwizard-flyway:0.7.0-1')
     compile 'com.github.lookout:whoas:0.1.2'
 
