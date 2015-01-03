@@ -17,6 +17,11 @@ When(~/^I GET "(.*?)"$/) { String path ->
     response = getFromPath(path, false)
 }
 
+When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
+    response = putJsonToPath(path, requestBody)
+}
+
+
 Then(~/^the response should be (\d+)$/) { int statusCode ->
     assert response.status == statusCode
 }

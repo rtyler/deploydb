@@ -30,6 +30,15 @@ public class ArtifactResource {
         this.dao = dao
     }
 
+    @PUT
+    @UnitOfWork
+    @Timed(name='put-requests')
+    public Response createArtifact(Artifact artifact) {
+        Artifact created = this.dao.create(artifact)
+
+        return Response.status(201).entity(created).build()
+    }
+
     @GET
     @Path("{id}")
     @UnitOfWork

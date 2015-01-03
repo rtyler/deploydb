@@ -37,7 +37,7 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
         return null
     }
 
-    long create(Artifact artifact) {
-        return persist(artifact).id
+    Artifact create(Artifact artifact) {
+        return persist(artifact)
     }
 }

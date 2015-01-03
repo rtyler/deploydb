@@ -4,7 +4,7 @@ Feature: Artifact CREATE APIs
   I should be able to create new artifacts in the system
 
 
-  @timefreeze
+  @freezetime
   Scenario: Creating a new artifact
 
     The creation of an artifact technically only requires group, name and
@@ -27,14 +27,14 @@ Feature: Artifact CREATE APIs
         "id" : 1,
         "group" : "com.example.cucumber",
         "name" : "cukes",
-        "version" : "1.2.345"
+        "version" : "1.2.345",
         "sourceUrl" : null,
         "createdAt" : "{{created_timestamp}}"
       }
     """
 
 
-  @error
+  @error @wip
   Scenario: Creating an artifact without a version
 
     When I PUT to "/api/v1/artifacts" with:
