@@ -1,27 +1,19 @@
 package deploydb.models
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.Length;
-import org.joda.time.DateTime
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.NamedQueries
+import javax.persistence.NamedQuery
+import javax.persistence.Table
+import com.fasterxml.jackson.annotation.JsonProperty
+import org.hibernate.validator.constraints.Length
 
 /**
  * Representation class for the concept of an Artifact
- *
  */
 @Entity
 @Table(name='artifacts')
-class Artifact {
-    @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id
+class Artifact extends AbstractModel {
 
     @Column(name="groupName", nullable=false)
     private String group
@@ -34,12 +26,6 @@ class Artifact {
 
     @Column(name='sourceUrl')
     private String sourceUrl
-
-    @Column(name='createdAt', nullable=false)
-    private DateTime createdAt = DateTime.now()
-
-    @Column(name='deletedAt')
-    private DateTime deletedAt
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -56,15 +42,6 @@ class Artifact {
         this.group = group
         this.name = name
         this.version = version
-    }
-
-
-    /**
-     * The internal identifier for the artifact
-     */
-    @JsonProperty
-    Long getId() {
-        return id
     }
 
     /**
@@ -107,15 +84,6 @@ class Artifact {
         this.sourceUrl = newSourceUrl
     }
 
-    @JsonProperty
-    String getCreatedAt() {
-        /* toString on DateTime returns ISO-8601 by default */
-        return createdAt.toString()
-    }
-
-    void setCreatedAt(String iso8601String) {
-        this.createdAt = DateTime.parse(iso8601String)
-    }
 
     @Override
     public boolean equals(Object o) {
