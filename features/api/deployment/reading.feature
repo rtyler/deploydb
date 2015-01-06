@@ -1,8 +1,7 @@
-Feature: Deployment Artifact APIs
+Feature: Deployment READ APIs
 
   As a RESTful client or user
-  I should be able to create deployments
-  And I should be able to read about them
+  I should be able to read information about deployments
 
 
   @freezetime
@@ -21,12 +20,7 @@ Feature: Deployment Artifact APIs
           "name" : "cucumber-artifact",
           "version" : "1.0.1"
         },
-        "environment" : {
-          "name" : "pre-production"
-        },
-        "service" : {
-          "id" : 1
-        },
+        "environment" : "pre-production",
         "createdAt" : "{{created_timestamp}}"
       }
     """
