@@ -10,4 +10,8 @@ import deploydb.models.Deployment
  */
 @InheritConstructors
 class DeploymentDAO extends AbstractDAO<Deployment> {
+
+    Deployment create(Deployment deployment) {
+        return persist(deployment)
+    }
 }

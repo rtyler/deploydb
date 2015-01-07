@@ -16,12 +16,12 @@ import org.joda.time.DateTimeZone
 
 import deploydb.resources.*
 import deploydb.health.*
-import deploydb.models.Artifact
+import deploydb.models.*
 import deploydb.dao.ArtifactDAO
 
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
-    private final ImmutableList models = ImmutableList.of(Artifact)
+    private final ImmutableList models = ImmutableList.of(Artifact, Deployment)
     private WebhookManager webhooks
 
     static void main(String[] args) throws Exception {

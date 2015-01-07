@@ -1,4 +1,5 @@
 import deploydb.cucumber.AppHelper
+import deploydb.cucumber.ModelHelper
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
@@ -23,4 +24,8 @@ After('@freezetime') {
 
 World {
   new AppHelper()
+}
+
+World {
+    new ModelHelper()
 }
