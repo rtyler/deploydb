@@ -126,6 +126,8 @@ if (location.href.indexOf('is-external=true') == -1) {
 
 <dt><span class="strong"><a href="deploydb/resources/ArtifactResource.html#byIdentifier(javax.ws.rs.core.HttpHeaders, io.dropwizard.jersey.params.LongParam)" title="Method in ArtifactResource">byIdentifier(HttpHeaders, LongParam)</a></span> - Method in <a href="deploydb/resources/ArtifactResource.html">ArtifactResource</a>
 </dt><dd> <div class="block"></div></dd>
+<dt><span class="strong"><a href="deploydb/resources/DeploymentResource.html#byIdentifier(javax.ws.rs.core.HttpHeaders, io.dropwizard.jersey.params.LongParam)" title="Method in DeploymentResource">byIdentifier(HttpHeaders, LongParam)</a></span> - Method in <a href="deploydb/resources/DeploymentResource.html">DeploymentResource</a>
+</dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="deploydb/resources/ArtifactResource.html#byName(java.lang.String, java.lang.String)" title="Method in ArtifactResource">byName(String, String)</a></span> - Method in <a href="deploydb/resources/ArtifactResource.html">ArtifactResource</a>
 </dt><dd> <div class="block"></div></dd>
 </dl>
@@ -140,6 +142,8 @@ if (location.href.indexOf('is-external=true') == -1) {
 <dt><span class="strong"><a href="deploydb/health/WebhookHealthCheck.html#check()" title="Method in WebhookHealthCheck">check()</a></span> - Method in <a href="deploydb/health/WebhookHealthCheck.html">WebhookHealthCheck</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="deploydb/dao/ArtifactDAO.html#create(deploydb.models.Artifact)" title="Method in ArtifactDAO">create(Artifact)</a></span> - Method in <a href="deploydb/dao/ArtifactDAO.html">ArtifactDAO</a>
+</dt><dd> <div class="block"></div></dd>
+<dt><span class="strong"><a href="deploydb/dao/DeploymentDAO.html#create(deploydb.models.Deployment)" title="Method in DeploymentDAO">create(Deployment)</a></span> - Method in <a href="deploydb/dao/DeploymentDAO.html">DeploymentDAO</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="deploydb/resources/ArtifactResource.html#createArtifact(deploydb.models.Artifact)" title="Method in ArtifactResource">createArtifact(Artifact)</a></span> - Method in <a href="deploydb/resources/ArtifactResource.html">ArtifactResource</a>
 </dt><dd> <div class="block"></div></dd>
@@ -160,10 +164,15 @@ if (location.href.indexOf('is-external=true') == -1) {
 </dt><dd><div class="block"></div></dd>
 <dt><span class="strong"><a href="deploydb/models/Deployment.html" title="Class in deploydb.models">Deployment</a></span> - Class in <a href="./deploydb/models/package-summary.html">deploydb.models</a>
 </dt><dd><div class="block">Representation class for the concept of a Deployment</div></dd>
-<dt><span class="strong"><a href="deploydb/models/Deployment.html#Deployment()" title="Constructor in Deployment">Deployment()</a></span> - Constructor in <a href="deploydb/models/Deployment.html">Deployment</a>
-</dt><dd> <div class="block">Empty constructor used by Jackson for object deserialization</div></dd>
+<dt><span class="strong"><a href="deploydb/models/Deployment.html#Deployment(deploydb.models.Artifact, java.lang.String)" title="Constructor in Deployment">Deployment(Artifact, String)</a></span> - Constructor in <a href="deploydb/models/Deployment.html">Deployment</a>
+</dt><dd> <div class="block">Default constructor to create a valid and saveable Deployment object in
+ the database</div></dd>
 <dt><span class="strong"><a href="deploydb/dao/DeploymentDAO.html" title="Class in deploydb.dao">DeploymentDAO</a></span> - Class in <a href="./deploydb/dao/package-summary.html">deploydb.dao</a>
 </dt><dd><div class="block">Deployment Data access object</div></dd>
+<dt><span class="strong"><a href="deploydb/resources/DeploymentResource.html" title="Class in deploydb.resources">DeploymentResource</a></span> - Class in <a href="./deploydb/resources/package-summary.html">deploydb.resources</a>
+</dt><dd><div class="block"></div></dd>
+<dt><span class="strong"><a href="deploydb/resources/DeploymentResource.html#DeploymentResource(deploydb.dao.DeploymentDAO)" title="Constructor in DeploymentResource">DeploymentResource(DeploymentDAO)</a></span> - Constructor in <a href="deploydb/resources/DeploymentResource.html">DeploymentResource</a>
+</dt><dd> <div class="block"></div></dd>
 </dl>
 
     
