@@ -16,16 +16,20 @@ import org.hibernate.validator.constraints.Length
 class Artifact extends AbstractModel {
 
     @Column(name="groupName", nullable=false)
-    private String group
+    @JsonProperty
+    String group
 
     @Column(name="name", nullable=false)
-    private String name
+    @JsonProperty
+    String name
 
     @Column(name='version', nullable=false)
-    private String version
+    @JsonProperty
+    String version
 
     @Column(name='sourceUrl')
-    private String sourceUrl
+    @JsonProperty
+    String sourceUrl
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -42,46 +46,6 @@ class Artifact extends AbstractModel {
         this.group = group
         this.name = name
         this.version = version
-    }
-
-    /**
-     * The group (e.g. 'com.github' for the artifact)
-     */
-    @JsonProperty
-    String getGroup() {
-        return group
-    }
-
-    /**
-     * The name of the artifact (e.g. 'deploydb.jar')
-     */
-    @JsonProperty
-    String getName() {
-        return name
-    }
-
-    /**
-     *  The version of the artifact (e.g. '1.0.1+0xbef')
-     */
-    @JsonProperty
-    String getVersion() {
-        return version
-    }
-
-    /**
-     *  The URL where one might find this artifact (e.g.
-     *  'http://example.com/dist/artifact.jar
-     */
-    @JsonProperty
-    String getSourceUrl() {
-        return sourceUrl
-    }
-
-    /**
-     *
-     */
-    void setSourceUrl(String newSourceUrl) {
-        this.sourceUrl = newSourceUrl
     }
 
 

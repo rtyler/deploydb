@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 abstract class AbstractModel {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    protected Long id
+    Long id
 
     @Column(name='createdAt', nullable=false)
     protected DateTime createdAt = DateTime.now()

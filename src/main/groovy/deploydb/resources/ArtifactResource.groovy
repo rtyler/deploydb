@@ -34,7 +34,7 @@ public class ArtifactResource {
     @UnitOfWork
     @Timed(name='put-requests')
     public Response createArtifact(Artifact artifact) {
-        Artifact created = this.dao.create(artifact)
+        Artifact created = this.dao.persist(artifact)
 
         return Response.status(201).entity(created).build()
     }
@@ -45,7 +45,7 @@ public class ArtifactResource {
     @Timed(name = "get-requests")
     public Artifact byIdentifier(@Context HttpHeaders headers,
                                @PathParam("id") LongParam artifactId) {
-        Artifact artifact = this.dao.findById(artifactId.get())
+        Artifact artifact = this.dao.get(artifactId.get())
 
         if (artifact == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)

@@ -14,13 +14,6 @@ import deploydb.models.Artifact
 class ArtifactDAO extends AbstractDAO<Artifact> {
 
     /**
-     * Locate a Artifact based on the artifactId passed in
-     */
-    Artifact findById(Long artifactId) {
-        return get(artifactId)
-    }
-
-    /**
      * Locate an Artifact based on the (group, name) pair
      *
      * @param group A valid group name (e.g. "com.example")
@@ -35,9 +28,5 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
             return artifacts.first()
         }
         return null
-    }
-
-    Artifact create(Artifact artifact) {
-        return persist(artifact)
     }
 }

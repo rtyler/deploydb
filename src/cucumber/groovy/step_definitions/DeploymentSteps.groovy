@@ -10,9 +10,9 @@ Given(~/^there is a deployment$/) { ->
         ArtifactDAO adao = new ArtifactDAO(sessionFactory)
         DeploymentDAO dao = new DeploymentDAO(sessionFactory)
         Artifact a = sampleArtifact()
-        Deployment d = new Deployment(adao.create(a),
+        Deployment d = new Deployment(adao.persist(a),
                                       "pre-production")
-        dao.create(d)
+        dao.persist(d)
     }
 }
 

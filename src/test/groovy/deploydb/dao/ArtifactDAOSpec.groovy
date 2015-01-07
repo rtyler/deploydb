@@ -23,16 +23,6 @@ class ArtifactDAOSpec extends Specification {
         dao instanceof AbstractDAO
     }
 
-    def "findById should delegate to get()"() {
-        given:
-        ArtifactDAO dao = Spy(ArtifactDAO, constructorArgs: [sessionFactory])
-        Long artifactId = 1337
-        1 * dao.get(artifactId) >> null
-
-        expect:
-        dao.findById(artifactId) == null
-    }
-
     def "findByGroupAndName() should return null if there are no results"() {
         given:
         ArtifactDAO dao = Spy(ArtifactDAO, constructorArgs: [sessionFactory])

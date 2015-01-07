@@ -21,7 +21,7 @@ class ArtifactResourceSpec extends Specification {
         Long artifactId = 12
         Artifact artifact = new Artifact('spock.group', 'spock-artifact', '1.0.1')
         Artifact fetched = null
-        1 * dao.findById(artifactId) >> artifact
+        1 * dao.get(artifactId) >> artifact
 
         when:
         fetched = client.target(dropwizard.jerseyTest.baseUri)
