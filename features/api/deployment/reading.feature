@@ -26,3 +26,8 @@ Feature: Deployment READ APIs
         "createdAt" : "{{created_timestamp}}"
       }
     """
+
+  Scenario: Fetching a deployment by ID that doesn't exist
+
+    When I GET "/api/v1/deployments/1"
+    Then the response should be 404

@@ -30,7 +30,13 @@ public class DeploymentResource {
     @Timed(name = "get-requests")
     public Deployment byIdentifier(@Context HttpHeaders headers,
                                    @PathParam("id") LongParam deploymentId) {
-        return this.dao.get(deploymentId.get())
+        Deployment deploy = this.dao.get(deploymentId.get())
+
+        if (deploy == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        return deploy
     }
 
 }
