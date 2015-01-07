@@ -2,6 +2,8 @@ package deploydb.models
 
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Enumerated
+import javax.persistence.EnumType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToOne
 import javax.persistence.Table
@@ -9,6 +11,9 @@ import javax.persistence.Table
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.Length
 import org.joda.time.DateTime
+
+
+enum DeploymentStatus {STARTED, COMPLETED, FAILED}
 
 /**
  * Representation class for the concept of a Deployment
@@ -23,9 +28,14 @@ class Deployment extends AbstractModel {
     @JsonProperty
     Artifact artifact
 
-    @Column(name="environment")
+    @Column(name="environment", nullable=false)
     @JsonProperty
     String environment
+
+    @Column(name="status", nullable=false)
+    @Enumerated(EnumType.ORDINAL)
+    @JsonProperty
+    DeploymentStatus status = DeploymentStatus.STARTED
 
     /**
      * Empty constructor used by Jackson for object deserialization

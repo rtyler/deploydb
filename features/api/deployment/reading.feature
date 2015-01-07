@@ -23,6 +23,7 @@ Feature: Deployment READ APIs
           "createdAt" : "{{created_timestamp}}"
         },
         "environment" : "pre-production",
+        "status" : "STARTED",
         "createdAt" : "{{created_timestamp}}"
       }
     """

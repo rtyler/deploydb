@@ -4,6 +4,7 @@ CREATE TABLE deployments (
 
     artifactId BIGINT(11) NOT NULL,
     environment VARCHAR(8192) NOT NULL,
+    status INT(11) NOT NULL,
 
 
     /*
@@ -14,3 +15,5 @@ CREATE TABLE deployments (
 
     PRIMARY KEY (id)
 );
+
+CREATE INDEX deploys_by_artifact ON deployments(artifactId);
