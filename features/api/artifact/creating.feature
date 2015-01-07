@@ -45,3 +45,10 @@ Feature: Artifact CREATE APIs
       }
     """
     Then the response should be 400
+
+  @wip @error
+  Scenario: Creating an artifact with too large of a group or name
+
+    Given an artifact with a name over 8192 characters
+    When I POST to "/api/v1/artifacts" with it
+    Then the response should be 400

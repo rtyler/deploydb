@@ -65,10 +65,9 @@ Feature: Artifact READ APIs
     When I GET "/api/v1/artifacts/1/versions"
     Then the response should be 200
 
+  @wip
+  Scenario: Fetching the deployments for an artifact
 
-  @wip @error
-  Scenario: Creating an artifact with too large of a group or name
-
-    Given an artifact with a name over 8192 characters
-    When I POST to "/api/v1/artifacts" with it
-    Then the response should be 400
+    Given there is a deployment
+    When I GET "/api/v1/artifacts/1/deployments"
+    Then the response should be 200
