@@ -92,6 +92,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
 
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
-        environment.jersey().register(new DeploymentResource(ddao))
+        environment.jersey().register(new DeploymentResource(ddao, adao))
     }
 }

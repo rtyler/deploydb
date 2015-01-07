@@ -48,7 +48,6 @@ class Artifact extends AbstractModel {
         this.version = version
     }
 
-
     @Override
     public boolean equals(Object o) {
         /* First object identity */
