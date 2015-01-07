@@ -17,7 +17,7 @@ import org.joda.time.DateTimeZone
 import deploydb.resources.*
 import deploydb.health.*
 import deploydb.models.*
-import deploydb.dao.ArtifactDAO
+import deploydb.dao.*
 
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
@@ -83,11 +83,15 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
+        final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
 
         environment.lifecycle().manage(webhooks)
+
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
+
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
+        environment.jersey().register(new DeploymentResource(ddao))
     }
 }

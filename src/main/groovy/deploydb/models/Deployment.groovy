@@ -20,10 +20,12 @@ class Deployment extends AbstractModel {
 
     @OneToOne(optional=false)
     @JoinColumn(name='artifactId', unique=false, nullable=false, updatable=false)
-    private Artifact artifact
+    @JsonProperty
+    Artifact artifact
 
     @Column(name="environment")
-    private String environment
+    @JsonProperty
+    String environment
 
     /**
      * Empty constructor used by Jackson for object deserialization

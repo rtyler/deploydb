@@ -18,7 +18,9 @@ Feature: Deployment READ APIs
           "id" : 1,
           "group" : "com.example.cucumber",
           "name" : "cucumber-artifact",
-          "version" : "1.0.1"
+          "version" : "1.0.1",
+          "sourceUrl" : null,
+          "createdAt" : "{{created_timestamp}}"
         },
         "environment" : "pre-production",
         "createdAt" : "{{created_timestamp}}"
