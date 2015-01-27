@@ -52,8 +52,13 @@ public class DeploymentResource {
     @Timed(name='patch-requests')
     @Consumes('application/json-patch')
     public Deployment modifyDeployment(@PathParam('id') LongParam deploymentId, String changes) {
+        Deployment deploy = this.dao.get(deploymentId.get())
+
+        if (deploy == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
         println "CHANGES: ${changes}"
-        return null
+        return deploy
     }
 
     @GET

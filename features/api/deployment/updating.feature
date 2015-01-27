@@ -33,3 +33,14 @@ Feature: Deployment UPDATE APIs
       }
     """
 
+
+  @freezetime @error
+  Scenario: Updating a deployment that doesn't exist
+
+    When I PATCH "/api/v1/deployments/1" with:
+    """
+      {
+        "status" : "FAILED"
+      }
+    """
+    Then the response should be 404
