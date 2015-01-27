@@ -1,24 +1,20 @@
-Feature: Deployment CREATE APIs
+Feature: Deployment UPDATE APIs
 
   As a RESTful client or user
-  I should be able to create new deployments in the system
+  I should be able to update existing deployments in the system
 
 
-  @freezetime
-  Scenario: Creating a new deployment
+  @freezetime @wip
+  Scenario: Updating a deployment with a status change
 
-    Creating a deployment assumes that we've already got an Artifact stored
-    inside the DeployDB database
-
-    Given there is an artifact
-    When I PUT to "/api/v1/deployments" with:
+    Given there is a deployment
+    When I PATCH "/api/v1/deployments/1" with:
     """
       {
-        "artifactId" : 1,
-        "environment" : "pre-production"
+        "status" : "FAILED"
       }
     """
-    Then the response should be 201
+    Then the response should be 200
     And the body should be JSON:
     """
       {
@@ -32,7 +28,8 @@ Feature: Deployment CREATE APIs
           "createdAt" : "{{created_timestamp}}"
         },
         "environment" : "pre-production",
-        "status" : "STARTED",
+        "status" : "FAILED",
         "createdAt" : "{{created_timestamp}}"
       }
     """
+

@@ -1,6 +1,7 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
+import io.dropwizard.jersey.*
 import io.dropwizard.jersey.params.*
 import io.dropwizard.hibernate.UnitOfWork
 
@@ -43,6 +44,16 @@ public class DeploymentResource {
 
 
         return Response.status(201).entity(created).build()
+    }
+
+    @PATCH
+    @Path('{id}')
+    @UnitOfWork
+    @Timed(name='patch-requests')
+    @Consumes('application/json-patch')
+    public Deployment modifyDeployment(@PathParam('id') LongParam deploymentId, String changes) {
+        println "CHANGES: ${changes}"
+        return null
     }
 
     @GET

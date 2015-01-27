@@ -64,6 +64,10 @@ class AppHelper {
         return this.jerseyClient
     }
 
+    Response makeRequestToPath(String path, String method, Entity entity) {
+        return this.makeRequestToPath(path, method, entity, false)
+    }
+
     Response makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
         int port = isAdmin ? runner.adminPort : runner.localPort
         String url = String.format("http://localhost:%d${path}", port)
@@ -78,17 +82,19 @@ class AppHelper {
      * Execute a PUT to the test server for step definitions
      */
     Response putJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'PUT', Entity.json(requestBody), false)
+        return this.makeRequestToPath(path, 'PUT', Entity.json(requestBody))
     }
+
     /**
      * Execute a PATCH to the test server for step definitions
      */
     Response patchJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'PATCH', Entity.json(requestBody), false)
+        String mediaType = 'application/json-patch'
+        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType))
     }
 
     Response deleteFromPath(String path) {
-        return this.makeRequestToPath(path, 'DELETE', null, false)
+        return this.makeRequestToPath(path, 'DELETE', null)
     }
 
     /**

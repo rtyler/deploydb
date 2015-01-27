@@ -36,9 +36,15 @@ dependencies {
         compile withSources("io.dropwizard:${it}:0.8.0-rc1")
     }
 
+    /* Used instead of the default HTTP connector for the Jersey client to
+     * allow us to make PATCH requests
+     */
     compile withSources('org.glassfish.jersey.connectors:jersey-apache-connector:2.+')
 
+    /* Used for managing migrations */
     compile withSources('io.dropwizard.modules:dropwizard-flyway:0.7.0-1')
+
+    /* Webhook support */
     compile 'com.github.lookout:whoas:0.1.2'
 
     compile withSources('com.h2database:h2:1.3.+')
