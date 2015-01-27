@@ -23,7 +23,7 @@ configurations {
 }
 
 dependencies {
-    compile withSources('org.codehaus.groovy:groovy-all:2.3.9+')
+    compile withSources('org.codehaus.groovy:groovy-all:2.4.0+')
 
     [
      'dropwizard-core',
