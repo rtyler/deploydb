@@ -17,7 +17,8 @@ Feature: Artifact CREATE APIs
       {
         "group" : "com.example.cucumber",
         "name" : "cukes",
-        "version" : "1.2.345"
+        "version" : "1.2.345",
+	"sourceUrl" : "http://example.com/cucumber.jar"
       }
     """
     Then the response should be 201
@@ -28,7 +29,7 @@ Feature: Artifact CREATE APIs
         "group" : "com.example.cucumber",
         "name" : "cukes",
         "version" : "1.2.345",
-        "sourceUrl" : null,
+        "sourceUrl" : "http://example.com/cucumber.jar",
         "createdAt" : "{{created_timestamp}}"
       }
     """
