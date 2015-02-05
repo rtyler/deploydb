@@ -18,7 +18,7 @@ Feature: Artifact CREATE APIs
         "group" : "com.example.cucumber",
         "name" : "cukes",
         "version" : "1.2.345",
-	"sourceUrl" : "http://example.com/cucumber.jar"
+        "sourceUrl" : "http://example.com/cucumber.jar"
       }
     """
     Then the response should be 201
