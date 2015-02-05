@@ -18,7 +18,8 @@ class ArtifactWithArgsSpec extends Specification {
     def setup() {
         artifact = new Artifact('spock.group',
                                 'spock-test-name',
-                                'v1.0.0')
+                                'v1.0.0',
+                                'http://example.com/cucumber.jar')
     }
 
     def "its properties should be correct"() {
