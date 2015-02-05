@@ -3,6 +3,16 @@ package deploydb.models
 import spock.lang.*
 
 class ArtifactSpec extends Specification {
+
+    private Artifact artifact
+
+    def setup() {
+        artifact = new Artifact('spock.group',
+                                'spock-test-name',
+                                'v1.0.0',
+                                'http://example.com/cucumber.jar')
+    }
+
     def "ensure it can be instantiated"() {
         when:
         def artifact = new Artifact()
@@ -13,6 +23,15 @@ class ArtifactSpec extends Specification {
 }
 
 class ArtifactWithArgsSpec extends Specification {
+
+    private Artifact artifact
+
+    def setup() {
+        artifact = new Artifact('spock.group',
+                                'spock-test-name',
+                                'v1.0.0',
+                                'http://example.com/cucumber.jar')
+    }
 
     def "its properties should be correct"() {
         given:
