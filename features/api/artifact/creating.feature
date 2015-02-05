@@ -7,10 +7,7 @@ Feature: Artifact CREATE APIs
   @freezetime
   Scenario: Creating a new artifact
 
-    The creation of an artifact technically only requires group, name and
-    version. However it's a good idea to always provide a `sourceUrl` as well
-    in order future users of DeployDB to be able to backtrack an artifact all
-    the way to the binary itself
+    The creation of an artifact requires group, name, version and sourceUrl.
 
     When I PUT to "/api/v1/artifacts" with:
     """
@@ -34,7 +31,6 @@ Feature: Artifact CREATE APIs
       }
     """
 
-
   @error @wip
   Scenario: Creating an artifact without a version
 
@@ -53,3 +49,16 @@ Feature: Artifact CREATE APIs
     Given an artifact with a name over 8192 characters
     When I POST to "/api/v1/artifacts" with it
     Then the response should be 400
+
+  @error
+  Scenario: The request should fail when creating an Artifact without a sourceUrl
+
+    When I PUT to "/api/v1/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "version" : "1.2.345"
+      }
+    """
+    Then the response should be 422

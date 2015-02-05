@@ -33,7 +33,8 @@ public class ArtifactResource {
     @PUT
     @UnitOfWork
     @Timed(name='put-requests')
-    public Response createArtifact(Artifact artifact) {
+    public Response createArtifact(@Valid Artifact artifact) {
+
         Artifact created = this.dao.persist(artifact)
 
         return Response.status(201).entity(created).build()
