@@ -31,17 +31,18 @@ Feature: Artifact CREATE APIs
       }
     """
 
-  @error @wip
-  Scenario: Creating an artifact without a version
+  @error 
+  Scenario: The reuqest should fail when creating an Artifact without a version
 
     When I PUT to "/api/v1/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
-        "name" : "cukes"
+        "name" : "cukes",
+        "sourceUrl" : "http://example.com/cucumber.jar"
       }
     """
-    Then the response should be 400
+    Then the response should be 422
 
   @wip @error
   Scenario: Creating an artifact with too large of a group or name

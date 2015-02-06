@@ -8,7 +8,7 @@ ALTER TABLE artifacts
         /*
          * 255 characters of version information should be enough for anybody!
          */
-        version VARCHAR(255) NOT NULL,
+        version VARCHAR(255),
 
         /*
          * The source URL could technically be pretty long, but we're also not

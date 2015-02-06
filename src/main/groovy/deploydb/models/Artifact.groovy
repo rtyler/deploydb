@@ -24,6 +24,7 @@ class Artifact extends AbstractModel {
     @JsonProperty
     String name
 
+    @NotEmpty
     @Column(name='version', nullable=false)
     @JsonProperty
     String version
