@@ -25,6 +25,7 @@ import deploydb.models.Artifact
 @Consumes(MediaType.APPLICATION_JSON)
 public class ArtifactResource {
     private final ArtifactDAO dao
+    private final Logger logger = LoggerFactory.getLogger(ArtifactResource.class)
 
     public ArtifactResource(ArtifactDAO dao) {
         this.dao = dao
@@ -58,15 +59,19 @@ public class ArtifactResource {
     @Path("by-module/{group}:{name}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    public Artifact byName(@PathParam('group') String artifactGroup,
-                         @PathParam("name") String artifactName) {
-        Artifact artifact = this.dao.findByGroupAndName(artifactGroup,
-                                                        artifactName)
+    public List<Artifact> byName(@PathParam('group') String artifactGroup,
+                         @PathParam("name") String artifactName,
+                         @QueryParam("pageNumber") @DefaultValue("0") IntParam artifactPageNumber,
+                         @QueryParam("perPageSize") @DefaultValue("5") IntParam artifactPerPageSize){
+        List<Artifact> artifacts = this.dao.findByGroupAndName(artifactGroup,
+                                                        artifactName, artifactPageNumber.get(), artifactPerPageSize.get())
 
-        if (artifact == null) {
+        if (artifacts.isEmpty()) {
+            logger.error("OH NOES")
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
-        return artifact
+        return artifacts
     }
+
 }
 
