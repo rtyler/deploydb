@@ -27,11 +27,11 @@ class ArtifactDAOSpec extends Specification {
         given:
         ArtifactDAO dao = Spy(ArtifactDAO, constructorArgs: [sessionFactory])
         def criteria = Mock(Criteria)
-        criteria./add|set|addOrder|setMaxResults/(_) >> criteria
+        criteria./add|set|addOrder|setMaxResults|setFirstResult/(_) >> criteria
         _ * dao.criteria() >> criteria
         1 * criteria.list() >> []
 
         expect:
-        dao.findByGroupAndName('spock-group', 'spock-name') == null
+        dao.findByGroupAndName('spock-group', 'spock-name', 1, 5).isEmpty()
     }
 }

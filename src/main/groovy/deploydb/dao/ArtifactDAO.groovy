@@ -19,14 +19,13 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
      * @param group A valid group name (e.g. "com.example")
      * @param name The artifact's name (e.g. "dropwizard-core")
      */
-    Artifact findByGroupAndName(String group, String name) {
-        List artifacts = criteria().add(Restrictions.eq('group', group))
+    List<Artifact> findByGroupAndName(String group, String name, int pageNumber, int perPageSize) {
+
+        List<Artifact> artifacts = criteria().add(Restrictions.eq('group', group))
                           .add(Restrictions.eq('name', name))
-                          .setMaxResults(1)
+                          .setFirstResult(pageNumber)
+                          .setMaxResults(perPageSize)
                           .addOrder(Order.desc('createdAt')).list()
-        if (artifacts.size() > 0) {
-            return artifacts.first()
-        }
-        return null
+        return artifacts
     }
 }
