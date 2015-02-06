@@ -7,6 +7,7 @@ import javax.persistence.NamedQuery
 import javax.persistence.Table
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.Length
+import org.hibernate.validator.constraints.NotEmpty
 
 /**
  * Representation class for the concept of an Artifact
@@ -27,6 +28,7 @@ class Artifact extends AbstractModel {
     @JsonProperty
     String version
 
+    @NotEmpty
     @Column(name='sourceUrl')
     @JsonProperty
     String sourceUrl
@@ -42,10 +44,12 @@ class Artifact extends AbstractModel {
      */
     Artifact(String group,
              String name,
-             String version) {
+             String version,
+             String sourceUrl) {
         this.group = group
         this.name = name
         this.version = version
+        this.sourceUrl = sourceUrl
     }
 
     @Override
@@ -63,11 +67,14 @@ class Artifact extends AbstractModel {
 
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.group, that.group) &&
-                Objects.equals(this.name, that.name)
+                Objects.equals(this.name, that.name) &&
+                Objects.equals(this.version, that.version) &&
+                Objects.equals(this.sourceUrl, that.sourceUrl)
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.group, this.name)
+        return Objects.hash(this.id, this.group, this.name, 
+                            this.version, this.sourceUrl)
     }
 }

@@ -19,7 +19,8 @@ class ArtifactResourceSpec extends Specification {
         given:
         Client client = dropwizard.client()
         Long artifactId = 12
-        Artifact artifact = new Artifact('spock.group', 'spock-artifact', '1.0.1')
+        Artifact artifact = new Artifact('spock.group', 'spock-artifact', '1.0.1', 
+                                         'http://example.com/cucumber.jar')
         Artifact fetched = null
         1 * dao.get(artifactId) >> artifact
 
