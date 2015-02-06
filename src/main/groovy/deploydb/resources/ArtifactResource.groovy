@@ -67,7 +67,6 @@ public class ArtifactResource {
                                                         artifactName, artifactPageNumber.get(), artifactPerPageSize.get())
 
         if (artifacts.isEmpty()) {
-            logger.error("OH NOES")
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
         return artifacts
