@@ -73,7 +73,7 @@ Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPag
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact"
     Then the response should be 404
 
-Scenario: Fetching an artifact by the (group, name) tuple with invalid page size
+Scenario: Fetching an artifact by the (group, name) tuple with invalid page number
 
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=1&perPageSize=5"
     Then the response should be 404
@@ -83,7 +83,7 @@ Scenario: Fetching an artifact by the (group, name) tuple with invalid page size
   Scenario: Fetching an artifact's versions
 
     Given there is an artifact
-    When I GET "/api/v1/artifacts/1/versions
+    When I GET "/api/v1/artifacts/1/versions"
     Then the response should be 200
 
   @wip
