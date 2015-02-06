@@ -32,7 +32,7 @@ Feature: Artifact CREATE APIs
     """
 
   @error 
-  Scenario: The reuqest should fail when creating an Artifact without a version
+  Scenario: The request should fail when creating an Artifact without a version
 
     When I PUT to "/api/v1/artifacts" with:
     """
