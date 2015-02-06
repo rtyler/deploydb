@@ -67,11 +67,14 @@ class Artifact extends AbstractModel {
 
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.group, that.group) &&
-                Objects.equals(this.name, that.name)
+                Objects.equals(this.name, that.name) &&
+                Objects.equals(this.version, that.version) &&
+                Objects.equals(this.sourceUrl, that.sourceUrl)
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.group, this.name)
+        return Objects.hash(this.id, this.group, this.name, 
+                            this.version, this.sourceUrl)
     }
 }
