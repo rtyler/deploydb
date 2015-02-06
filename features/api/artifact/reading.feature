@@ -51,41 +51,44 @@ Feature: Artifact READ APIs
         "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
       }]
     """
-@freezetime
-Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPageSize
+  @freezetime
+  Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPageSize
 
-    Given there are artifacts
-    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=0&perPageSize=5"
-    Then the response should be 200
-    And the body should be JSON:
-    """
-      [{
-        "id" : 2,
-        "createdAt" : "{{created_timestamp}}",
-        "group" : "com.example.cucumber",
-        "name" : "cucumber-artifact",
-        "version" : "1.0.2",
-        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar"
-      },
-      {
-        "id" : 1,
-        "createdAt" : "{{created_timestamp}}",
-        "group" : "com.example.cucumber",
-        "name" : "cucumber-artifact",
-        "version" : "1.0.1",
-        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
-      }]
-    """
+      Given there are artifacts
+      When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=0&perPageSize=5"
+      Then the response should be 200
+      And the body should be JSON:
+      """
+        [{
+          "id" : 2,
+          "createdAt" : "{{created_timestamp}}",
+          "group" : "com.example.cucumber",
+          "name" : "cucumber-artifact",
+          "version" : "1.0.2",
+          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar"
+        },
+        {
+          "id" : 1,
+          "createdAt" : "{{created_timestamp}}",
+          "group" : "com.example.cucumber",
+          "name" : "cucumber-artifact",
+          "version" : "1.0.1",
+          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
+        }]
+      """
+  @error
   Scenario: Fetching an artifact by the (group, name) tuple that doesn't exist
 
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact"
     Then the response should be 404
-
+  
+  @error
   Scenario: Fetching an artifact by the (group, name) tuple with invalid page number
 
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=1&perPageSize=5"
     Then the response should be 404
 
+  @error
   Scenario: Fetching an artifact by the (group, name) tuple with invalid data type for pageSize
 
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=-1&perPageSize=0xdeadbeef"
