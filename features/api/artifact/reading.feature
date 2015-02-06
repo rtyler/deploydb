@@ -54,12 +54,20 @@ Feature: Artifact READ APIs
 @freezetime
 Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPageSize
 
-    Given there is an artifact
+    Given there are artifacts
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=0&perPageSize=5"
     Then the response should be 200
     And the body should be JSON:
     """
       [{
+        "id" : 2,
+        "createdAt" : "{{created_timestamp}}",
+        "group" : "com.example.cucumber",
+        "name" : "cucumber-artifact",
+        "version" : "1.0.2",
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar"
+      },
+      {
         "id" : 1,
         "createdAt" : "{{created_timestamp}}",
         "group" : "com.example.cucumber",
@@ -83,6 +91,23 @@ Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPag
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=-1&perPageSize=0xdeadbeef"
     Then the response should be 400
 
+@wip
+Scenario: Fetching an artifact by the (group, name) tuple, pageNumber=0 and perPageSize=0
+
+    Given there are artifacts
+    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=0&perPageSize=0"
+    Then the response should be 200
+    And the body should be JSON:
+    """
+      [{
+        "id" : 2,
+        "createdAt" : "{{created_timestamp}}",
+        "group" : "com.example.cucumber",
+        "name" : "cucumber-artifact",
+        "version" : "1.0.2",
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar"
+      }]
+    """  
   @wip
   Scenario: Fetching an artifact's versions
 
