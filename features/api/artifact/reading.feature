@@ -73,11 +73,15 @@ Scenario: Fetching an artifact by the (group, name) tuple, pageNumber and perPag
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact"
     Then the response should be 404
 
-Scenario: Fetching an artifact by the (group, name) tuple with invalid page number
+  Scenario: Fetching an artifact by the (group, name) tuple with invalid page number
 
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=1&perPageSize=5"
     Then the response should be 404
 
+  Scenario: Fetching an artifact by the (group, name) tuple with invalid data type for pageSize
+
+    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=-1&perPageSize=0xdeadbeef"
+    Then the response should be 400
 
   @wip
   Scenario: Fetching an artifact's versions
