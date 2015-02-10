@@ -4,7 +4,7 @@ import spock.lang.*
 
 class ArtifactSpec extends Specification {
 
-    private Artifact artifact
+   // private Artifact artifact
 
     def "ensure it can be instantiated"() {
         when:
@@ -17,7 +17,7 @@ class ArtifactSpec extends Specification {
 
 class ArtifactWithArgsSpec extends Specification {
 
-    private Artifact artifact
+   // private Artifact artifact
 
     def "its properties should be correct"() {
         given:
