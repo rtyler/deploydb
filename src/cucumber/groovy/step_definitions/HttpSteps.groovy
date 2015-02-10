@@ -3,7 +3,6 @@ import cucumber.api.*
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.joda.time.DateTime
-import java.util.Random 
 
 // Add functions to register hooks and steps to this script.
 this.metaClass.mixin(cucumber.api.groovy.Hooks)
@@ -27,14 +26,10 @@ When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
 
 When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
 
-    // Create a randomString of size varSize+100 
-    String alphabet = (('a'..'z') + ('A'..'Z')+('0'..'9')).join()
-    String randomString = ""
-    for ( i in 1..varSize+100 ) {
-        randomString += alphabet[ new Random().nextInt(alphabet.length()-1)]
-    }
+    print "MVK : When I PUT, path = $path, var = $var, varSize = $varSize\n"
 
-    print "MVK : $var\n"
+    // Create a randomString of size varSize+1
+    String randomString = "test-".padRight(varSize+1, "a")
 
     group = var == "group" ? randomString : "com.example.cucumber"
     name  = var == "name" ? randomString : "cukes"
@@ -76,4 +71,30 @@ Then(~/^the body should be JSON:$/) { String expectedBody ->
     JsonNode bodyNode = mapper.readTree(body)
 
     assert bodyNode == expectedNode
+}
+
+Given(~/^I have an artifact request$/) { ->
+}
+
+And(~/^the (.*?) is over ([1-9][0-9]*) characters$/) { String var, int varSize ->
+
+    // Create a randomString of size varSize+1
+    String randomString = "test-".padRight(varSize+1, "a")
+
+    group = var == "group" ? randomString : "com.example.cucumber"
+    name  = var == "name" ? randomString : "cukes"
+    version = var == "version" ? randomString : "1.2.345"
+    sourceUrl = var == "sourceUrl" ? randomString : "http://example.com/cucumber.jar"
+
+    requestBody = """ {
+        "group" : "$group",
+        "name" : "$name",
+        "version" : "$version",
+        "sourceUrl" : "$sourceUrl"
+      }
+    """
+}
+
+When(~/^I PUT to "(.*?)"$/) { String path ->
+    response = putJsonToPath(path, requestBody)
 }
