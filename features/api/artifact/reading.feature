@@ -94,6 +94,42 @@ Feature: Artifact READ APIs
     When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber=-1&perPageSize=0xdeadbeef"
     Then the response should be 400
 
+  @freezetime
+  Scenario: Fetching the latest artifact by the (group, name) tuple
+
+    Given there is an artifact
+    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest"
+    Then the response should be 200
+    And the body should be JSON:
+    """
+     {
+        "id" : 1,
+        "createdAt" : "{{created_timestamp}}",
+        "group" : "com.example.cucumber",
+        "name" : "cucumber-artifact",
+        "version" : "1.0.1",
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
+      } 
+    """
+
+  @freezetime
+  Scenario: Fetching the latest artifact by the (group, name) tuple when multiple artifacts are present
+
+    Given there are artifacts
+    When I GET "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest"
+    Then the response should be 200
+    And the body should be JSON:
+    """
+     {
+        "id" : 2,
+        "createdAt" : "{{created_timestamp}}",
+        "group" : "com.example.cucumber",
+        "name" : "cucumber-artifact",
+        "version" : "1.0.2",
+        "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar"
+      }
+    """
+
 @wip
 Scenario: Fetching an artifact by the (group, name) tuple, pageNumber=0 and perPageSize=0
 
