@@ -28,4 +28,22 @@ class ArtifactDAO extends AbstractDAO<Artifact> {
                           .addOrder(Order.desc('createdAt')).list()
         return artifacts
     }
+
+    /**
+     * Locate the latest Artifact based on the (group, name) pair
+     *
+     * @param group A valid group name (e.g. "com.example")
+     * @param name The artifact's name (e.g. "dropwizard-core")
+     */
+    Artifact findLatestByGroupAndName(String group, String name) {
+
+        List<Artifact> artifacts = criteria().add(Restrictions.eq('group', group))
+                          .add(Restrictions.eq('name', name))
+                          .setMaxResults(1)
+                          .addOrder(Order.asc('createdAt')).list()
+        if(artifacts.size() > 0) {
+            return artifacts.first()
+        }
+        return null
+    }
 }

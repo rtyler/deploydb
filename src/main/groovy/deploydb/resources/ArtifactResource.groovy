@@ -72,5 +72,20 @@ public class ArtifactResource {
         return artifacts
     }
 
+    @GET
+    @Path("by-module/{group}:{name}/latest")
+    @UnitOfWork
+    @Timed(name = "get-requests")
+    public Artifact byNameLatest(@PathParam('group') String artifactGroup,
+                         @PathParam("name") String artifactName){
+        Artifact artifact = this.dao.findLatestByGroupAndName(artifactGroup,
+                                                            artifactName)
+
+        if (artifact == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+        return artifact
+    }
+
 }
 
