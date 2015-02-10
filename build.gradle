@@ -136,13 +136,11 @@ asciidoctor {
                 'toc-title': 'Table of Contents'
     shouldRunAfter test
 }
-check.dependsOn asciidoctor
 
 groovydoc {
     destinationDir file('docs/html5/groovydoc')
     shouldRunAfter test
 }
-check.dependsOn groovydoc
 
 def withSources(String dependency) {
     ['sources'].each {
