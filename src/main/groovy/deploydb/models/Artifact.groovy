@@ -29,7 +29,7 @@ class Artifact extends AbstractModel {
     String name
 
     @NotEmpty
-    @Size(min=1, max=8192)
+    @Size(min=1, max=255)
     @Column(name='version', nullable=false)
     @JsonProperty
     String version

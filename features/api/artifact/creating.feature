@@ -83,27 +83,34 @@ Feature: Artifact CREATE APIs
     """
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: Creating an artifact with too large of a group name
 
-    When I PUT to "/api/v1/artifacts" with a group over 8192 characters
+    Given I have an artifact request
+    And the group is over 8192 characters
+    When I PUT to "/api/v1/artifacts"
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: Creating an artifact with too large of a name
 
-    When I PUT to "/api/v1/artifacts" with a name over 8192 characters
+    Given I have an artifact request
+    And the name is over 8192 characters
+    When I PUT to "/api/v1/artifacts"
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: Creating an artifact with too large of a version
 
-    When I PUT to "/api/v1/artifacts" with a version over 8192 characters
+    Given I have an artifact request
+    And the version is over 255 characters
+    When I PUT to "/api/v1/artifacts"
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: Creating an artifact with too large of a sourceUrl
 
-    When I PUT to "/api/v1/artifacts" with a sourceUrl over 8192 characters
+    Given I have an artifact request
+    And the sourceUrl is over 8192 characters
+    When I PUT to "/api/v1/artifacts"
     Then the response should be 422
-
