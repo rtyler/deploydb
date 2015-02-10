@@ -3,6 +3,8 @@ package deploydb.models
 import spock.lang.*
 
 class ArtifactSpec extends Specification {
+
+
     def "ensure it can be instantiated"() {
         when:
         def artifact = new Artifact()
@@ -13,6 +15,7 @@ class ArtifactSpec extends Specification {
 }
 
 class ArtifactWithArgsSpec extends Specification {
+
 
     def "its properties should be correct"() {
         given:
