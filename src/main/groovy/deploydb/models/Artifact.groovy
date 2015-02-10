@@ -6,8 +6,8 @@ import javax.persistence.NamedQueries
 import javax.persistence.NamedQuery
 import javax.persistence.Table
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.NotEmpty
+import javax.validation.constraints.Size
 
 /**
  * Representation class for the concept of an Artifact
@@ -16,19 +16,26 @@ import org.hibernate.validator.constraints.NotEmpty
 @Table(name='artifacts')
 class Artifact extends AbstractModel {
 
+    @NotEmpty
+    @Size(min=1, max=8192)
     @Column(name="groupName", nullable=false)
     @JsonProperty
     String group
 
+    @NotEmpty
+    @Size(min=1, max=8192)
     @Column(name="name", nullable=false)
     @JsonProperty
     String name
 
+    @NotEmpty
+    @Size(min=1, max=8192)
     @Column(name='version', nullable=false)
     @JsonProperty
     String version
 
     @NotEmpty
+    @Size(min=1, max=8192)
     @Column(name='sourceUrl')
     @JsonProperty
     String sourceUrl

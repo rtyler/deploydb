@@ -31,24 +31,44 @@ Feature: Artifact CREATE APIs
       }
     """
 
-  @error @wip
-  Scenario: Creating an artifact without a version
+  @error 
+  Scenario: The request should fail when creating an Artifact without a group name
+
+    When I PUT to "/api/v1/artifacts" with:
+    """
+      {
+        "name" : "cukes",
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 422
+
+  @error 
+  Scenario: The request should fail when creating an Artifact without a name
 
     When I PUT to "/api/v1/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
-        "name" : "cukes"
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
       }
     """
-    Then the response should be 400
+    Then the response should be 422
 
-  @wip @error
-  Scenario: Creating an artifact with too large of a group or name
+  @error 
+  Scenario: The request should fail when creating an Artifact without a version
 
-    Given an artifact with a name over 8192 characters
-    When I POST to "/api/v1/artifacts" with it
-    Then the response should be 400
+    When I PUT to "/api/v1/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 422
 
   @error
   Scenario: The request should fail when creating an Artifact without a sourceUrl
@@ -62,3 +82,28 @@ Feature: Artifact CREATE APIs
       }
     """
     Then the response should be 422
+
+  @error 
+  Scenario: Creating an artifact with too large of a group name
+
+    When I PUT to "/api/v1/artifacts" with a group over 8192 characters
+    Then the response should be 422
+
+  @error 
+  Scenario: Creating an artifact with too large of a name
+
+    When I PUT to "/api/v1/artifacts" with a name over 8192 characters
+    Then the response should be 422
+
+  @error 
+  Scenario: Creating an artifact with too large of a version
+
+    When I PUT to "/api/v1/artifacts" with a version over 8192 characters
+    Then the response should be 422
+
+  @error 
+  Scenario: Creating an artifact with too large of a sourceUrl
+
+    When I PUT to "/api/v1/artifacts" with a sourceUrl over 8192 characters
+    Then the response should be 422
+
