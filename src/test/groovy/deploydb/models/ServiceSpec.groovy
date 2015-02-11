@@ -34,10 +34,14 @@ class ServiceWithArgsSpec extends Specification {
     private final ConfigurationFactory<Service> factory =
             new ConfigurationFactory<>(Service.class, validator, Jackson.newObjectMapper(), "dw")
 
+    private File getFile(String filename) {
+        ClassLoader classLoader = getClass().getClassLoader()
+        return new File(classLoader.getResource(filename).toURI())
+    }
+
     def "Loading of valid service config file suceeds"() {
         given:
-        ClassLoader classLoader = getClass().getClassLoader()
-        File validFile = new File(classLoader.getResource("services/test-valid.yml").toURI())
+        File validFile = getFile("services/test-valid.yml")
         Service service = factory.build(validFile)
 
         expect:
@@ -52,8 +56,7 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading an empty service config file throws a null pointer exception"() {
         given:
-        ClassLoader classLoader = getClass().getClassLoader()
-        File emptyFile = new File(classLoader.getResource("services/test-empty.yml").toURI())
+        File emptyFile = getFile("services/test-empty.yml")
         
         when:
         Service service = factory.build(emptyFile)
@@ -64,8 +67,7 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading a malformed service config file throws throws a parsing exception"() {
         given:
-        ClassLoader classLoader = getClass().getClassLoader()
-        File malformedFile = new File(classLoader.getResource("services/test-malformed.yml").toURI())
+        File malformedFile = getFile("services/test-malformed.yml")
         
         when:
         Service service = factory.build(malformedFile)
@@ -76,8 +78,7 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading a invalid service config file throws throws a validation exception"() {
         given:
-        ClassLoader classLoader = getClass().getClassLoader()
-        File invalidFile = new File(classLoader.getResource("services/test-invalid.yml").toURI())
+        File invalidFile = getFile("services/test-invalid.yml")
         
         when:
         Service service = factory.build(invalidFile)
