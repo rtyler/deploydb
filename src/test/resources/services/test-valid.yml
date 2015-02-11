@@ -1,0 +1,10 @@
+name: "Fun as a Service"
+artifacts:
+  - com.github.lookout:foas
+  - com.github.lookout.puppet:puppet-foas
+  - com.github.lookout:puppet-mysql
+pipelines:
+  - devtoprod
+promotions:
+  - status-check
+  - jenkins-smoke
