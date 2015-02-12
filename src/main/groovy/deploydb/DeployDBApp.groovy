@@ -13,6 +13,8 @@ import io.dropwizard.setup.Environment
 import io.dropwizard.views.ViewBundle
 import org.hibernate.SessionFactory
 import org.joda.time.DateTimeZone
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import deploydb.resources.*
 import deploydb.health.*
@@ -22,6 +24,7 @@ import deploydb.dao.*
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(Artifact, Deployment)
+    private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
 
     static void main(String[] args) throws Exception {
@@ -57,14 +60,13 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new AssetsBundle())
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
-
-
         webhooks = new WebhookManager()
 
         /*
          * Force our default timezone to always be UTC
          */
         DateTimeZone.setDefault(DateTimeZone.UTC)
+        logger.debug("Set default timezone to UTC")
 
         bootstrap.addBundle(new FlywayBundle<DeployDBConfiguration>() {
             @Override

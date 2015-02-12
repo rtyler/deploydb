@@ -7,10 +7,14 @@ import com.github.lookout.whoas.SequentialHookRunner
 import com.github.lookout.whoas.AbstractHookRunner
 import com.github.lookout.whoas.AbstractHookQueue
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 class WebhookManager implements Managed {
     private Thread runnerThread
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
+    private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
 
     WebhookManager() {
         runner = new SequentialHookRunner(this.queue)
@@ -18,16 +22,19 @@ class WebhookManager implements Managed {
             runner.run()
         })
         runnerThread.name = 'WebhookManager Thread'
+        logger.info("Webhook runner thread created: ${runnerThread}")
     }
 
     @Override
     void start() {
         runnerThread.start()
+        logger.info("${runnerThread} started")
     }
 
     @Override
     void stop() {
         runner.stop()
+        logger.info("${runnerThread} stopped")
     }
 
     /**
