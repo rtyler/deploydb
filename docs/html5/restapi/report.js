@@ -7,11 +7,11 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 2661590000,
+  "duration": 2704466000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 4839000,
+  "duration": 4298000,
   "status": "passed"
 });
 formatter.scenario({
@@ -22,7 +22,7 @@ formatter.scenario({
       "line": 7
     }
   ],
-  "description": "\nThe creation of an artifact technically only requires group, name and\nversion. However it\u0027s a good idea to always provide a `sourceUrl` as well\nin order future users of DeployDB to be able to backtrack an artifact all\nthe way to the binary itself",
+  "description": "\nThe creation of an artifact requires group, name, version and sourceUrl.",
   "name": "Creating a new artifact",
   "keyword": "Scenario",
   "line": 8,
@@ -31,25 +31,25 @@ formatter.scenario({
 formatter.step({
   "name": "I PUT to \"/api/v1/artifacts\" with:",
   "keyword": "When ",
-  "line": 15,
+  "line": 12,
   "doc_string": {
     "value": "  {\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cukes\",\n    \"version\" : \"1.2.345\",\n    \"sourceUrl\" : \"http://example.com/cucumber.jar\"\n  }",
-    "line": 16,
+    "line": 13,
     "content_type": ""
   }
 });
 formatter.step({
   "name": "the response should be 201",
   "keyword": "Then ",
-  "line": 24
+  "line": 21
 });
 formatter.step({
   "name": "the body should be JSON:",
   "keyword": "And ",
-  "line": 25,
+  "line": 22,
   "doc_string": {
     "value": "  {\n    \"id\" : 1,\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cukes\",\n    \"version\" : \"1.2.345\",\n    \"sourceUrl\" : \"http://example.com/cucumber.jar\",\n    \"createdAt\" : \"{{created_timestamp}}\"\n  }",
-    "line": 26,
+    "line": 23,
     "content_type": ""
   }
 });
@@ -60,10 +60,10 @@ formatter.match({
       "offset": 10
     }
   ],
-  "location": "HttpSteps.groovy:24"
+  "location": "HttpSteps.groovy:23"
 });
 formatter.result({
-  "duration": 612297000,
+  "duration": 644652000,
   "status": "passed"
 });
 formatter.match({
@@ -73,25 +73,645 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 5804000,
+  "duration": 4891000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 64164000,
+  "duration": 55220000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 18321000,
+  "duration": 17847000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 488000,
+  "duration": 523000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 368801000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;the-request-should-fail-when-creating-an-artifact-without-a-group-name",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 34
+    }
+  ],
+  "description": "",
+  "name": "The request should fail when creating an Artifact without a group name",
+  "keyword": "Scenario",
+  "line": 35,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\" with:",
+  "keyword": "When ",
+  "line": 37,
+  "doc_string": {
+    "value": "  {\n    \"name\" : \"cukes\",\n    \"version\" : \"1.2.345\",\n    \"sourceUrl\" : \"http://example.com/cucumber.jar\"\n  }",
+    "line": 38,
+    "content_type": ""
+  }
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 45
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:23"
+});
+formatter.result({
+  "duration": 69174000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 168000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 10271000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 335076000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;the-request-should-fail-when-creating-an-artifact-without-a-name",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 47
+    }
+  ],
+  "description": "",
+  "name": "The request should fail when creating an Artifact without a name",
+  "keyword": "Scenario",
+  "line": 48,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\" with:",
+  "keyword": "When ",
+  "line": 50,
+  "doc_string": {
+    "value": "  {\n    \"group\" : \"com.example.cucumber\",\n    \"version\" : \"1.2.345\",\n    \"sourceUrl\" : \"http://example.com/cucumber.jar\"\n  }",
+    "line": 51,
+    "content_type": ""
+  }
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 58
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:23"
+});
+formatter.result({
+  "duration": 46454000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 128000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 7302000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 400001000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;the-request-should-fail-when-creating-an-artifact-without-a-version",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 60
+    }
+  ],
+  "description": "",
+  "name": "The request should fail when creating an Artifact without a version",
+  "keyword": "Scenario",
+  "line": 61,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\" with:",
+  "keyword": "When ",
+  "line": 63,
+  "doc_string": {
+    "value": "  {\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cukes\",\n    \"sourceUrl\" : \"http://example.com/cucumber.jar\"\n  }",
+    "line": 64,
+    "content_type": ""
+  }
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 71
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:23"
+});
+formatter.result({
+  "duration": 57164000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 152000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 8048000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 399315000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;the-request-should-fail-when-creating-an-artifact-without-a-sourceurl",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 73
+    }
+  ],
+  "description": "",
+  "name": "The request should fail when creating an Artifact without a sourceUrl",
+  "keyword": "Scenario",
+  "line": 74,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\" with:",
+  "keyword": "When ",
+  "line": 76,
+  "doc_string": {
+    "value": "  {\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cukes\",\n    \"version\" : \"1.2.345\"\n  }",
+    "line": 77,
+    "content_type": ""
+  }
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 84
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:23"
+});
+formatter.result({
+  "duration": 56353000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 157000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 7022000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 253474000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;creating-an-artifact-with-too-large-of-a-group-name",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 86
+    }
+  ],
+  "description": "",
+  "name": "Creating an artifact with too large of a group name",
+  "keyword": "Scenario",
+  "line": 87,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I have an artifact request",
+  "keyword": "Given ",
+  "line": 89
+});
+formatter.step({
+  "name": "the group is over 8192 characters",
+  "keyword": "And ",
+  "line": 90
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\"",
+  "keyword": "When ",
+  "line": 91
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 92
+});
+formatter.match({
+  "location": "HttpSteps.groovy:76"
+});
+formatter.result({
+  "duration": 125000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "group",
+      "offset": 4
+    },
+    {
+      "val": "8192",
+      "offset": 18
+    }
+  ],
+  "location": "HttpSteps.groovy:79"
+});
+formatter.result({
+  "duration": 1726000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:98"
+});
+formatter.result({
+  "duration": 44749000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 148000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 5248000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 240664000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;creating-an-artifact-with-too-large-of-a-name",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 94
+    }
+  ],
+  "description": "",
+  "name": "Creating an artifact with too large of a name",
+  "keyword": "Scenario",
+  "line": 95,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I have an artifact request",
+  "keyword": "Given ",
+  "line": 97
+});
+formatter.step({
+  "name": "the name is over 8192 characters",
+  "keyword": "And ",
+  "line": 98
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\"",
+  "keyword": "When ",
+  "line": 99
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 100
+});
+formatter.match({
+  "location": "HttpSteps.groovy:76"
+});
+formatter.result({
+  "duration": 20000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "name",
+      "offset": 4
+    },
+    {
+      "val": "8192",
+      "offset": 17
+    }
+  ],
+  "location": "HttpSteps.groovy:79"
+});
+formatter.result({
+  "duration": 887000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:98"
+});
+formatter.result({
+  "duration": 36317000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 177000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 6744000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 304529000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;creating-an-artifact-with-too-large-of-a-version",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 102
+    }
+  ],
+  "description": "",
+  "name": "Creating an artifact with too large of a version",
+  "keyword": "Scenario",
+  "line": 103,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I have an artifact request",
+  "keyword": "Given ",
+  "line": 105
+});
+formatter.step({
+  "name": "the version is over 255 characters",
+  "keyword": "And ",
+  "line": 106
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\"",
+  "keyword": "When ",
+  "line": 107
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 108
+});
+formatter.match({
+  "location": "HttpSteps.groovy:76"
+});
+formatter.result({
+  "duration": 31000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "version",
+      "offset": 4
+    },
+    {
+      "val": "255",
+      "offset": 20
+    }
+  ],
+  "location": "HttpSteps.groovy:79"
+});
+formatter.result({
+  "duration": 485000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:98"
+});
+formatter.result({
+  "duration": 59429000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 149000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 7308000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 269453000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-create-apis;creating-an-artifact-with-too-large-of-a-sourceurl",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 110
+    }
+  ],
+  "description": "",
+  "name": "Creating an artifact with too large of a sourceUrl",
+  "keyword": "Scenario",
+  "line": 111,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I have an artifact request",
+  "keyword": "Given ",
+  "line": 113
+});
+formatter.step({
+  "name": "the sourceUrl is over 8192 characters",
+  "keyword": "And ",
+  "line": 114
+});
+formatter.step({
+  "name": "I PUT to \"/api/v1/artifacts\"",
+  "keyword": "When ",
+  "line": 115
+});
+formatter.step({
+  "name": "the response should be 422",
+  "keyword": "Then ",
+  "line": 116
+});
+formatter.match({
+  "location": "HttpSteps.groovy:76"
+});
+formatter.result({
+  "duration": 38000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "sourceUrl",
+      "offset": 4
+    },
+    {
+      "val": "8192",
+      "offset": 22
+    }
+  ],
+  "location": "HttpSteps.groovy:79"
+});
+formatter.result({
+  "duration": 441000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts",
+      "offset": 10
+    }
+  ],
+  "location": "HttpSteps.groovy:98"
+});
+formatter.result({
+  "duration": 35509000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "422",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 138000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 5763000,
   "status": "passed"
 });
 formatter.uri("api/artifact/deleting.feature");
@@ -103,7 +723,7 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 363370000,
+  "duration": 234206000,
   "status": "passed"
 });
 formatter.scenario({
@@ -133,7 +753,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 31425000,
+  "duration": 42723000,
   "status": "passed"
 });
 formatter.match({
@@ -143,10 +763,10 @@ formatter.match({
       "offset": 10
     }
   ],
-  "location": "HttpSteps.groovy:20"
+  "location": "HttpSteps.groovy:19"
 });
 formatter.result({
-  "duration": 36164000,
+  "duration": 32629000,
   "status": "passed"
 });
 formatter.match({
@@ -156,14 +776,14 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 174000,
+  "duration": 112000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 10582000,
+  "duration": 6075000,
   "status": "passed"
 });
 formatter.uri("api/artifact/reading.feature");
@@ -175,11 +795,11 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 313276000,
+  "duration": 295335000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 58000,
+  "duration": 75000,
   "status": "passed"
 });
 formatter.scenario({
@@ -225,7 +845,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 5124000,
+  "duration": 4778000,
   "status": "passed"
 });
 formatter.match({
@@ -235,10 +855,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 55350000,
+  "duration": 89660000,
   "status": "passed"
 });
 formatter.match({
@@ -248,29 +868,29 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 128000,
+  "duration": 164000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 1739000,
+  "duration": 2037000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 7922000,
+  "duration": 5824000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 33000,
+  "duration": 40000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 393520000,
+  "duration": 252979000,
   "status": "passed"
 });
 formatter.scenario({
@@ -298,10 +918,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 52168000,
+  "duration": 39908000,
   "status": "passed"
 });
 formatter.match({
@@ -311,18 +931,18 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 138000,
+  "duration": 162000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 7835000,
+  "duration": 5130000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 401724000,
+  "duration": 235622000,
   "status": "passed"
 });
 formatter.scenario({
@@ -356,10 +976,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 45295000,
+  "duration": 29572000,
   "status": "passed"
 });
 formatter.match({
@@ -369,22 +989,22 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 178000,
+  "duration": 147000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 8711000,
+  "duration": 5975000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 257788000,
+  "duration": 205116000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 53000,
+  "duration": 49000,
   "status": "passed"
 });
 formatter.scenario({
@@ -421,7 +1041,7 @@ formatter.step({
   "keyword": "And ",
   "line": 43,
   "doc_string": {
-    "value": "  {\n    \"id\" : 1,\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.1\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\",\n    \"createdAt\" : \"{{created_timestamp}}\"\n  }",
+    "value": "  [{\n    \"id\" : 1,\n    \"createdAt\" : \"{{created_timestamp}}\",\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.1\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\"\n  }]",
     "line": 44,
     "content_type": ""
   }
@@ -430,7 +1050,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 2433000,
+  "duration": 3791000,
   "status": "passed"
 });
 formatter.match({
@@ -440,10 +1060,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 57327000,
+  "duration": 54960000,
   "status": "passed"
 });
 formatter.match({
@@ -453,48 +1073,149 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
   "duration": 152000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 1486000,
+  "duration": 4238000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 6156000,
+  "duration": 4782000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 23000,
+  "duration": 18000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 264967000,
+  "duration": 228287000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 74000,
   "status": "passed"
 });
 formatter.scenario({
-  "id": "artifact-read-apis;fetching-an-artifact-by-the-(group,-name)-tuple-that-doesn\u0027t-exist",
+  "id": "artifact-read-apis;fetching-an-artifact-by-the-(group,-name)-tuple,-pagenumber-and-perpagesize",
+  "tags": [
+    {
+      "name": "@freezetime",
+      "line": 54
+    }
+  ],
   "description": "",
-  "name": "Fetching an artifact by the (group, name) tuple that doesn\u0027t exist",
+  "name": "Fetching an artifact by the (group, name) tuple, pageNumber and perPageSize",
   "keyword": "Scenario",
   "line": 55,
   "type": "scenario"
 });
 formatter.step({
+  "name": "there are artifacts",
+  "keyword": "Given ",
+  "line": 57
+});
+formatter.step({
+  "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d0\u0026perPageSize\u003d5\"",
+  "keyword": "When ",
+  "line": 58
+});
+formatter.step({
+  "name": "the response should be 200",
+  "keyword": "Then ",
+  "line": 59
+});
+formatter.step({
+  "name": "the body should be JSON:",
+  "keyword": "And ",
+  "line": 60,
+  "doc_string": {
+    "value": "  [{\n    \"id\" : 2,\n    \"createdAt\" : \"{{created_timestamp}}\",\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.2\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar\"\n  },\n  {\n    \"id\" : 1,\n    \"createdAt\" : \"{{created_timestamp}}\",\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.1\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\"\n  }]",
+    "line": 61,
+    "content_type": ""
+  }
+});
+formatter.match({
+  "location": "ArtifactSteps.groovy:15"
+});
+formatter.result({
+  "duration": 7659000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d0\u0026perPageSize\u003d5",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 34623000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "200",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 162000,
+  "status": "passed"
+});
+formatter.match({
+  "location": "HttpSteps.groovy:62"
+});
+formatter.result({
+  "duration": 2311000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 5668000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 19000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 252987000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-read-apis;fetching-an-artifact-by-the-(group,-name)-tuple-that-doesn\u0027t-exist",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 79
+    }
+  ],
+  "description": "",
+  "name": "Fetching an artifact by the (group, name) tuple that doesn\u0027t exist",
+  "keyword": "Scenario",
+  "line": 80,
+  "type": "scenario"
+});
+formatter.step({
   "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact\"",
   "keyword": "When ",
-  "line": 57
+  "line": 82
 });
 formatter.step({
   "name": "the response should be 404",
   "keyword": "Then ",
-  "line": 58
+  "line": 83
 });
 formatter.match({
   "arguments": [
@@ -503,10 +1224,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 41365000,
+  "duration": 33440000,
   "status": "passed"
 });
 formatter.match({
@@ -516,14 +1237,320 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 155000,
+  "duration": 666000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 6051000,
+  "duration": 6487000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 218751000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-read-apis;fetching-an-artifact-by-the-(group,-name)-tuple-with-invalid-page-number",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 85
+    }
+  ],
+  "description": "",
+  "name": "Fetching an artifact by the (group, name) tuple with invalid page number",
+  "keyword": "Scenario",
+  "line": 86,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d1\u0026perPageSize\u003d5\"",
+  "keyword": "When ",
+  "line": 88
+});
+formatter.step({
+  "name": "the response should be 404",
+  "keyword": "Then ",
+  "line": 89
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d1\u0026perPageSize\u003d5",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 29599000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "404",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 338000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 6917000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 270547000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-read-apis;fetching-an-artifact-by-the-(group,-name)-tuple-with-invalid-data-type-for-pagesize",
+  "tags": [
+    {
+      "name": "@error",
+      "line": 91
+    }
+  ],
+  "description": "",
+  "name": "Fetching an artifact by the (group, name) tuple with invalid data type for pageSize",
+  "keyword": "Scenario",
+  "line": 92,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d-1\u0026perPageSize\u003d0xdeadbeef\"",
+  "keyword": "When ",
+  "line": 94
+});
+formatter.step({
+  "name": "the response should be 400",
+  "keyword": "Then ",
+  "line": 95
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact?pageNumber\u003d-1\u0026perPageSize\u003d0xdeadbeef",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 28767000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "400",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 142000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 4510000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 258051000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 72000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-read-apis;fetching-the-latest-artifact-by-the-(group,-name)-tuple",
+  "tags": [
+    {
+      "name": "@freezetime",
+      "line": 97
+    }
+  ],
+  "description": "",
+  "name": "Fetching the latest artifact by the (group, name) tuple",
+  "keyword": "Scenario",
+  "line": 98,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "there is an artifact",
+  "keyword": "Given ",
+  "line": 100
+});
+formatter.step({
+  "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest\"",
+  "keyword": "When ",
+  "line": 101
+});
+formatter.step({
+  "name": "the response should be 200",
+  "keyword": "Then ",
+  "line": 102
+});
+formatter.step({
+  "name": "the body should be JSON:",
+  "keyword": "And ",
+  "line": 103,
+  "doc_string": {
+    "value": " {\n    \"id\" : 1,\n    \"createdAt\" : \"{{created_timestamp}}\",\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.1\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\"\n  } ",
+    "line": 104,
+    "content_type": ""
+  }
+});
+formatter.match({
+  "location": "ArtifactSteps.groovy:8"
+});
+formatter.result({
+  "duration": 4999000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 35022000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "200",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 127000,
+  "status": "passed"
+});
+formatter.match({
+  "location": "HttpSteps.groovy:62"
+});
+formatter.result({
+  "duration": 1679000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 4709000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 24000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 288618000,
+  "status": "passed"
+});
+formatter.before({
+  "duration": 73000,
+  "status": "passed"
+});
+formatter.scenario({
+  "id": "artifact-read-apis;fetching-the-latest-artifact-by-the-(group,-name)-tuple-when-multiple-artifacts-are-present",
+  "tags": [
+    {
+      "name": "@freezetime",
+      "line": 115
+    }
+  ],
+  "description": "",
+  "name": "Fetching the latest artifact by the (group, name) tuple when multiple artifacts are present",
+  "keyword": "Scenario",
+  "line": 116,
+  "type": "scenario"
+});
+formatter.step({
+  "name": "there are artifacts",
+  "keyword": "Given ",
+  "line": 118
+});
+formatter.step({
+  "name": "I GET \"/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest\"",
+  "keyword": "When ",
+  "line": 119
+});
+formatter.step({
+  "name": "the response should be 200",
+  "keyword": "Then ",
+  "line": 120
+});
+formatter.step({
+  "name": "the body should be JSON:",
+  "keyword": "And ",
+  "line": 121,
+  "doc_string": {
+    "value": " {\n    \"id\" : 2,\n    \"createdAt\" : \"{{created_timestamp}}\",\n    \"group\" : \"com.example.cucumber\",\n    \"name\" : \"cucumber-artifact\",\n    \"version\" : \"1.0.2\",\n    \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar\"\n  }",
+    "line": 122,
+    "content_type": ""
+  }
+});
+formatter.match({
+  "location": "ArtifactSteps.groovy:15"
+});
+formatter.result({
+  "duration": 6509000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "/api/v1/artifacts/by-module/com.example.cucumber:cucumber-artifact/latest",
+      "offset": 7
+    }
+  ],
+  "location": "HttpSteps.groovy:15"
+});
+formatter.result({
+  "duration": 32201000,
+  "status": "passed"
+});
+formatter.match({
+  "arguments": [
+    {
+      "val": "200",
+      "offset": 23
+    }
+  ],
+  "location": "HttpSteps.groovy:54"
+});
+formatter.result({
+  "duration": 161000,
+  "status": "passed"
+});
+formatter.match({
+  "location": "HttpSteps.groovy:62"
+});
+formatter.result({
+  "duration": 1557000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 7009000,
+  "status": "passed"
+});
+formatter.after({
+  "duration": 22000,
   "status": "passed"
 });
 formatter.uri("api/artifact/updating.feature");
@@ -535,7 +1562,7 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 298597000,
+  "duration": 260915000,
   "status": "passed"
 });
 formatter.scenario({
@@ -570,7 +1597,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 1750000,
+  "duration": 3823000,
   "status": "passed"
 });
 formatter.match({
@@ -580,10 +1607,10 @@ formatter.match({
       "offset": 9
     }
   ],
-  "location": "HttpSteps.groovy:28"
+  "location": "HttpSteps.groovy:50"
 });
 formatter.result({
-  "duration": 26598000,
+  "duration": 25134000,
   "status": "passed"
 });
 formatter.match({
@@ -593,14 +1620,14 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 104000,
+  "duration": 177000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 14401000,
+  "duration": 7196000,
   "status": "passed"
 });
 formatter.uri("api/deployment/creating.feature");
@@ -612,11 +1639,11 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 210472000,
+  "duration": 182561000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 44000,
+  "duration": 71000,
   "status": "passed"
 });
 formatter.scenario({
@@ -667,7 +1694,7 @@ formatter.match({
   "location": "ArtifactSteps.groovy:8"
 });
 formatter.result({
-  "duration": 1696000,
+  "duration": 3907000,
   "status": "passed"
 });
 formatter.match({
@@ -677,10 +1704,10 @@ formatter.match({
       "offset": 10
     }
   ],
-  "location": "HttpSteps.groovy:24"
+  "location": "HttpSteps.groovy:23"
 });
 formatter.result({
-  "duration": 34503000,
+  "duration": 30668000,
   "status": "passed"
 });
 formatter.match({
@@ -690,25 +1717,25 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 106000,
+  "duration": 158000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 1388000,
+  "duration": 1273000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 5091000,
+  "duration": 4474000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 19000,
+  "duration": 24000,
   "status": "passed"
 });
 formatter.uri("api/deployment/reading.feature");
@@ -720,11 +1747,11 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 266427000,
+  "duration": 255100000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 60000,
+  "duration": 70000,
   "status": "passed"
 });
 formatter.scenario({
@@ -761,7 +1788,7 @@ formatter.step({
   "keyword": "And ",
   "line": 13,
   "doc_string": {
-    "value": "  {\n    \"id\" : 1,\n    \"artifact\" : {\n      \"id\" : 1,\n      \"group\" : \"com.example.cucumber\",\n      \"name\" : \"cucumber-artifact\",\n      \"version\" : \"1.0.1\",\n      \"sourceUrl\" : null,\n      \"createdAt\" : \"{{created_timestamp}}\"\n    },\n    \"environment\" : \"pre-production\",\n    \"status\" : \"STARTED\",\n    \"createdAt\" : \"{{created_timestamp}}\"\n  }",
+    "value": "  {\n    \"id\" : 1,\n    \"artifact\" : {\n      \"id\" : 1,\n      \"group\" : \"com.example.cucumber\",\n      \"name\" : \"cucumber-artifact\",\n      \"version\" : \"1.0.1\",\n      \"sourceUrl\" : \"http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar\",\n      \"createdAt\" : \"{{created_timestamp}}\"\n    },\n    \"environment\" : \"pre-production\",\n    \"status\" : \"STARTED\",\n    \"createdAt\" : \"{{created_timestamp}}\"\n  }",
     "line": 14,
     "content_type": ""
   }
@@ -770,7 +1797,7 @@ formatter.match({
   "location": "DeploymentSteps.groovy:8"
 });
 formatter.result({
-  "duration": 4706000,
+  "duration": 5814000,
   "status": "passed"
 });
 formatter.match({
@@ -780,10 +1807,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 39941000,
+  "duration": 34344000,
   "status": "passed"
 });
 formatter.match({
@@ -793,29 +1820,29 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 103000,
+  "duration": 130000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 1984000,
+  "duration": 1911000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 5401000,
+  "duration": 6011000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 28000,
+  "duration": 26000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 283708000,
+  "duration": 261795000,
   "status": "passed"
 });
 formatter.scenario({
@@ -843,10 +1870,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:16"
+  "location": "HttpSteps.groovy:15"
 });
 formatter.result({
-  "duration": 31910000,
+  "duration": 26101000,
   "status": "passed"
 });
 formatter.match({
@@ -856,14 +1883,14 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 162000,
+  "duration": 96000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 6094000,
+  "duration": 5413000,
   "status": "passed"
 });
 formatter.uri("api/deployment/updating.feature");
@@ -875,11 +1902,11 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 268577000,
+  "duration": 291304000,
   "status": "passed"
 });
 formatter.before({
-  "duration": 64000,
+  "duration": 66000,
   "status": "passed"
 });
 formatter.scenario({
@@ -922,10 +1949,10 @@ formatter.match({
       "offset": 9
     }
   ],
-  "location": "HttpSteps.groovy:28"
+  "location": "HttpSteps.groovy:50"
 });
 formatter.result({
-  "duration": 29964000,
+  "duration": 32300000,
   "status": "passed"
 });
 formatter.match({
@@ -935,18 +1962,18 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 132000,
+  "duration": 182000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 5389000,
+  "duration": 6541000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 26000,
+  "duration": 25000,
   "status": "passed"
 });
 formatter.uri("api/health.feature");
@@ -958,7 +1985,7 @@ formatter.feature({
   "line": 1
 });
 formatter.before({
-  "duration": 257210000,
+  "duration": 240018000,
   "status": "passed"
 });
 formatter.scenario({
@@ -996,10 +2023,10 @@ formatter.match({
       "offset": 7
     }
   ],
-  "location": "HttpSteps.groovy:12"
+  "location": "HttpSteps.groovy:11"
 });
 formatter.result({
-  "duration": 57082000,
+  "duration": 41775000,
   "status": "passed"
 });
 formatter.match({
@@ -1009,21 +2036,21 @@ formatter.match({
       "offset": 23
     }
   ],
-  "location": "HttpSteps.groovy:33"
+  "location": "HttpSteps.groovy:54"
 });
 formatter.result({
-  "duration": 160000,
+  "duration": 94000,
   "status": "passed"
 });
 formatter.match({
-  "location": "HttpSteps.groovy:41"
+  "location": "HttpSteps.groovy:62"
 });
 formatter.result({
-  "duration": 1726000,
+  "duration": 1421000,
   "status": "passed"
 });
 formatter.after({
-  "duration": 4951000,
+  "duration": 7014000,
   "status": "passed"
 });
 });
