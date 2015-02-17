@@ -200,3 +200,53 @@ this might work with a cluster of applications in one service, I'm not yet sure.
 
 `A *manual* promotion is a special case scenario where the UI for DeployDB is
 going to need to present a button to a user to click
+
+=== Flow Diagram
+
+  initiator        deployDb            deployer1        deployer2       tester
+     +                 +                   +               +               +  
+     |   A1' created   |                   |               |               |  
+     +----------------->                   |               |               |  
+     | create artifact | D1=ns, A1',S1,E1  |               |               |  
+     |                 +------------------->               |               |  
+     |                 | Deployment Start  |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D1=started     |               |               |  
+     |                 <-------------------+               |               |  
+     |                 | Deployment Startd |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D1=compltd     |               |               |  
+     |                 <-------------------+               |               |  
+     |                 | Deployment Compltd|               |               |  
+     |                 |                   +               +               |  
+     |                 |   D1, A1',S1,S1  (Deployment Completed)           |  
+     |                 +-------------------+---------------+--------------->  
+     |                 |                   |               |               |  
+     |                 |   D1, P1-PASSED   |               |               |  
+     |                 <---------+-----------------------------------------+  
+     |                 |                   |               |               |  
+     |                 | D2=ns, A1',S1,E2  |               |               |  
+     |                 +----------------------------------->               |  
+     |                 | Deployment Start  |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D2=started     |               |               |  
+     |                 <-----------------------------------+               |  
+     |                 | Deployment Startd |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D2=compltd     |               |               |  
+     |                 <-----------------------------------+               |  
+     |                 | Deployment Compltd|               |               |  
+     |                 |                   +               +               |  
+     |                 |   D2, A1',S1,E2  (Deployment Completed)           |  
+     |                 +-------------------+---------------+--------------->  
+     |                 |                   |               |               |  
+     |                 |   D2, P1-PASSED   |               |               |  
+     |                 <---------+-----------------------------------------+  
+     |                 |                   |               |               |  
+     +                 +                   +               +               +  
+                                                                              
+     Legend:                                                                  
+     Service S1 = Artifacts (A1, A2),Pipline (PL1), Promotions (P1)           
+     Pipline PL1 = Enviroment (E1), Enviroment (E2)                           
+     ns = notStarted 
+   
