@@ -102,7 +102,7 @@ webhooks:
         - http://jenkins.example.com/job/integ-deploy-created/build
     - completed:
         - http://jenkins.example.com/job/integ-deploy-completed/build
-promotion:
+  promotion:
     - completed:
 ----
 
