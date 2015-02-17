@@ -511,11 +511,19 @@ table.CodeRay td.code>pre{padding:0}
 <ul class="sectlevel2">
 <li><a href="#_notifications">Notifications</a></li>
 <li><a href="#_triggers">Triggers</a></li>
+<li><a href="#_configuring_webhooks">Configuring Webhooks</a></li>
 </ul>
 </li>
 <li><a href="#_queueing">Queueing</a></li>
 <li><a href="#_data_storage">Data storage</a></li>
-<li><a href="#_environments_pipelines">Environments/Pipelines</a></li>
+<li><a href="#_environments_pipelines_promotions">Environments/Pipelines/Promotions</a>
+<ul class="sectlevel2">
+<li><a href="#_environments">Environments</a></li>
+<li><a href="#_pipelines">Pipelines</a></li>
+<li><a href="#_services">Services</a></li>
+<li><a href="#_promotions">Promotions</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -533,7 +541,11 @@ components within the conceptual "DeployDB box."</p>
 <div class="sect1">
 <h2 id="_web_hooks">Web hooks</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>"Web hooks" in this section technically covers "web hooks" but also public APIs
+that other services like Jenkins might use to trigger changes in the DeployDB
+system.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -542,18 +554,22 @@ components within the conceptual "DeployDB box."</p>
 <div class="sect2">
 <h3 id="_notifications">Notifications</h3>
 <div class="paragraph">
-<p>Outgoing events</p>
+<p><strong>Outgoing</strong> events, e.g. webhooks, which should be invoked every time the
+internal DeployDB state machine changes.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Artifact is ready/available</p>
+<p>Deployment created (with Deployment, Artifact, Service, Environment)</p>
 </li>
 <li>
-<p>Deploy completed</p>
+<p>Deployment started (with Deployment, Artifact, Service, Environment)</p>
 </li>
 <li>
-<p>Verification of a deployment completed</p>
+<p>Deployment completed (with Deployment, Artifact, Service, Environment)</p>
+</li>
+<li>
+<p>Promotion completed (with Deployment, Promotion status)</p>
 </li>
 </ul>
 </div>
@@ -561,7 +577,9 @@ components within the conceptual "DeployDB box."</p>
 <div class="sect2">
 <h3 id="_triggers">Triggers</h3>
 <div class="paragraph">
-<p>Inbound events, there&#8217;s a large symmetry between <a href="#_notifications">Notifications</a> and Triggers.</p>
+<p>Inbound events, there&#8217;s a large symmetry between <a href="#_notifications">Notifications</a> and
+Triggers. These would be coming from external sources, such as Jenkins, which
+push or change the internal DeployDB state machine.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -569,12 +587,40 @@ components within the conceptual "DeployDB box."</p>
 <p>Artifact of a new version is available</p>
 </li>
 <li>
-<p>Deployment has completed</p>
+<p>Start Deployment</p>
 </li>
 <li>
-<p>Verficiation completed</p>
+<p>Complete Deployment</p>
+</li>
+<li>
+<p>Report Promotion status</p>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_webhooks">Configuring Webhooks</h3>
+<div class="paragraph">
+<p>Webhooks can be configured at two levels, globally and per-environment. The
+reason for this distinction is to make it easier to drive behaviors in
+different environments through different deployer/orchestration servers (e.g.
+Rundeck-Integ, Rundeck-Prod).</p>
+</div>
+<div class="listingblock">
+<div class="title">webhooks.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">deployment</span>:
+    - <span class="string"><span class="content">started:</span></span>
+    - <span class="string"><span class="content">created:</span><span class="content">
+        - http://jenkins.example.com/job/notify-deploy-created/build</span></span>
+    - <span class="string"><span class="content">completed:</span><span class="content">
+        - http://jenkins.example.com/job/notify-deploy-completed/build</span></span>
+<span class="key">promotion</span>:
+    - <span class="string"><span class="content">completed:</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="#_environments">Environments</a> for environment specific webhook configuration</p>
 </div>
 </div>
 </div>
@@ -615,7 +661,7 @@ information into a database. This should be abstracted through a JDBC connector.
 </div>
 </div>
 <div class="sect1">
-<h2 id="_environments_pipelines">Environments/Pipelines</h2>
+<h2 id="_environments_pipelines_promotions">Environments/Pipelines/Promotions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Current thinking: if pipelines are defined in "configuration" as are
@@ -626,6 +672,26 @@ be in configuration but rather registered via an API.</p>
 <p>It might make sense to have that registration API write some YAML to disk or
 something and allow DeployDB to register artifacts from the same place on disk</p>
 </div>
+<div class="sect2">
+<h3 id="_environments">Environments</h3>
+<div class="listingblock">
+<div class="title">environments/integ.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">DeployDB Primary Integration</span><span class="delimiter">&quot;</span></span>
+<span class="key">webhooks</span>:
+  <span class="key">deployment</span>:
+    - <span class="string"><span class="content">started:</span></span>
+    - <span class="string"><span class="content">created:</span><span class="content">
+        - http://jenkins.example.com/job/integ-deploy-created/build</span></span>
+    - <span class="string"><span class="content">completed:</span><span class="content">
+        - http://jenkins.example.com/job/integ-deploy-completed/build</span></span>
+<span class="key">promotion</span>:
+    - <span class="string"><span class="content">completed:</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pipelines">Pipelines</h3>
 <div class="listingblock">
 <div class="title">pipelines/devtoprod.yml</div>
 <div class="content">
@@ -633,25 +699,117 @@ something and allow DeployDB to register artifacts from the same place on disk</
   - <span class="string"><span class="content">dev-alpha</span></span>
   - <span class="string"><span class="content">dev-beta</span></span>
   - <span class="string"><span class="content">integ</span></span>
-  - <span class="string"><span class="content">preprod</span></span>
+  - <span class="string"><span class="content">preprod:</span></span>
+    <span class="key">promotions</span>:
+        - <span class="string"><span class="content">prod-preflight</span></span>
+        - <span class="string"><span class="content">manual</span></span>
   - <span class="string"><span class="content">prod</span></span></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The Pipeline concept allows for the configuring of a linear set of Environments
+for Artifacts to be passed through. At each step of the way the Promotions
+defined for a given Service traversing the pipeline will need to be
+validated. E.g. the "FoaS" Service much execute its Promotions between
+<code>integ</code> and <code>preprod</code>, but before going from <code>preprod</code> to <code>prod</code> the
+<code>prod-preflight</code> and a <code>manual</code> Promotion must be satisfied.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_services">Services</h3>
 <div class="listingblock">
 <div class="title">services/foas.yml</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">Fun as a Service</span><span class="delimiter">&quot;</span></span>
 <span class="key">artifacts</span>:
-  - <span class="string"><span class="content">foas</span></span>
-  - <span class="string"><span class="content">puppet-foas</span></span>
-  - <span class="string"><span class="content">puppet-mysql</span></span>
+  - <span class="string"><span class="content">com.github.lookout:foas</span></span>
+  - <span class="string"><span class="content">com.github.lookout.puppet:puppet-foas</span></span>
+  - <span class="string"><span class="content">com.github.lookout:puppet-mysql</span></span>
 <span class="key">pipelines</span>:
   - <span class="string"><span class="content">devtoprod</span></span>
 <span class="key">promotions</span>:
-  - <span class="string"><span class="content">manual</span></span>
+  - <span class="string"><span class="content">status-check</span></span>
   - <span class="string"><span class="content">jenkins-smoke</span></span>
-  - <span class="string"><span class="content">status-check</span></span></code></pre>
+<span class="key">failure_strategy</span>: <span class="string"><span class="content">stop</span></span></code></pre>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The "artifact" declarations in the configuration file are using the
+<code>groupname:artifactname</code> syntax which ensure that we can uniquely identify an
+krtifact. It is expected that all artifacts have at least a unique
+<code>groupname:artifactname</code> for storage in the data store.
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. Service Configuration Properties</caption>
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 33%;">
+<col style="width: 33%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+<th class="tableblock halign-left valign-top">Type/Options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The descriptive name of the service being defined</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">artifacts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of <code>groupname:artifactname</code> pairings defining artifacts which compose the service</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of Strings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pipelines</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Named pipeline to push these Artifacts through (<em>One pipeline per service is currently supported</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of valid pipeline identifier Strings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">promotions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Named promotions to execute after a Deployment of any of the Artifacts
+completes, in every stage of pipeline</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array of valid promotion identifier Strings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">failure_strategy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What should happen with an artifact that is part of this service when a
+Deployment fails, or the Promotions indicate that the Artifact isn&#8217;t valid.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of "stop" (stop pipeline), "rollback" (revert to latest version
+successfully deployed to this environment) or "full_rollback" (revert to latest
+version to successfully complete pipeline)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_promotions">Promotions</h3>
+<div class="listingblock">
+<div class="title">promotions/jenkins-smoke.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">type</span>: <span class="string"><span class="content">JenkinsPromotion</span></span>
+<span class="key">jobs</span>:
+  - <span class="string"><span class="content">basic-smokes-test</span></span>
+  - <span class="string"><span class="content">basic-perf-test</span></span>
+  - <span class="string"><span class="content">end2end-smoke-test</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>JenkinsPromotion</code> as a typed concept would require a list of Jenkins job names
+that would be required to succeed in order to execute the promotion.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -668,20 +826,6 @@ work.
 </table>
 </div>
 <div class="listingblock">
-<div class="title">promotions/jenkins-smoke.yml</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">type</span>: <span class="string"><span class="content">JenkinsPromotion</span></span>
-<span class="key">jobs</span>:
-  - <span class="string"><span class="content">basic-smokes-test</span></span>
-  - <span class="string"><span class="content">basic-perf-test</span></span>
-  - <span class="string"><span class="content">end2end-smoke-test</span></span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><code>JenkinsPromotion</code> as a typed concept would require a list of Jenkins job names
-that would be required to succeed in order to execute the promotion.</p>
-</div>
-<div class="listingblock">
 <div class="title">promotions/status-check.yml</div>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">type</span>: <span class="string"><span class="content">WebhookPromotion</span></span>
@@ -695,12 +839,17 @@ that would be required to succeed in order to execute the promotion.</p>
 application and see if it&#8217;s online before identifying it as "promoted." How
 this might work with a cluster of applications in one service, I&#8217;m not yet sure.</p>
 </div>
+<div class="paragraph">
+<p>`A <strong>manual</strong> promotion is a special case scenario where the UI for DeployDB is
+going to need to present a button to a user to click</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-02-04 16:17:14 PST
+Last updated 2015-02-17 10:51:33 PST
 </div>
 </div>
 </body>

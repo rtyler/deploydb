@@ -15,29 +15,38 @@ system.
 
 === Notifications
 
-Outgoing events
+*Outgoing* events, e.g. webhooks, which should be invoked every time the
+internal DeployDB state machine changes.
 
- * Artifact is ready/available
- * Deploy completed with success/failure indicated in the payload
- * Status change of a Deployment (e.g. a promotion criteria was met)
+ * Deployment created (with Deployment, Artifact, Service, Environment)
+ * Deployment started (with Deployment, Artifact, Service, Environment)
+ * Deployment completed (with Deployment, Artifact, Service, Environment)
+ * Promotion completed (with Deployment, Promotion status)
 
 === Triggers
 
-Inbound events, there's a large symmetry between <<Notifications>> and Triggers.
+Inbound events, there's a large symmetry between <<Notifications>> and
+Triggers. These would be coming from external sources, such as Jenkins, which
+push or change the internal DeployDB state machine.
 
  * Artifact of a new version is available
- * Create a Deployment
- * Change status on a known Deployment
+ * Start Deployment
+ * Complete Deployment
+ * Report Promotion status
 
 
 === Configuring Webhooks
 
+Webhooks can be configured at two levels, globally and per-environment. The
+reason for this distinction is to make it easier to drive behaviors in
+different environments through different deployer/orchestration servers (e.g.
+Rundeck-Integ, Rundeck-Prod).
+
 [source,yaml]
 .webhooks.yml
 ----
-artifact:
-    - created:
 deployment:
+    - started:
     - created:
         - http://jenkins.example.com/job/notify-deploy-created/build
     - completed:
@@ -47,39 +56,7 @@ promotion:
 ----
 
 
-=== Web hook payloads
-
-
-[source,json]
-.Artifact created
-----
-{
-}
-----
-
-
-[source,json]
-.Deployment created
-----
-{
-}
-----
-
-
-[source,json]
-.Deployment completed
-----
-{
-}
-----
-
-
-[source,json]
-.Promotion completed
-----
-{
-}
-----
+See <<Environments>> for environment specific webhook configuration
 
 
 
@@ -111,6 +88,23 @@ be in configuration but rather registered via an API.
 
 It might make sense to have that registration API write some YAML to disk or
 something and allow DeployDB to register artifacts from the same place on disk
+
+=== Environments
+
+[source,yaml]
+.environments/integ.yml
+----
+name: "DeployDB Primary Integration"
+webhooks:
+  deployment:
+    - started:
+    - created:
+        - http://jenkins.example.com/job/integ-deploy-created/build
+    - completed:
+        - http://jenkins.example.com/job/integ-deploy-completed/build
+promotion:
+    - completed:
+----
 
 === Pipelines
 
@@ -153,6 +147,7 @@ pipelines:
 promotions:
   - status-check
   - jenkins-smoke
+failure_strategy: stop
 ----
 
 
@@ -160,6 +155,36 @@ NOTE: The "artifact" declarations in the configuration file are using the
 `groupname:artifactname` syntax which ensure that we can uniquely identify an
 krtifact. It is expected that all artifacts have at least a unique
 `groupname:artifactname` for storage in the data store.
+
+.Service Configuration Properties
+|===
+| Name | Purpose | Type/Options
+
+| name
+| The descriptive name of the service being defined
+| String
+
+| artifacts
+| A list of `groupname:artifactname` pairings defining artifacts which compose the service
+| Array of Strings
+
+| pipelines
+| Named pipeline to push these Artifacts through (_One pipeline per service is currently supported_)
+| Array of valid pipeline identifier Strings
+
+| promotions
+| Named promotions to execute after a Deployment of any of the Artifacts
+completes, in every stage of pipeline
+| Array of valid promotion identifier Strings
+
+| failure_strategy
+| What should happen with an artifact that is part of this service when a
+Deployment fails, or the Promotions indicate that the Artifact isn't valid.
+| One of "stop" (stop pipeline), "rollback" (revert to latest version
+successfully deployed to this environment) or "full_rollback" (revert to latest
+version to successfully complete pipeline)
+
+|===
 
 === Promotions
 
