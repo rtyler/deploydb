@@ -18,8 +18,8 @@ system.
 *Outgoing* events, e.g. webhooks, which should be invoked every time the
 internal DeployDB state machine changes.
 
- * Deployment created (with Deployment, Artifact, Service, Environment)
- * Deployment started (with Deployment, Artifact, Service, Environment)
+ * Deployment created, in a non-started status (with Deployment, Artifact, Service, Environment)
+ * Deployment started, e.g. a deployer service has begun to *actually* deploy (with Deployment, Artifact, Service, Environment)
  * Deployment completed (with Deployment, Artifact, Service, Environment)
  * Promotion completed (with Deployment, Promotion status)
 
@@ -30,8 +30,8 @@ Triggers. These would be coming from external sources, such as Jenkins, which
 push or change the internal DeployDB state machine.
 
  * Artifact of a new version is available
- * Start Deployment
- * Complete Deployment
+ * Started Deployment
+ * Completed Deployment
  * Report Promotion status
 
 

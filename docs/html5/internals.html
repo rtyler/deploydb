@@ -561,10 +561,10 @@ internal DeployDB state machine changes.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Deployment created (with Deployment, Artifact, Service, Environment)</p>
+<p>Deployment created, in a non-started status (with Deployment, Artifact, Service, Environment)</p>
 </li>
 <li>
-<p>Deployment started (with Deployment, Artifact, Service, Environment)</p>
+<p>Deployment started, e.g. a deployer service has begun to <strong>actually</strong> deploy (with Deployment, Artifact, Service, Environment)</p>
 </li>
 <li>
 <p>Deployment completed (with Deployment, Artifact, Service, Environment)</p>
@@ -588,10 +588,10 @@ push or change the internal DeployDB state machine.</p>
 <p>Artifact of a new version is available</p>
 </li>
 <li>
-<p>Start Deployment</p>
+<p>Started Deployment</p>
 </li>
 <li>
-<p>Complete Deployment</p>
+<p>Completed Deployment</p>
 </li>
 <li>
 <p>Report Promotion status</p>
@@ -923,7 +923,7 @@ ns = notStarted</pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-02-17 11:55:16 PST
+Last updated 2015-02-17 12:40:10 PST
 </div>
 </div>
 </body>
