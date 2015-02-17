@@ -1,6 +1,0 @@
-logging:
-  level: INFO
-  loggers:
-http:
-  port: 9000
-  adminPort: 9001

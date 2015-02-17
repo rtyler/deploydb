@@ -1,6 +1,7 @@
 package webhookTestServer.resources
 
 import ch.qos.logback.classic.pattern.ThreadConverter
+import com.codahale.metrics.annotation.Metered
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.codahale.metrics.annotation.Timed
 import com.google.common.base.Optional
@@ -11,55 +12,51 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import webhookTestServer.models.TestCallbackObject
 
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
+import javax.ws.rs.core.UriInfo
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicLong
+
 /**
  *
  */
-@Path("api/webhooks")
 @Consumes(MediaType.APPLICATION_JSON)
 public class TestCallBackobjectResource {
 
     private final Logger logger = LoggerFactory.getLogger(TestCallBackobjectResource.class)
+    @Context private HttpServletRequest servletRequest
 
     private final TestCallbackObject callbackObjectUnderTest
 
-    @PUT
-    @Path("{name}")
-    @UnitOfWork
-    @Timed(name='put-requests')
-    public Response validateAndRespond(@PathParam('name') String name,
-                                       @Valid TestCallbackObject callbackObject){
+    @Metered
+    public Response validateAndRespond(){
 
-        /*
-         * Initialize the name of the PUT object
-         */
-        callbackObject.name = name
+        String httpMethod = this.servletRequest.getMethod()
+        String requestUri = this.servletRequest.requestURI()
+
+        logger.debug(" method %s requestUri %s", httpMethod, requestUri)
 
         /*
          * If the name and payload is not valid request, then we throw BAD_REQUEST
          */
-       if (! callbackObjectUnderTest.validNameAndPayload(callbackObject.name, callbackObject.payload)){
-           throw new WebApplicationException(Response.Status.BAD_REQUEST)
-       }
-
-        /*
-         * If there is a delay specified in the TestCallbackObject, then use it
-         */
-        if(callbackObjectUnderTest.delayBeforeResponseInSecs > 0){
-            ThreadConverter.sleep(callbackObject.delayBeforeResponseInSecs*1000)
+        if (! callbackObjectUnderTest.validMethodAndUri(httpMethod, requestUri)){
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
+
+
         /*
-         * If the payload is valid, then we respond with ACCEPTED
+         * If the payload is valid, then we respond with configured data and response code
          */
-        throw new WebApplicationException(Response.Status.ACCEPTED)
+        return Response.status(callbackObjectUnderTest.responseCode.toInteger())
+                       .entity(callbackObjectUnderTest.responseData)
+                       .sleep(callbackObjectUnderTest.delayBeforeResponseInSecs/1000)
     }
 
     /*

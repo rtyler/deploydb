@@ -1,6 +1,7 @@
 package deploydb.cucumber
 
 import deploydb.DeployDBApp
+import webhookTestServer.webhookTestServerApp
 
 import com.github.mustachejava.DefaultMustacheFactory
 import com.github.mustachejava.Mustache
@@ -21,7 +22,7 @@ import org.hibernate.context.internal.ManagedSessionContext
 class AppHelper {
     private StubAppRunner runner = null
     private Client jerseyClient = null
-
+    private WebhookTestServerAppRunner webhookRunner = null
 
     SessionFactory getSessionFactory() {
         return this.runner.sessionFactory
@@ -117,6 +118,21 @@ class AppHelper {
     void stopApp() {
         if (this.runner != null) {
             this.runner.stop()
+        }
+    }
+
+    void startWebhookTestServerWithConfiguration(String config) {
+        if (this.webhookRunner != null) {
+            return
+        }
+        this.webhookRunner = new WebhookTestServerAppRunner(webhookTestServerApp.class, config)
+        this.webhookRunner.start()
+    }
+
+
+    void stopWebhookTestServerApp() {
+        if (this.webhookRunner != null) {
+            this.webhookRunner.stop()
         }
     }
 }
