@@ -522,6 +522,7 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_pipelines">Pipelines</a></li>
 <li><a href="#_services">Services</a></li>
 <li><a href="#_promotions">Promotions</a></li>
+<li><a href="#_flow_diagram">Flow Diagram</a></li>
 </ul>
 </li>
 </ul>
@@ -794,6 +795,23 @@ version to successfully complete pipeline)</p></td>
 </tr>
 </tbody>
 </table>
+<div class="sect3">
+<h4 id="_service_defaults">Service Defaults</h4>
+<div class="paragraph">
+<p>DeployDB should support a special file called <code>_defaults.yml</code> which can contain
+default Artifacts which can be considered part of every Service.  This might
+include a <code>puppet-users</code> module, <code>logstash-agent</code> or other globally applicable
+Artifacts which should trigger Deployments for the given Services..</p>
+</div>
+<div class="listingblock">
+<div class="title">services/_defaults.yml</div>
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="key">artifacts</span>:
+  - <span class="string"><span class="content">com.github.lookout:puppet-users</span></span>
+  - <span class="string"><span class="content">com.github.lookout:puppet-datadog</span></span></code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_promotions">Promotions</h3>
@@ -844,12 +862,68 @@ this might work with a cluster of applications in one service, I&#8217;m not yet
 going to need to present a button to a user to click</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_flow_diagram">Flow Diagram</h3>
+<div class="literalblock">
+<div class="content">
+<pre>initiator        deployDb            deployer1        deployer2       tester
+   +                 +                   +               +               +
+   |   A1' created   |                   |               |               |
+   +-----------------&gt;                   |               |               |
+   | create artifact | D1=ns, A1',S1,E1  |               |               |
+   |                 +-------------------&gt;               |               |
+   |                 | Deployment Start  |               |               |
+   |                 |                   |               |               |
+   |                 |    D1=started     |               |               |
+   |                 &lt;-------------------+               |               |
+   |                 | Deployment Startd |               |               |
+   |                 |                   |               |               |
+   |                 |    D1=compltd     |               |               |
+   |                 &lt;-------------------+               |               |
+   |                 | Deployment Compltd|               |               |
+   |                 |                   +               +               |
+   |                 |   D1, A1',S1,S1  (Deployment Completed)           |
+   |                 +-------------------+---------------+---------------&gt;
+   |                 |                   |               |               |
+   |                 |   D1, P1-PASSED   |               |               |
+   |                 &lt;---------+-----------------------------------------+
+   |                 |                   |               |               |
+   |                 | D2=ns, A1',S1,E2  |               |               |
+   |                 +-----------------------------------&gt;               |
+   |                 | Deployment Start  |               |               |
+   |                 |                   |               |               |
+   |                 |    D2=started     |               |               |
+   |                 &lt;-----------------------------------+               |
+   |                 | Deployment Startd |               |               |
+   |                 |                   |               |               |
+   |                 |    D2=compltd     |               |               |
+   |                 &lt;-----------------------------------+               |
+   |                 | Deployment Compltd|               |               |
+   |                 |                   +               +               |
+   |                 |   D2, A1',S1,E2  (Deployment Completed)           |
+   |                 +-------------------+---------------+---------------&gt;
+   |                 |                   |               |               |
+   |                 |   D2, P1-PASSED   |               |               |
+   |                 &lt;---------+-----------------------------------------+
+   |                 |                   |               |               |
+   +                 +                   +               +               +</pre>
+</div>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>Legend:
+Service S1 = Artifacts (A1, A2),Pipline (PL1), Promotions (P1)
+Pipline PL1 = Enviroment (E1), Enviroment (E2)
+ns = notStarted</pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2015-02-17 10:51:33 PST
+Last updated 2015-02-17 11:55:16 PST
 </div>
 </div>
 </body>
