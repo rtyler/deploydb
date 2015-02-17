@@ -186,6 +186,22 @@ version to successfully complete pipeline)
 
 |===
 
+
+==== Service Defaults
+
+DeployDB should support a special file called `_defaults.yml` which can contain
+default Artifacts which can be considered part of every Service.  This might
+include a `puppet-users` module, `logstash-agent` or other globally applicable
+Artifacts which should trigger Deployments for the given Services..
+
+[source,yaml]
+.services/_defaults.yml
+----
+artifacts:
+  - com.github.lookout:puppet-users
+  - com.github.lookout:puppet-datadog
+----
+
 === Promotions
 
 
