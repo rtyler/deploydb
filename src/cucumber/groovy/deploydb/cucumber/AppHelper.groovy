@@ -10,6 +10,7 @@ import org.glassfish.jersey.client.ClientConfig
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider
+import org.glassfish.jersey.client.JerseyInvocation
 import javax.ws.rs.core.Response
 import javax.ws.rs.client.Entity
 
@@ -75,25 +76,32 @@ class AppHelper {
         return this.jerseyClient
     }
 
-    Response makeRequestToPath(String path, String method, Entity entity) {
+    /**
+     * Create the proper full URL for our running app with the given path.
+     *
+     * If this is an admin request, we'll hit the admin port correctly
+     */
+    String urlWithPort(String path, Boolean isAdmin) {
+        int port = isAdmin ? runner.adminPort : runner.localPort
+        return String.format("http://localhost:%d${path}", port)
+    }
+
+
+    JerseyInvocation makeRequestToPath(String path, String method, Entity entity) {
         return this.makeRequestToPath(path, method, entity, false)
     }
 
-    Response makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
-        int port = isAdmin ? runner.adminPort : runner.localPort
-        String url = String.format("http://localhost:%d${path}", port)
-
-        return client.target(url)
+    JerseyInvocation makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
+        return client.target(urlWithPort(path, isAdmin))
                      .request()
                      .build(method, entity)
-                     .invoke()
     }
 
     /**
      * Execute a POST to the test server for step definitions
      */
     Response postJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody))
+        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody)).invoke()
     }
 
     /**
@@ -101,11 +109,11 @@ class AppHelper {
      */
     Response patchJsonToPath(String path, String requestBody) {
         String mediaType = 'application/json-patch'
-        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType))
+        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType)).invoke()
     }
 
     Response deleteFromPath(String path) {
-        return this.makeRequestToPath(path, 'DELETE', null)
+        return this.makeRequestToPath(path, 'DELETE', null).invoke()
     }
 
     /**
@@ -113,7 +121,7 @@ class AppHelper {
      * right port in our test application
      */
     Response getFromPath(String path, boolean isAdmin) {
-        return this.makeRequestToPath(path, 'GET', null , isAdmin)
+        return this.makeRequestToPath(path, 'GET', null , isAdmin).invoke()
     }
 
     void startAppWithConfiguration(String config) {

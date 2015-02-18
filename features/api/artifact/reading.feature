@@ -22,6 +22,19 @@ Feature: Artifact READ APIs
       }
     """
 
+  @wip
+  Scenario: Fetching an artifact with the proper media type
+
+    It is encouraged to specify the version of the API you would like to
+    receive inside of a Accept header. If this header is not specified than the
+    client is expected to receive the v1 version of the JSON API
+
+    Given there is an artifact
+    When I GET "/api/artifacts/1" with custom headers:
+      | Header Name | Value                            |
+      | Accept      | application/vnd.deploydb.v1+json |
+    Then the response should be 200
+
   Scenario: Fetching an artifact by ID that doesn't exist
 
     When I GET "/api/artifacts/1"

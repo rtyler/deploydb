@@ -19,22 +19,23 @@ import java.util.concurrent.atomic.AtomicLong
 
 import deploydb.dao.ArtifactDAO
 import deploydb.models.Artifact
+import deploydb.provider.V1TypeProvider
 
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class ArtifactResource {
     private final ArtifactDAO dao
     private final Logger logger = LoggerFactory.getLogger(ArtifactResource.class)
 
-    public ArtifactResource(ArtifactDAO dao) {
+    ArtifactResource(ArtifactDAO dao) {
         this.dao = dao
     }
 
     @POST
     @UnitOfWork
     @Timed(name='put-requests')
-    public Response createArtifact(@Valid Artifact artifact) {
+    Response createArtifact(@Valid Artifact artifact) {
 
         Artifact created = this.dao.persist(artifact)
 
@@ -45,7 +46,7 @@ public class ArtifactResource {
     @Path("{id}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    public Artifact byIdentifier(@Context HttpHeaders headers,
+    Artifact byIdentifier(@Context HttpHeaders headers,
                                @PathParam("id") LongParam artifactId) {
         Artifact artifact = this.dao.get(artifactId.get())
 
@@ -59,7 +60,7 @@ public class ArtifactResource {
     @Path("by-module/{group}:{name}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    public List<Artifact> byName(@PathParam('group') String artifactGroup,
+    List<Artifact> byName(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName,
                          @QueryParam("pageNumber") @DefaultValue("0") IntParam artifactPageNumber,
                          @QueryParam("perPageSize") @DefaultValue("5") IntParam artifactPerPageSize){
@@ -76,7 +77,7 @@ public class ArtifactResource {
     @Path("by-module/{group}:{name}/latest")
     @UnitOfWork
     @Timed(name = "get-requests")
-    public Artifact byNameLatest(@PathParam('group') String artifactGroup,
+    Artifact byNameLatest(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName){
         Artifact artifact = this.dao.findLatestByGroupAndName(artifactGroup,
                                                             artifactName)
