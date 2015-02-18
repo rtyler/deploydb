@@ -18,6 +18,9 @@ import org.hibernate.SessionFactory
 import org.hibernate.Transaction
 import org.hibernate.context.internal.ManagedSessionContext
 
+import deploydb.registry.ModelRegistry
+import deploydb.models.Service
+
 class AppHelper {
     private StubAppRunner runner = null
     private Client jerseyClient = null
@@ -44,6 +47,14 @@ class AppHelper {
         }
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper Service Registry
+     *
+     * @param c (required) Closure to execute 
+     */
+    void withServiceRegistry(Closure c) {
+        c.call(this.runner.serviceRegistry)
+    }
 
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
@@ -59,7 +70,7 @@ class AppHelper {
         if (this.jerseyClient == null) {
             ClientConfig clientConfig = new ClientConfig()
             clientConfig.connectorProvider(new ApacheConnectorProvider())
-            this.jerseyClient = ClientBuilder.newClient(clientConfig);
+            this.jerseyClient = ClientBuilder.newClient(clientConfig)
         }
         return this.jerseyClient
     }

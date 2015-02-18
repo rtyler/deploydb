@@ -26,8 +26,6 @@ When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
 
 When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
 
-    print "MVK : When I PUT, path = $path, var = $var, varSize = $varSize\n"
-
     // Create a randomString of size varSize+1
     String randomString = "test-".padRight(varSize+1, "a")
 

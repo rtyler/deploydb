@@ -40,4 +40,23 @@ class Service {
     @JsonProperty
     @Size(max=10)
     List<String> promotions
+
+    /**
+     * Empty constructor used by Jackson for object deserialization
+     */
+    Service() { }
+
+    /**
+     *  Constructor to be used by DeployDB internally. It accepts all
+     *  of the parameters
+     */
+    Service(String name,
+            List<String> artifacts,
+            List<String> pipelines,
+            List<String> promotions) {
+        this.name = name
+        this.artifacts = artifacts
+        this.pipelines = pipelines
+        this.promotions = promotions
+    }
 }
