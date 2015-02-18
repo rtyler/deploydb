@@ -21,3 +21,25 @@ Given(~/^there are artifacts$/) { ->
         dao.persist(a2)
     }
 }
+
+Given(~/^I have an artifact request$/) { ->
+}
+
+And(~/^the (.*?) is over ([1-9][0-9]*) characters$/) { String var, int varSize ->
+
+    // Create a randomString of size varSize+1
+    String randomString = "test-".padRight(varSize+1, "a")
+
+    group = var == "group" ? randomString : "com.example.cucumber"
+    name  = var == "name" ? randomString : "cukes"
+    version = var == "version" ? randomString : "1.2.345"
+    sourceUrl = var == "sourceUrl" ? randomString : "http://example.com/cucumber.jar"
+
+    requestBody = """ {
+        "group" : "$group",
+        "name" : "$name",
+        "version" : "$version",
+        "sourceUrl" : "$sourceUrl"
+      }
+    """
+}

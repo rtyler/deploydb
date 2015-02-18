@@ -28,6 +28,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
+    private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
         new DeployDBApp().run(args)
@@ -81,6 +82,10 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
                 return config.getFlywayFactory()
             }
         })
+
+
+        typeProvider = new provider.V1TypeProvider(bootstrap.objectMapper,
+                                                    bootstrap.validatorFactory.validator)
     }
 
     @Override
@@ -95,6 +100,8 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
 
+
+        environment.jersey().register(typeProvider)
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
         environment.jersey().register(new DeploymentResource(ddao, adao))

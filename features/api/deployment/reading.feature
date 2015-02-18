@@ -8,7 +8,7 @@ Feature: Deployment READ APIs
   Scenario: Fetching a deployment by ID
 
     Given there is a deployment
-    When I GET "/api/v1/deployments/1"
+    When I GET "/api/deployments/1"
     Then the response should be 200
     And the body should be JSON:
     """
@@ -30,5 +30,5 @@ Feature: Deployment READ APIs
 
   Scenario: Fetching a deployment by ID that doesn't exist
 
-    When I GET "/api/v1/deployments/1"
+    When I GET "/api/deployments/1"
     Then the response should be 404
