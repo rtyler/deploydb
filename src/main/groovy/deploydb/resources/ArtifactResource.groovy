@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong
 import deploydb.dao.ArtifactDAO
 import deploydb.models.Artifact
 
-@Path("/api/v1/artifacts")
+@Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ArtifactResource {
@@ -31,7 +31,7 @@ public class ArtifactResource {
         this.dao = dao
     }
 
-    @PUT
+    @POST
     @UnitOfWork
     @Timed(name='put-requests')
     public Response createArtifact(@Valid Artifact artifact) {

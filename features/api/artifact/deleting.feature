@@ -9,6 +9,6 @@ Feature: Artifact DELETE APIs
     Once artifacts are in DeployDB they're there forever. FOREVER.
 
     Given there is an artifact
-    When I DELETE "/api/v1/artifacts/1"
+    When I DELETE "/api/artifacts/1"
     Then the response should be 405
 

@@ -20,12 +20,11 @@ When(~/^I DELETE "(.*?)"$/) { String path ->
     response = deleteFromPath(path)
 }
 
-When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
-    response = putJsonToPath(path, requestBody)
+When(~/^I POST to "(.*?)" with:$/) { String path, String requestBody ->
+    response = postJsonToPath(path, requestBody)
 }
 
-When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
-
+When(~/^I POST to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
     // Create a randomString of size varSize+1
     String randomString = "test-".padRight(varSize+1, "a")
 
@@ -33,7 +32,7 @@ When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String 
     name  = var == "name" ? randomString : "cukes"
     version = var == "version" ? randomString : "1.2.345"
     sourceUrl = var == "sourceUrl" ? randomString : "http://example.com/cucumber.jar"
-    
+
     requestBody = """ {
         "group" : "$group",
         "name" : "$name",
@@ -42,7 +41,7 @@ When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String 
       }
     """
 
-    response = putJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody)
 }
 
 When(~/^I PATCH "(.*?)" with:$/) { String path, String requestBody ->
@@ -93,6 +92,6 @@ And(~/^the (.*?) is over ([1-9][0-9]*) characters$/) { String var, int varSize -
     """
 }
 
-When(~/^I PUT to "(.*?)"$/) { String path ->
-    response = putJsonToPath(path, requestBody)
+When(~/^I POST to "(.*?)"$/) { String path ->
+    response = postJsonToPath(path, requestBody)
 }

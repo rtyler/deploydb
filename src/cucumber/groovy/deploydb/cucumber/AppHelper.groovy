@@ -90,10 +90,10 @@ class AppHelper {
     }
 
     /**
-     * Execute a PUT to the test server for step definitions
+     * Execute a POST to the test server for step definitions
      */
-    Response putJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'PUT', Entity.json(requestBody))
+    Response postJsonToPath(String path, String requestBody) {
+        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody))
     }
 
     /**
