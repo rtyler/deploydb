@@ -3,7 +3,7 @@ import cucumber.api.*
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import deploydb.models.Service
-import deploydb.resources.ModelRegistry
+import deploydb.registry.ModelRegistry
 
 Given(~/^there is an service$/) { ->
     withServiceRegistry { ModelRegistry<Service> serviceRegistry ->

@@ -16,6 +16,7 @@ import org.joda.time.DateTimeZone
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import deploydb.registry.ModelRegistry
 import deploydb.resources.*
 import deploydb.health.*
 import deploydb.models.*

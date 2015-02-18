@@ -2,7 +2,7 @@ package deploydb.cucumber
 
 import deploydb.models.Artifact
 import deploydb.models.Service
-import deploydb.resources.ModelRegistry
+import deploydb.registry.ModelRegistry
 
 class ModelHelper {
 
@@ -30,7 +30,7 @@ class ModelHelper {
                                       [ 'detoprod' ],
                                       [ 'status-check',
                                         'jenkins-smoke' ])
-        serviceRegistry.insert(service)
+        serviceRegistry.put(service.name, service)
         return service
     }
 
@@ -45,6 +45,6 @@ class ModelHelper {
                                       [ 'detoprod' ],
                                       [ 'status-check',
                                         'jenkins-smoke' ])
-        serviceRegistry.insert(service)
+        serviceRegistry.put(service.name, service)
         return service}
 }

@@ -18,7 +18,7 @@ import org.hibernate.SessionFactory
 import org.hibernate.Transaction
 import org.hibernate.context.internal.ManagedSessionContext
 
-import deploydb.resources.ModelRegistry
+import deploydb.registry.ModelRegistry
 import deploydb.models.Service
 
 class AppHelper {
@@ -53,8 +53,7 @@ class AppHelper {
      * @param c (required) Closure to execute 
      */
     void withServiceRegistry(Closure c) {
-        ModelRegistry<Service> serviceRegistry = this.runner.serviceRegistry
-        c.call(serviceRegistry)
+        c.call(this.runner.serviceRegistry)
     }
 
     String processTemplate(String buffer, Map scope) {
@@ -71,7 +70,7 @@ class AppHelper {
         if (this.jerseyClient == null) {
             ClientConfig clientConfig = new ClientConfig()
             clientConfig.connectorProvider(new ApacheConnectorProvider())
-            this.jerseyClient = ClientBuilder.newClient(clientConfig);
+            this.jerseyClient = ClientBuilder.newClient(clientConfig)
         }
         return this.jerseyClient
     }

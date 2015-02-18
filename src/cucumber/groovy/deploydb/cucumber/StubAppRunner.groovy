@@ -23,7 +23,7 @@ import org.junit.runners.model.Statement
 import javax.annotation.Nullable
 import java.util.Enumeration
 
-import deploydb.resources.ModelRegistry
+import deploydb.registry.ModelRegistry
 import deploydb.models.Service
 
 /**
