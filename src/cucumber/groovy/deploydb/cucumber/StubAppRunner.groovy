@@ -23,6 +23,9 @@ import org.junit.runners.model.Statement
 import javax.annotation.Nullable
 import java.util.Enumeration
 
+import deploydb.resources.ModelRegistry
+import deploydb.models.Service
+
 /**
  * Class for running the Dropwizard app
  *
@@ -38,6 +41,7 @@ public class StubAppRunner<C extends Configuration> {
     private Environment environment
     private Server jettyServer
     private SessionFactory sessionFactory
+    private ModelRegistry<Service> serviceRegistry
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -79,6 +83,11 @@ public class StubAppRunner<C extends Configuration> {
                              * it's up and running
                              */
                             sessionFactory = application.sessionFactory
+
+                            /* Get a ModelRegistry<Service> out of the application once
+                             * it's up and running
+                             */
+                            serviceRegistry = application.serviceRegistry
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB
@@ -137,13 +146,5 @@ public class StubAppRunner<C extends Configuration> {
 
     public <A extends Application<C>> A getApplication() {
         return (A) application
-    }
-
-    Environment getEnvironment() {
-        return environment
-    }
-
-    SessionFactory getSessionFactory() {
-        return sessionFactory
     }
 }

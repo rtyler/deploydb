@@ -26,6 +26,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(Artifact, Deployment)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
+    private ModelRegistry<Service> serviceRegistry
 
     static void main(String[] args) throws Exception {
         new DeployDBApp().run(args)
@@ -86,6 +87,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
                     Environment environment) {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
         final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
+        serviceRegistry = new ModelRegistry<Service>(Service.class)
 
         environment.lifecycle().manage(webhooks)
 
@@ -95,5 +97,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))
         environment.jersey().register(new DeploymentResource(ddao, adao))
+        environment.jersey().register(new ServiceResource(serviceRegistry))
     }
 }
