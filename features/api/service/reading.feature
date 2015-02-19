@@ -12,11 +12,11 @@ Feature: Service READ APIs
     And the body should be JSON:
     """
       [{
-        "ident" : "faas",
-        "description" : "Fun as a Service",
+        "ident" : "alas",
+        "description" : "Auditlog as a Service",
         "artifacts" : [
-            "com.github.lookout:foas",
-            "com.github.lookout.puppet:puppet-foas",
+            "com.github.lookout:alas",
+            "com.github.lookout.puppet:puppet-alas",
             "com.github.lookout:puppet-mysql"
         ],
         "pipelines" : [
@@ -28,11 +28,11 @@ Feature: Service READ APIs
         ]
       },
       {
-        "ident" : "alas",
-        "description" : "Auditlog as a Service",
+        "ident" : "faas",
+        "description" : "Fun as a Service",
         "artifacts" : [
-            "com.github.lookout:alas",
-            "com.github.lookout.puppet:puppet-alas",
+            "com.github.lookout:foas",
+            "com.github.lookout.puppet:puppet-foas",
             "com.github.lookout:puppet-mysql"
         ],
         "pipelines" : [

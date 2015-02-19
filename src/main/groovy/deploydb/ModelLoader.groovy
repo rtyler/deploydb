@@ -13,10 +13,9 @@ import javax.validation.Validation
 import javax.validation.Validator
 
 /**
- * Model Registry object
+ * Model Loader object
  *
- * It creates the configuration driven model objects. The key for Model 
- * instances is String. 
+ * It instantiates a model object from the yaml configuration.
  */
 @TypeChecked
 class ModelLoader<T> {
