@@ -1,4 +1,4 @@
-package deploydb.models
+package deploydb.models.Webhook
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.NotEmpty
@@ -6,32 +6,49 @@ import org.hibernate.validator.constraints.NotEmpty
 import javax.validation.constraints.Size
 
 /**
- *
+ * Class for Webhook's deployment configuration.
  */
-class WebhookDeployment {
+class Deployment {
 
-    @Size(max=2)
+    /**
+     * List of URI associated with deployment started state
+     */
     @JsonProperty
     List<String> started
 
-    @NotEmpty
-    @Size(max=2)
+    /**
+     * List of URI associated with deployment created state
+     */
     @JsonProperty
     List<String> created
 
-    @NotEmpty
-    @Size(max=2)
+    /**
+     * List of URI associated with deployment completed state
+     */
     @JsonProperty
     List<String> completed
 
+    /**
+     * List of URI associated with deployment verified state
+     */
+    @JsonProperty
+    List<String> verified
 
-    WebhookDeployment() {}
+    /**
+     * Empty constructor used by Jackson for object deserialization
+     */
+    Deployment() {}
 
-    WebhookDeployment(List<String> started,
-                      List<String> created,
-                      List<String> completed){
+    /**
+     * Constructor with all the parameters specified used by deployDb
+     */
+    Deployment(List<String> started,
+               List<String> created,
+               List<String> completed,
+               List<String> verified){
         this.started = started
         this.created = created
         this.completed = completed
+        this.verified = verified
     }
 }

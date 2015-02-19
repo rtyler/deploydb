@@ -7,21 +7,8 @@ Feature: Webhook invocation  when deployment is created
       deployment:
         created: "http://{{webhook_url}}"
     """
-    And the service configuration:
-    """
-    name: "Fun as a Service"
-    artifacts:
-      - com.github.lookout:foas
-      - com.github.lookout.puppet:puppet-foas
-      - com.github.lookout:puppet-mysql
-      - com.example.cucumber:cucumber-artifact
-    pipelines:
-      - devtoprod
-    promotions:
-      - status-check
-      - jenkins-smoke
-    """
-    When I PUT to "/api/v1/artifacts" with an artifact
+    And Given a service is configured
+    When I POST to "/api/v1/artifacts" with an artifact
     Then the webhook should be invoked with the JSON:
     """
       {

@@ -8,10 +8,10 @@ Feature: Webhook invocation when promotion is completed
         completed: "http://{{webhook_url}}"
     """
     And there is an artifact
-    When I trigger deployment PATCH "/api/deployments/1" with:
+    And Given the service has one promotion criteria defined
+    When I trigger deployment POST "/api/deployments/1/promotions" with:
     """
       {
-        "promotion":{
           "name": "status-check"
           "url" : "http://local.lookout.com/jenkins/job-id/2/results"
           "status" : "SUCCESS"
@@ -32,10 +32,10 @@ Feature: Webhook invocation when promotion is completed
         "service" : "fun as service"
         "environment" : "dev-apha",
         "status" : "VERIFIED",
-        "promotion":{
+        "promotion":[{
           "name": "status-check"
           "url" : "http://local.lookout.com/jenkins/job-id/2/results"
           "status" : "SUCCESS"
-        }
+        }]
       }
     """
