@@ -1,4 +1,4 @@
-name: "Fun as a Service"
+description: "Fun as a Service"
 artifacts:
   - com.github.lookout:foas
   - com.github.lookout.puppet:puppet-foas

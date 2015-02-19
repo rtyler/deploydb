@@ -21,14 +21,14 @@ import deploydb.models.Service
 /**
  * ServiceResource class registered with JettyClient for servicing REST request
  */
-@Path("/api/v1/services")
+@Path("/api/services")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class ServiceResource {
     private final ModelRegistry<Service> serviceRegistry
     private final Logger logger = LoggerFactory.getLogger(ServiceResource.class)
 
-    public ServiceResource(ModelRegistry<Service> serviceRegistry) {
+    ServiceResource(ModelRegistry<Service> serviceRegistry) {
         this.serviceRegistry = serviceRegistry
     }
 
@@ -38,7 +38,7 @@ public class ServiceResource {
     @GET
     @UnitOfWork
     @Timed(name = "get-requests")
-    public List<Service> getAll() {
+    List<Service> getAll() {
         List<Service> serviceTable = this.serviceRegistry.getAll()
 
         if (serviceTable.isEmpty()) {
@@ -54,8 +54,8 @@ public class ServiceResource {
     @Path("{name}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    public Service byName(@PathParam("name") String serviceName) {
-        Service service = this.serviceRegistry.get(serviceName)
+    Service byName(@PathParam("name") String serviceIdent) {
+        Service service = this.serviceRegistry.get(serviceIdent)
 
         if (service == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
