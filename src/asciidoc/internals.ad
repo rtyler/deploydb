@@ -7,24 +7,57 @@ components within the conceptual "DeployDB box."
 
 == Web hooks
 
+"Web hooks" in this section technically covers "web hooks" but also public APIs
+that other services like Jenkins might use to trigger changes in the DeployDB
+system.
 
 == Events
 
 === Notifications
 
-Outgoing events
+*Outgoing* events, e.g. webhooks, which should be invoked every time the
+internal DeployDB state machine changes.
 
- * Artifact is ready/available
- * Deploy completed
- * Verification of a deployment completed
+ * Deployment created, in a non-started status (with Deployment, Artifact, Service, Environment)
+ * Deployment started, e.g. a deployer service has begun to *actually* deploy (with Deployment, Artifact, Service, Environment)
+ * Deployment completed (with Deployment, Artifact, Service, Environment)
+ * Promotion completed (with Deployment, Promotion status)
 
 === Triggers
 
-Inbound events, there's a large symmetry between <<Notifications>> and Triggers.
+Inbound events, there's a large symmetry between <<Notifications>> and
+Triggers. These would be coming from external sources, such as Jenkins, which
+push or change the internal DeployDB state machine.
 
  * Artifact of a new version is available
- * Deployment has completed
- * Verficiation completed
+ * Started Deployment
+ * Completed Deployment
+ * Report Promotion status
+
+
+=== Configuring Webhooks
+
+Webhooks can be configured at two levels, globally and per-environment. The
+reason for this distinction is to make it easier to drive behaviors in
+different environments through different deployer/orchestration servers (e.g.
+Rundeck-Integ, Rundeck-Prod).
+
+[source,yaml]
+.webhooks.yml
+----
+deployment:
+    - started:
+    - created:
+        - http://jenkins.example.com/job/notify-deploy-created/build
+    - completed:
+        - http://jenkins.example.com/job/notify-deploy-completed/build
+promotion:
+    - completed:
+----
+
+
+See <<Environments>> for environment specific webhook configuration
+
 
 
 == Queueing
@@ -47,7 +80,7 @@ information into a database. This should be abstracted through a JDBC connector.
 
 
 
-== Environments/Pipelines
+== Environments/Pipelines/Promotions
 
 Current thinking: if pipelines are defined in "configuration" as are
 "environments" then the actual registration of an artifact probably shouldn't
@@ -56,6 +89,25 @@ be in configuration but rather registered via an API.
 It might make sense to have that registration API write some YAML to disk or
 something and allow DeployDB to register artifacts from the same place on disk
 
+=== Environments
+
+[source,yaml]
+.environments/integ.yml
+----
+name: "DeployDB Primary Integration"
+webhooks:
+  deployment:
+    - started:
+    - created:
+        - http://jenkins.example.com/job/integ-deploy-created/build
+    - completed:
+        - http://jenkins.example.com/job/integ-deploy-completed/build
+  promotion:
+    - completed:
+----
+
+=== Pipelines
+
 [source,yaml]
 .pipelines/devtoprod.yml
 ----
@@ -63,10 +115,23 @@ environments:
   - dev-alpha
   - dev-beta
   - integ
-  - preprod
+  - preprod:
+    promotions:
+        - prod-preflight
+        - manual
   - prod
 ----
 
+
+The Pipeline concept allows for the configuring of a linear set of Environments
+for Artifacts to be passed through. At each step of the way the Promotions
+defined for a given Service traversing the pipeline will need to be
+validated. E.g. the "FoaS" Service much execute its Promotions between
+`integ` and `preprod`, but before going from `preprod` to `prod` the
+`prod-preflight` and a `manual` Promotion must be satisfied.
+
+
+=== Services
 
 [source,yaml]
 .services/foas.yml
@@ -74,21 +139,71 @@ environments:
 
 name: "Fun as a Service"
 artifacts:
-  - foas
-  - puppet-foas
-  - puppet-mysql
+  - com.github.lookout:foas
+  - com.github.lookout.puppet:puppet-foas
+  - com.github.lookout:puppet-mysql
 pipelines:
   - devtoprod
 promotions:
-  - manual
-  - jenkins-smoke
   - status-check
+  - jenkins-smoke
+failure_strategy: stop
 ----
 
 
-NOTE: The "promotion" concepts described below are not final and really just
-brainstorming to flesh out how configuration of promotions as a concept *might*
-work.
+NOTE: The "artifact" declarations in the configuration file are using the
+`groupname:artifactname` syntax which ensure that we can uniquely identify an
+krtifact. It is expected that all artifacts have at least a unique
+`groupname:artifactname` for storage in the data store.
+
+.Service Configuration Properties
+|===
+| Name | Purpose | Type/Options
+
+| name
+| The descriptive name of the service being defined
+| String
+
+| artifacts
+| A list of `groupname:artifactname` pairings defining artifacts which compose the service
+| Array of Strings
+
+| pipelines
+| Named pipeline to push these Artifacts through (_One pipeline per service is currently supported_)
+| Array of valid pipeline identifier Strings
+
+| promotions
+| Named promotions to execute after a Deployment of any of the Artifacts
+completes, in every stage of pipeline
+| Array of valid promotion identifier Strings
+
+| failure_strategy
+| What should happen with an artifact that is part of this service when a
+Deployment fails, or the Promotions indicate that the Artifact isn't valid.
+| One of "stop" (stop pipeline), "rollback" (revert to latest version
+successfully deployed to this environment) or "full_rollback" (revert to latest
+version to successfully complete pipeline)
+
+|===
+
+
+==== Service Defaults
+
+DeployDB should support a special file called `_defaults.yml` which can contain
+default Artifacts which can be considered part of every Service.  This might
+include a `puppet-users` module, `logstash-agent` or other globally applicable
+Artifacts which should trigger Deployments for the given Services..
+
+[source,yaml]
+.services/_defaults.yml
+----
+artifacts:
+  - com.github.lookout:puppet-users
+  - com.github.lookout:puppet-datadog
+----
+
+=== Promotions
+
 
 [source,yaml]
 .promotions/jenkins-smoke.yml
@@ -104,6 +219,10 @@ jobs:
 `JenkinsPromotion` as a typed concept would require a list of Jenkins job names
 that would be required to succeed in order to execute the promotion.
 
+NOTE: The "promotion" concepts described below are not final and really just
+brainstorming to flesh out how configuration of promotions as a concept *might*
+work.
+
 
 [source,yaml]
 .promotions/status-check.yml
@@ -118,3 +237,57 @@ timeout: 15
 `WebhookPromotion` would be something that would make a HTTP GET request to the
 application and see if it's online before identifying it as "promoted." How
 this might work with a cluster of applications in one service, I'm not yet sure.
+
+
+`A *manual* promotion is a special case scenario where the UI for DeployDB is
+going to need to present a button to a user to click
+
+=== Flow Diagram
+
+  initiator        deployDb            deployer1        deployer2       tester
+     +                 +                   +               +               +  
+     |   A1' created   |                   |               |               |  
+     +----------------->                   |               |               |  
+     | create artifact | D1=ns, A1',S1,E1  |               |               |  
+     |                 +------------------->               |               |  
+     |                 | Deployment Start  |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D1=started     |               |               |  
+     |                 <-------------------+               |               |  
+     |                 | Deployment Startd |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D1=compltd     |               |               |  
+     |                 <-------------------+               |               |  
+     |                 | Deployment Compltd|               |               |  
+     |                 |                   +               +               |  
+     |                 |   D1, A1',S1,S1  (Deployment Completed)           |  
+     |                 +-------------------+---------------+--------------->  
+     |                 |                   |               |               |  
+     |                 |   D1, P1-PASSED   |               |               |  
+     |                 <---------+-----------------------------------------+  
+     |                 |                   |               |               |  
+     |                 | D2=ns, A1',S1,E2  |               |               |  
+     |                 +----------------------------------->               |  
+     |                 | Deployment Start  |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D2=started     |               |               |  
+     |                 <-----------------------------------+               |  
+     |                 | Deployment Startd |               |               |  
+     |                 |                   |               |               |  
+     |                 |    D2=compltd     |               |               |  
+     |                 <-----------------------------------+               |  
+     |                 | Deployment Compltd|               |               |  
+     |                 |                   +               +               |  
+     |                 |   D2, A1',S1,E2  (Deployment Completed)           |  
+     |                 +-------------------+---------------+--------------->  
+     |                 |                   |               |               |  
+     |                 |   D2, P1-PASSED   |               |               |  
+     |                 <---------+-----------------------------------------+  
+     |                 |                   |               |               |  
+     +                 +                   +               +               +  
+                                                                              
+     Legend:                                                                  
+     Service S1 = Artifacts (A1, A2),Pipline (PL1), Promotions (P1)           
+     Pipline PL1 = Enviroment (E1), Enviroment (E2)                           
+     ns = notStarted 
+   

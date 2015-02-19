@@ -11,6 +11,7 @@ import org.glassfish.jersey.client.ClientConfig
 import javax.ws.rs.client.Client
 import javax.ws.rs.client.ClientBuilder
 import org.glassfish.jersey.apache.connector.ApacheConnectorProvider
+import org.glassfish.jersey.client.JerseyInvocation
 import javax.ws.rs.core.Response
 import javax.ws.rs.client.Entity
 
@@ -18,6 +19,9 @@ import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.Transaction
 import org.hibernate.context.internal.ManagedSessionContext
+
+import deploydb.registry.ModelRegistry
+import deploydb.models.Service
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -45,6 +49,14 @@ class AppHelper {
         }
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper Service Registry
+     *
+     * @param c (required) Closure to execute 
+     */
+    void withServiceRegistry(Closure c) {
+        c.call(this.runner.serviceRegistry)
+    }
 
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
@@ -60,30 +72,37 @@ class AppHelper {
         if (this.jerseyClient == null) {
             ClientConfig clientConfig = new ClientConfig()
             clientConfig.connectorProvider(new ApacheConnectorProvider())
-            this.jerseyClient = ClientBuilder.newClient(clientConfig);
+            this.jerseyClient = ClientBuilder.newClient(clientConfig)
         }
         return this.jerseyClient
     }
 
-    Response makeRequestToPath(String path, String method, Entity entity) {
+    /**
+     * Create the proper full URL for our running app with the given path.
+     *
+     * If this is an admin request, we'll hit the admin port correctly
+     */
+    String urlWithPort(String path, Boolean isAdmin) {
+        int port = isAdmin ? runner.adminPort : runner.localPort
+        return String.format("http://localhost:%d${path}", port)
+    }
+
+
+    JerseyInvocation makeRequestToPath(String path, String method, Entity entity) {
         return this.makeRequestToPath(path, method, entity, false)
     }
 
-    Response makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
-        int port = isAdmin ? runner.adminPort : runner.localPort
-        String url = String.format("http://localhost:%d${path}", port)
-
-        return client.target(url)
+    JerseyInvocation makeRequestToPath(String path, String method, Entity entity, Boolean isAdmin) {
+        return client.target(urlWithPort(path, isAdmin))
                      .request()
                      .build(method, entity)
-                     .invoke()
     }
 
     /**
-     * Execute a PUT to the test server for step definitions
+     * Execute a POST to the test server for step definitions
      */
-    Response putJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'PUT', Entity.json(requestBody))
+    Response postJsonToPath(String path, String requestBody) {
+        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody)).invoke()
     }
 
     /**
@@ -91,11 +110,11 @@ class AppHelper {
      */
     Response patchJsonToPath(String path, String requestBody) {
         String mediaType = 'application/json-patch'
-        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType))
+        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType)).invoke()
     }
 
     Response deleteFromPath(String path) {
-        return this.makeRequestToPath(path, 'DELETE', null)
+        return this.makeRequestToPath(path, 'DELETE', null).invoke()
     }
 
     /**
@@ -103,7 +122,7 @@ class AppHelper {
      * right port in our test application
      */
     Response getFromPath(String path, boolean isAdmin) {
-        return this.makeRequestToPath(path, 'GET', null , isAdmin)
+        return this.makeRequestToPath(path, 'GET', null , isAdmin).invoke()
     }
 
     void startAppWithConfiguration(String config) {

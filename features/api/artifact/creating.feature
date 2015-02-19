@@ -9,7 +9,7 @@ Feature: Artifact CREATE APIs
 
     The creation of an artifact requires group, name, version and sourceUrl.
 
-    When I PUT to "/api/v1/artifacts" with:
+    When I POST to "/api/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
@@ -31,10 +31,10 @@ Feature: Artifact CREATE APIs
       }
     """
 
-  @error 
+  @error
   Scenario: The request should fail when creating an Artifact without a group name
 
-    When I PUT to "/api/v1/artifacts" with:
+    When I POST to "/api/artifacts" with:
     """
       {
         "name" : "cukes",
@@ -44,10 +44,10 @@ Feature: Artifact CREATE APIs
     """
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: The request should fail when creating an Artifact without a name
 
-    When I PUT to "/api/v1/artifacts" with:
+    When I POST to "/api/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
@@ -57,10 +57,10 @@ Feature: Artifact CREATE APIs
     """
     Then the response should be 422
 
-  @error 
+  @error
   Scenario: The request should fail when creating an Artifact without a version
 
-    When I PUT to "/api/v1/artifacts" with:
+    When I POST to "/api/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
@@ -73,7 +73,7 @@ Feature: Artifact CREATE APIs
   @error
   Scenario: The request should fail when creating an Artifact without a sourceUrl
 
-    When I PUT to "/api/v1/artifacts" with:
+    When I POST to "/api/artifacts" with:
     """
       {
         "group" : "com.example.cucumber",
@@ -88,7 +88,7 @@ Feature: Artifact CREATE APIs
 
     Given I have an artifact request
     And the group is over 8192 characters
-    When I PUT to "/api/v1/artifacts"
+    When I POST to "/api/artifacts"
     Then the response should be 422
 
   @error
@@ -96,7 +96,7 @@ Feature: Artifact CREATE APIs
 
     Given I have an artifact request
     And the name is over 8192 characters
-    When I PUT to "/api/v1/artifacts"
+    When I POST to "/api/artifacts"
     Then the response should be 422
 
   @error
@@ -104,7 +104,7 @@ Feature: Artifact CREATE APIs
 
     Given I have an artifact request
     And the version is over 255 characters
-    When I PUT to "/api/v1/artifacts"
+    When I POST to "/api/artifacts"
     Then the response should be 422
 
   @error
@@ -112,5 +112,5 @@ Feature: Artifact CREATE APIs
 
     Given I have an artifact request
     And the sourceUrl is over 8192 characters
-    When I PUT to "/api/v1/artifacts"
+    When I POST to "/api/artifacts"
     Then the response should be 422

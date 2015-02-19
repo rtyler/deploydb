@@ -26,7 +26,7 @@ class ArtifactResourceSpec extends Specification {
 
         when:
         fetched = client.target(dropwizard.jerseyTest.baseUri)
-                        .path("/api/v1/artifacts/${artifactId}")
+                        .path("/api/artifacts/${artifactId}")
                         .request()
                         .get(Artifact.class)
 

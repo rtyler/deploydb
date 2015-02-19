@@ -10,7 +10,7 @@ Feature: Artifact UPDATE APIs
     DeployDB. We can't different binaries with the same version, that's silly.
 
     Given there is an artifact
-    When I PATCH "/api/v1/artifacts/1" with:
+    When I PATCH "/api/artifacts/1" with:
     """
       {
         "version" : "9.0.0.0"

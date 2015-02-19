@@ -173,7 +173,7 @@ task publishDocs(type: Exec) {
     group 'Publishing'
     description 'Publish the Asciidoctor docs to gh-pages'
     commandLine 'git'
-    args 'subtree', 'push', '--prefix', 'docs/html5', 'origin', 'gh-pages'
+    args 'subtree', 'push', '--prefix', 'docs/html5', 'upstream', 'gh-pages'
     dependsOn asciidoctor
 }
 

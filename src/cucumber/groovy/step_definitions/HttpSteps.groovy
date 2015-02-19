@@ -2,6 +2,7 @@ import cucumber.api.*
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.glassfish.jersey.client.JerseyInvocation
 import org.joda.time.DateTime
 
 // Add functions to register hooks and steps to this script.
@@ -20,14 +21,11 @@ When(~/^I DELETE "(.*?)"$/) { String path ->
     response = deleteFromPath(path)
 }
 
-When(~/^I PUT to "(.*?)" with:$/) { String path, String requestBody ->
-    response = putJsonToPath(path, requestBody)
+When(~/^I POST to "(.*?)" with:$/) { String path, String requestBody ->
+    response = postJsonToPath(path, requestBody)
 }
 
-When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
-
-    print "MVK : When I PUT, path = $path, var = $var, varSize = $varSize\n"
-
+When(~/^I POST to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
     // Create a randomString of size varSize+1
     String randomString = "test-".padRight(varSize+1, "a")
 
@@ -35,7 +33,7 @@ When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String 
     name  = var == "name" ? randomString : "cukes"
     version = var == "version" ? randomString : "1.2.345"
     sourceUrl = var == "sourceUrl" ? randomString : "http://example.com/cucumber.jar"
-    
+
     requestBody = """ {
         "group" : "$group",
         "name" : "$name",
@@ -44,12 +42,29 @@ When(~/^I PUT to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String 
       }
     """
 
-    response = putJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody)
 }
 
 When(~/^I PATCH "(.*?)" with:$/) { String path, String requestBody ->
     response = patchJsonToPath(path, requestBody)
 }
+
+When(~/^I POST to "(.*?)"$/) { String path ->
+    response = postJsonToPath(path, requestBody)
+}
+
+When(~/^I GET "(.*?)" with custom headers:$/) { String path, DataTable headers ->
+    JerseyInvocation.Builder builder = client.target(urlWithPort(path, false)).request()
+
+    List<List<String>> rawHeaders = headers.raw()
+
+    rawHeaders.subList(1, rawHeaders.size()).each { List<String> row ->
+        builder.header(row[0] as String, row[1] as Object)
+    }
+
+    response = builder.build('GET', null).invoke()
+}
+
 
 Then(~/^the response should be (\d+)$/) { int statusCode ->
     assert response.status == statusCode
@@ -71,30 +86,4 @@ Then(~/^the body should be JSON:$/) { String expectedBody ->
     JsonNode bodyNode = mapper.readTree(body)
 
     assert bodyNode == expectedNode
-}
-
-Given(~/^I have an artifact request$/) { ->
-}
-
-And(~/^the (.*?) is over ([1-9][0-9]*) characters$/) { String var, int varSize ->
-
-    // Create a randomString of size varSize+1
-    String randomString = "test-".padRight(varSize+1, "a")
-
-    group = var == "group" ? randomString : "com.example.cucumber"
-    name  = var == "name" ? randomString : "cukes"
-    version = var == "version" ? randomString : "1.2.345"
-    sourceUrl = var == "sourceUrl" ? randomString : "http://example.com/cucumber.jar"
-
-    requestBody = """ {
-        "group" : "$group",
-        "name" : "$name",
-        "version" : "$version",
-        "sourceUrl" : "$sourceUrl"
-      }
-    """
-}
-
-When(~/^I PUT to "(.*?)"$/) { String path ->
-    response = putJsonToPath(path, requestBody)
 }

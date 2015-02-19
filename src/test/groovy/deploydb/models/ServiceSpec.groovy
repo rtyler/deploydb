@@ -1,22 +1,11 @@
 package deploydb.models
 
 import spock.lang.*
-
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.google.common.collect.Lists
-import com.google.common.io.Resources
-import io.dropwizard.jackson.Jackson
-import org.assertj.core.data.MapEntry
-import io.dropwizard.configuration.ConfigurationFactory
 import io.dropwizard.configuration.ConfigurationParsingException
-import io.dropwizard.configuration.ConfigurationValidationException
-
-import javax.validation.Validation
-import javax.validation.Validator
-import java.io.File
-import java.util.*
-import java.io.IOException
- 
+import io.dropwizard.configuration.ConfigurationValidationException 
+import deploydb.registry.ModelRegistry
+import deploydb.models.Service
 
 class ServiceSpec extends Specification {
     def "ensure Service object can be instantiated"() {
@@ -29,20 +18,13 @@ class ServiceSpec extends Specification {
 }
 
 class ServiceWithArgsSpec extends Specification {
-
-    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator()
-    private final ConfigurationFactory<Service> factory =
-            new ConfigurationFactory<>(Service.class, validator, Jackson.newObjectMapper(), "dw")
-
-    private File getFile(String filename) {
-        ClassLoader classLoader = getClass().getClassLoader()
-        return new File(classLoader.getResource(filename).toURI())
-    }
+    private final ModelRegistry<Service> serviceRegistry =
+            new ModelRegistry<Service>(Service.class)
 
     def "Loading of valid service config file suceeds"() {
         given:
-        File validFile = getFile("services/test-valid.yml")
-        Service service = factory.build(validFile)
+        Service service = serviceRegistry.load("services/test-valid.yml")
+        serviceRegistry.put(service.name, service)
 
         expect:
         service.name == "Fun as a Service"
@@ -52,38 +34,39 @@ class ServiceWithArgsSpec extends Specification {
         service.pipelines[0] == "devtoprod"
         service.promotions[0] == "status-check"
         service.promotions[1] == "jenkins-smoke"
+        serviceRegistry.get("Fun as a Service") == service
     }
 
     def "Loading an empty service config file throws a null pointer exception"() {
-        given:
-        File emptyFile = getFile("services/test-empty.yml")
-        
         when:
-        Service service = factory.build(emptyFile)
+        Service service = serviceRegistry.load("services/test-empty.yml")
 
         then:
         thrown(NullPointerException)
     }
 
     def "Loading a malformed service config file throws throws a parsing exception"() {
-        given:
-        File malformedFile = getFile("services/test-malformed.yml")
-        
         when:
-        Service service = factory.build(malformedFile)
+        Service service = serviceRegistry.load("services/test-malformed.yml")
 
         then:
         thrown(ConfigurationParsingException)
     }
 
     def "Loading a invalid service config file throws throws a validation exception"() {
-        given:
-        File invalidFile = getFile("services/test-invalid.yml")
-        
         when:
-        Service service = factory.build(invalidFile)
+        Service service = serviceRegistry.load("services/test-invalid.yml")
 
         then:
         thrown(ConfigurationValidationException)
+    }
+
+    def "Inserting an empty object in Service Registry throws null pointer exception"() {
+        when:
+        Service service = new Service()
+        serviceRegistry.put(service.name, service)
+
+        then:
+        thrown(NullPointerException)
     }
 }
