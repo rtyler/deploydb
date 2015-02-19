@@ -1,5 +1,8 @@
 package deploydb
 
+import deploydb.registry.ModelRegistry
+import deploydb.models.*
+
 import io.dropwizard.lifecycle.Managed
 
 import com.github.lookout.whoas.InMemoryQueue
@@ -15,6 +18,7 @@ class WebhookManager implements Managed {
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
+    private ModelRegistry<Webhook> webhookModelRegistry
 
     WebhookManager() {
         runner = new SequentialHookRunner(this.queue)
