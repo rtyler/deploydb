@@ -22,12 +22,6 @@ class ModelRegistry<T> {
         modelTable[name] = model
     }
 
-    T loadFromString(String content)
-            throws Exception, ConfigurationParsingException,
-                    ConfigurationValidationException {
-        File.createTempFile('tmp', '.yml').write(content)
-        return load('tmp.yml')
-    }
     /**
      * Return list of all model objects
      */

@@ -48,6 +48,19 @@ class ModelLoader<T> {
     }
 
     /**
+     * Instantiate a new Model using configuration content. We create a
+     * temp file and call load(filename)
+     *
+     * @param Configuration content
+     */
+    T loadFromString(String content)
+            throws Exception, ConfigurationParsingException,
+                    ConfigurationValidationException {
+        File.createTempFile('tmp', '.yml').write(content)
+        return load('tmp.yml')
+    }
+
+    /**
      * Get identifier for model from the the input file 
      *
      * @param File name, file is present in the resources directory
