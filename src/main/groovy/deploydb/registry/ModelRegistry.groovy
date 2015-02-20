@@ -1,7 +1,7 @@
 package deploydb.registry
 
 import groovy.transform.TypeChecked
-import java.util.concurrent.ConcurrentSkipListMap
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Model Registry object
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentSkipListMap
  */
 @TypeChecked
 class ModelRegistry<T> {
-    private ConcurrentSkipListMap<String, T> modelTable = new ConcurrentSkipListMap<String, T>()
+    private ConcurrentHashMap<String, T> modelTable = new ConcurrentHashMap<>()
 
     /**
      * Insert an extant model in the table
@@ -26,7 +26,9 @@ class ModelRegistry<T> {
      * Return list of all model objects
      */
     List<T> getAll() {
-        return new ArrayList<T>(modelTable.values())
+        return modelTable.keySet().sort().collect { String key ->
+            modelTable[key]
+        }
     }
 
     /**
