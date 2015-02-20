@@ -16,6 +16,7 @@ image:https://travis-ci.org/lookout/deploydb.svg?branch=master["Build Status", l
 * link:hacking.html[Hacking on DeployDB]
 * link:restapi/index.html[REST API documentation]
 * link:groovydoc/index.html[Groovydocs]
+* link:workflow.html[DeployDB WorkFlow]
 
 ---
 
