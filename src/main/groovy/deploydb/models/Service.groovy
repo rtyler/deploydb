@@ -11,12 +11,21 @@ import org.hibernate.validator.constraints.NotEmpty
 class Service {
 
     /**
-     * Service name
+     * Service identifier
+     *
+     * Retrieved from the configuration base filename. Used as a key in
+     * registry
+     */
+    @JsonProperty
+    String ident
+
+    /**
+     * Service description
      */
     @NotEmpty
     @Size(max=8192)
     @JsonProperty
-    String name
+    String description
 
     /**
      * List of Artifact names (max 10).
@@ -50,13 +59,44 @@ class Service {
      *  Constructor to be used by DeployDB internally. It accepts all
      *  of the parameters
      */
-    Service(String name,
+    Service(String ident,
+            String description,
             List<String> artifacts,
             List<String> pipelines,
             List<String> promotions) {
-        this.name = name
+        this.ident = ident
+        this.description = description
         this.artifacts = artifacts
         this.pipelines = pipelines
         this.promotions = promotions
+    }
+
+    @Override
+    boolean equals(Object o) {
+
+        /* First object identity */
+        if (this.is(o)) {
+            return true
+        }
+
+        if (!(o instanceof Service)) {
+            return false
+        }
+
+        final Service that = (Service)o
+
+        return Objects.equals(this.ident, that.ident) &&
+                Objects.equals(this.description, that.description) &&
+                Objects.equals(this.artifacts, that.artifacts) &&
+                Objects.equals(this.pipelines, that.pipelines) &&
+                Objects.equals(this.promotions, that.promotions)
+    }
+
+    @Override
+    String toString() {
+        String output
+        output += "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, "
+        output += "pipelines = ${pipelines}, promotions = ${promotions}"
+        return output
     }
 }

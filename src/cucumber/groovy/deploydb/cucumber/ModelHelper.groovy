@@ -23,14 +23,14 @@ class ModelHelper {
      * Creates a sample service object
      */ 
     Service sampleService1(ModelRegistry<Service> serviceRegistry) {
-        Service service = new Service('Fun-as-a-Service',
+        Service service = new Service('faas', 'Fun as a Service',
                                       [ 'com.github.lookout:foas',
                                         'com.github.lookout.puppet:puppet-foas',
                                         'com.github.lookout:puppet-mysql' ],
                                       [ 'detoprod' ],
                                       [ 'status-check',
                                         'jenkins-smoke' ])
-        serviceRegistry.put(service.name, service)
+        serviceRegistry.put(service.ident, service)
         return service
     }
 
@@ -38,13 +38,14 @@ class ModelHelper {
      * Creates a sample service object
      */ 
     Service sampleService2(ModelRegistry<Service> serviceRegistry) {
-        Service service = new Service('Auditlog-as-a-Service',
+        Service service = new Service('alas', 'Auditlog as a Service',
                                       [ 'com.github.lookout:alas',
                                         'com.github.lookout.puppet:puppet-alas',
                                         'com.github.lookout:puppet-mysql' ],
                                       [ 'detoprod' ],
                                       [ 'status-check',
                                         'jenkins-smoke' ])
-        serviceRegistry.put(service.name, service)
-        return service}
+        serviceRegistry.put(service.ident, service)
+        return service
+    }
 }

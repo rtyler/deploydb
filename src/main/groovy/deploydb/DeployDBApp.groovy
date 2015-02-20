@@ -93,7 +93,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
                     Environment environment) {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
         final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
-        serviceRegistry = new ModelRegistry<Service>(Service.class)
+        serviceRegistry = new ModelRegistry<Service>()
 
         environment.lifecycle().manage(webhooks)
 
