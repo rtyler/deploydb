@@ -1,5 +1,9 @@
 package deploydb
 
+import deploydb.registry.ModelRegistry
+import deploydb.models.Webhook.Webhook
+import deploydb.models.*
+
 import io.dropwizard.lifecycle.Managed
 
 import com.github.lookout.whoas.InMemoryQueue
@@ -10,11 +14,13 @@ import com.github.lookout.whoas.AbstractHookQueue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+
 class WebhookManager implements Managed {
     private Thread runnerThread
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
+    private ModelRegistry<Webhook> webhookModelRegistry
 
     WebhookManager() {
         runner = new SequentialHookRunner(this.queue)

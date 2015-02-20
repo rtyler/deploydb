@@ -8,10 +8,12 @@ this.metaClass.mixin(cucumber.api.groovy.Hooks)
 
 Before {
     startAppWithConfiguration('deploydb.cucumber.yml')
+    startWebhookTestServerWithConfiguration('webhookTestServer.example.yml')
 }
 
 After {
     stopApp()
+    stopWebhookTestServerApp()
 }
 
 Before('@freezetime') {
