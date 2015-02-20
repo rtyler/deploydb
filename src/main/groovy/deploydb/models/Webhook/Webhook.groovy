@@ -14,13 +14,27 @@ class Webhook {
      * List of deployments that are part of this webhook configuration.
      */
     @JsonProperty
-    List<Deployment> webhookDeploymentList
+    Deployment deployment
 
     /**
      * List of promotions that are part of this webhook configuration.
      */
     @JsonProperty
-    List<Promotion> webhookPromotionList
+    Promotion promotion
+
+    /**
+     *  Access function for deployment
+     */
+    public Deployment getDeployment(){
+        return this.deployment
+    }
+
+    /**
+     *  Access function for promotion
+     */
+    public Promotion getPromotion(){
+        return this.promotion
+    }
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -31,9 +45,9 @@ class Webhook {
      *  Constructor to be used by DeployDB internally. It accepts all
      *  of the parameters
      */
-    Webhook(List<Deployment> webhookDeploymentList,
-            List<Promotion> webhookPromotionList) {
-        this.webhookDeploymentList = webhookDeploymentList
-        this.webhookPromotionList = webhookPromotionList
+    Webhook(Deployment deployment,
+            Promotion promotion) {
+        this.deployment = deployment
+        this.promotion = promotion
     }
 }

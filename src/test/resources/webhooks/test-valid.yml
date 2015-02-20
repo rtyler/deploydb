@@ -1,0 +1,10 @@
+deployment:
+  created:
+    - http://jenkins.example.com/job/notify-deployment-created/build
+  started:
+    - http://jenkins.example.com/job/notify-deployment-started/build
+  completed:
+    - http://jenkins.example.com/job/notify-deployment-completed/build
+promotion:
+  completed:
+    - http://jenkins.example.com/job/notify-promotion-completed/build

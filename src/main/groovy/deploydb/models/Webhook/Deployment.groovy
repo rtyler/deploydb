@@ -14,30 +14,59 @@ class Deployment {
      * List of URI associated with deployment started state
      */
     @JsonProperty
-    List<String> started
+    private List<String> started
 
     /**
      * List of URI associated with deployment created state
      */
     @JsonProperty
-    List<String> created
+    private List<String> created
 
     /**
      * List of URI associated with deployment completed state
      */
     @JsonProperty
-    List<String> completed
+    private List<String> completed
 
     /**
      * List of URI associated with deployment verified state
      */
     @JsonProperty
-    List<String> verified
+    private List<String> verified
+
+    /*
+     * Access function for created
+     */
+    public List<String> getCreated(){
+        return this.created
+    }
+
+    /*
+     * Access function for started
+     */
+    public List<String> getStarted(){
+        return this.started
+    }
+
+    /*
+     * Access function for completed
+     */
+    public List<String> getCompleted(){
+        return this.completed
+    }
+
+    /*
+     * Access function for verified
+     */
+    public List<String> getVerified(){
+        return this.verified
+    }
 
     /**
      * Empty constructor used by Jackson for object deserialization
      */
     Deployment() {}
+
 
     /**
      * Constructor with all the parameters specified used by deployDb
