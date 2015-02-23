@@ -20,14 +20,25 @@ class ServiceSpec extends Specification {
 
 class ServiceWithArgsSpec extends Specification {
     private final ModelRegistry<Service> serviceRegistry =
-            new ModelRegistry<Service>()
+            new ModelRegistry<>()
     private final ModelLoader<Service> serviceLoader =
-            new ModelLoader<Service>(Service.class)
+            new ModelLoader<>(Service.class)
 
     def "Loading of valid service config file suceeds"() {
         given:
-        Service service = serviceLoader.load('services/test-valid.yml')
-        service.ident = serviceLoader.getIdent('services/test-valid.yml')
+        String fileContents =
+                "description: \"Fun as a Service\"\n" +
+                        "artifacts:\n" +
+                        "  - com.github.lookout:foas\n" +
+                        "  - com.github.lookout.puppet:puppet-foas\n" +
+                        "  - com.github.lookout:puppet-mysql\n" +
+                        "pipelines:\n" +
+                        "  - devtoprod\n" +
+                        "promotions:\n" +
+                        "  - status-check\n" +
+                        "  - jenkins-smoke"
+        Service service = serviceLoader.loadFromString(fileContents)
+        service.ident = "test-valid"
         serviceRegistry.put(service.ident, service)
 
         expect:
@@ -45,7 +56,9 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading an empty service config file throws a null pointer exception"() {
         when:
-        Service service = serviceLoader.load('services/test-empty.yml')
+        String fileContents = ""
+        Service service = serviceLoader.loadFromString(fileContents)
+        //Service service = serviceLoader.load('services/test-empty.yml')
 
         then:
         thrown(NullPointerException)
@@ -53,7 +66,9 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading a malformed service config file throws throws a parsing exception"() {
         when:
-        Service service = serviceLoader.load('services/test-malformed.yml')
+        String fileContents = "j&&&&"
+        Service service = serviceLoader.loadFromString(fileContents)
+        //Service service = serviceLoader.load('services/test-malformed.yml')
 
         then:
         thrown(ConfigurationParsingException)
@@ -61,7 +76,9 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading a invalid service config file throws throws a validation exception"() {
         when:
-        Service service = serviceLoader.load('services/test-invalid.yml')
+        String fileContents = "description: Boop"
+        Service service = serviceLoader.loadFromString(fileContents)
+        //Service service = serviceLoader.load('services/test-invalid.yml')
 
         then:
         thrown(ConfigurationValidationException)

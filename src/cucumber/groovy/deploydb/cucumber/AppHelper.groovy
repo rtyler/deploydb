@@ -22,6 +22,7 @@ import org.hibernate.context.internal.ManagedSessionContext
 
 import deploydb.registry.ModelRegistry
 import deploydb.models.Service
+import deploydb.models.Environment
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -52,10 +53,19 @@ class AppHelper {
     /**
      *  Execute the {@link Closure} with a proper Service Registry
      *
-     * @param c (required) Closure to execute 
+     * @param c (required) Closure to execute
      */
     void withServiceRegistry(Closure c) {
         c.call(this.runner.serviceRegistry)
+    }
+
+    /**
+     *  Execute the {@link Closure} with a proper Environment Registry
+     *
+     * @param c (required) Closure to execute
+     */
+    void withEnvironmentRegistry(Closure c) {
+        c.call(this.runner.environmentRegistry)
     }
 
     String processTemplate(String buffer, Map scope) {

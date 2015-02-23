@@ -56,8 +56,11 @@ class ModelLoader<T> {
     T loadFromString(String content)
             throws Exception, ConfigurationParsingException,
                     ConfigurationValidationException {
-        File.createTempFile('tmp', '.yml').write(content)
-        return load('tmp.yml')
+        File tmpFile = File.createTempFile('tmp', '.yml', new File('./build/tmp/'))
+        tmpFile.write(content)
+        T model = factory.build(tmpFile)
+        tmpFile.deleteOnExit()
+        return model
     }
 
     /**
