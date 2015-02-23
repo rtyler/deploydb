@@ -3,74 +3,41 @@ Feature: Promotion READ APIs
   As a RESTful client or user
   I should be able to read information about promotions
 
-
   @wip
   Scenario: Fetching all promotions
 
-    Given a promotion configuration name "jenkins":
+    Given a promotion configuration name "basic":
     """
-    type:  JenkinsPromotion
-    jobs:
-       - basic-smokes-test
-       - basic-perf-test
-       - end2end-smoke-test
-    """
-    Given a promotion configuration named "prod":
-    """
-    type:  ProductionPromotion
-    jobs:
-       - prod-smokes-test
-       - prod-perf-tests
-       - prod-santiy-tests
+    type:  BasicPromotion
+    description: "Smoke test the Fun as a Service service"
     """
     When I GET "/api/promotions"
     Then the response should be 200
     And the body should be JSON:
     """
       [{
-        "ident" : "jenkins",
-        "type" : "JenkinsPromotion",
-        "jobs" : [
-            "basic-smokes-test",
-            "basic-perf-test",
-            "end2end-smoke-test"
-        ]
-      },
-      {
-        "ident" : "prod",
-        "type" : "ProductionPromotion",
-        "jobs" : [
-            "prod-smokes-test",
-            "prod-perf-tests",
-            "prod-sanity-tests"
-        ]
+        "ident" : "basic",
+        "type" : "BasicPromotion",
+        "description" : "Smoke test the Fun as a Service service"
       }]
     """
-
 
   @wip
   Scenario: Fetching an promotion by name that exists
 
-    Given a promotion configuration name "jenkins":
+    Given a promotion configuration name "basic":
     """
-    type:  JenkinsPromotion
-    jobs:
-       - basic-smokes-test
-       - basic-perf-test
-       - end2end-smoke-test
+    type:  BasicPromotion
+    description: "Smoke test the Fun as a Service service"
     """
-    When I GET "/api/promotions/jenkins"
+    When I GET "/api/promotions/basic"
     Then the response should be 200
     And the body should be JSON:
     """
       {
-        "ident" : "jenkins",
-        "type" : "JenkinsPromotion",
-        "jobs" : [
-            "basic-smokes-test",
-            "basic-perf-test",
-            "end2end-smoke-test"
-        ]
+        "ident" : "basic",
+        "type" : "BasicPromotion",
+        "description" : "Smoke test the Fun as a Service service"
       }
     """
 
