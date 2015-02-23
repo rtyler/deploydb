@@ -15,14 +15,7 @@ class Promotion {
      * List of URIs for promotion completed state
      */
     @JsonProperty
-    private List<String> completed
-
-    /**
-     * Access function for completed
-     */
-    public List<String> getCompleted(){
-        return this.completed
-    }
+    List<String> completed
 
     /**
      * Empty constructor. Used by Jackson for object deserialization

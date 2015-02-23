@@ -36,6 +36,7 @@ class WebhookWithArgsSpec extends Specification {
         webhook.deployment.created == ['http://jenkins.example.com/job/notify-deployment-created/build']
         webhook.deployment.started == ['http://jenkins.example.com/job/notify-deployment-started/build']
         webhook.deployment.completed == ['http://jenkins.example.com/job/notify-deployment-completed/build']
+        webhook.deployment.verified == ['http://jenkins.example.com/job/notify-deployment-verified/build']
         webhook.promotion.completed == ['http://jenkins.example.com/job/notify-promotion-completed/build']
     }
 
@@ -76,8 +77,10 @@ class WebhookWithArgsSpec extends Specification {
         given:
         Webhook webhook = webhookModelLoader.loadFromString("deployment:\n" +
                 "  created:\n" +
-                "    - http://jenkins.example.com/job/notify-deployment-created/build")
+                "    - http://jenkins.example.com/job/notify-deployment-created/build\n" +
+                "    - http://jenkins_prod.example.com/job/notify-deployment-created/build")
         expect:
-        webhook.deployment.created == ['http://jenkins.example.com/job/notify-deployment-created/build']
+        webhook.deployment.created == ['http://jenkins.example.com/job/notify-deployment-created/build',
+                                       'http://jenkins_prod.example.com/job/notify-deployment-created/build']
     }
 }

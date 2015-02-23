@@ -23,20 +23,6 @@ class Webhook {
     Promotion promotion
 
     /**
-     *  Access function for deployment
-     */
-    public Deployment getDeployment(){
-        return this.deployment
-    }
-
-    /**
-     *  Access function for promotion
-     */
-    public Promotion getPromotion(){
-        return this.promotion
-    }
-
-    /**
      * Empty constructor used by Jackson for object deserialization
      */
     Webhook() { }
