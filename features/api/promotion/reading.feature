@@ -59,14 +59,6 @@ Feature: Promotion READ APIs
        - basic-perf-test
        - end2end-smoke-test
     """
-    Given a promotion configuration named "prod":
-    """
-    type:  ProductionPromotion
-    jobs:
-       - prod-smokes-test
-       - prod-perf-tests
-       - prod-santiy-tests
-    """
     When I GET "/api/promotions/jenkins"
     Then the response should be 200
     And the body should be JSON:
@@ -85,5 +77,5 @@ Feature: Promotion READ APIs
   @wip
   Scenario: Fetching an promotion by name that doesn't exist
 
-    When I GET "/api/Promotions/faas"
+    When I GET "/api/promotions/faas"
     Then the response should be 404
