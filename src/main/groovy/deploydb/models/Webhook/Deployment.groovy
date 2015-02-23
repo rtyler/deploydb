@@ -33,11 +33,12 @@ class Deployment {
      */
     @JsonProperty
     List<String> verified
-
+    
     /**
      * Empty constructor used by Jackson for object deserialization
      */
     Deployment() {}
+
 
     /**
      * Constructor with all the parameters specified used by deployDb

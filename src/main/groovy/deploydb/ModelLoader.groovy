@@ -8,6 +8,9 @@ import io.dropwizard.jackson.Jackson
 import io.dropwizard.configuration.ConfigurationException
 import io.dropwizard.configuration.ConfigurationParsingException
 import io.dropwizard.configuration.ConfigurationValidationException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import java.io.File
 import javax.validation.Validation
 import javax.validation.Validator
