@@ -10,6 +10,8 @@ import deploydb.registry.ModelRegistry
 import deploydb.models.Webhook.Webhook
 import deploydb.models.Webhook.Deployment
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class WebhookSpec extends Specification {
     def "ensure Webhook object can be instantiated"() {
@@ -22,8 +24,7 @@ class WebhookSpec extends Specification {
 }
 
 class WebhookWithArgsSpec extends Specification {
-    private final ModelRegistry<Webhook> webhookModelRegistry =
-            new ModelRegistry<Webhook>()
+
     private final ModelLoader<Webhook> webhookModelLoader =
             new ModelLoader<Webhook>(Webhook.class)
 
@@ -69,5 +70,14 @@ class WebhookWithArgsSpec extends Specification {
 
         then:
         thrown(ConfigurationParsingException)
+    }
+
+    def "Loading a valid webhook with configuration inline succeeds"(){
+        given:
+        Webhook webhook = webhookModelLoader.loadFromString("deployment:\n" +
+                "  created:\n" +
+                "    - http://jenkins.example.com/job/notify-deployment-created/build")
+        expect:
+        webhook.deployment.created == ['http://jenkins.example.com/job/notify-deployment-created/build']
     }
 }
