@@ -8,6 +8,7 @@ plugins {
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'application'
+apply plugin: 'codenarc'
 
 version = '0.1.0'
 group = 'com.github.lookout'
