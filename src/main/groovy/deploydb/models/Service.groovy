@@ -1,6 +1,5 @@
 package deploydb.models
 
-import com.google.common.collect.Lists
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.dropwizard.validation.OneOf
 
@@ -105,10 +104,12 @@ class Service {
     }
 
     @Override
+    int hashCode() {
+        return Objects.hash(this.ident, this.description)
+    }
+
+    @Override
     String toString() {
-        String output
-        output += "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, "
-        output += "pipelines = ${pipelines}, promotions = ${promotions}"
-        return output
+        return "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, pipelines = ${pipelines}, promotions = ${promotions}"
     }
 }
