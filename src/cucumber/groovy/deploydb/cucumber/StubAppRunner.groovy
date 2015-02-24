@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
@@ -42,6 +43,7 @@ public class StubAppRunner<C extends Configuration> {
     private Server jettyServer
     private SessionFactory sessionFactory
     private ModelRegistry<Service> serviceRegistry
+    private ModelRegistry<Promotion> promotionRegistry
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -88,6 +90,7 @@ public class StubAppRunner<C extends Configuration> {
                              * it's up and running
                              */
                             serviceRegistry = application.serviceRegistry
+                            promotionRegistry = application.promotionRegistry
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB

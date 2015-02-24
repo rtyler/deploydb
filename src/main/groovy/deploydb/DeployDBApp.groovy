@@ -28,6 +28,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
+    private ModelRegistry<Promotion> promotionRegistry
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -94,6 +95,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
         final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
         serviceRegistry = new ModelRegistry<Service>()
+        promotionRegistry = new ModelRegistry<Promotion>()
 
         environment.lifecycle().manage(webhooks)
 
@@ -106,5 +108,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(new ArtifactResource(adao))
         environment.jersey().register(new DeploymentResource(ddao, adao))
         environment.jersey().register(new ServiceResource(serviceRegistry))
+        environment.jersey().register(new PromotionResource(promotionRegistry))
     }
 }

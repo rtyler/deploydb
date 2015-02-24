@@ -1,6 +1,7 @@
 package deploydb.cucumber
 
 import deploydb.models.Artifact
+import deploydb.models.Promotion
 import deploydb.models.Service
 import deploydb.registry.ModelRegistry
 
