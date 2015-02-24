@@ -70,6 +70,10 @@ repositories {
 // TASKS
 ////////////////////////////////////////////////////////////////////////////////
 
+codenarc {
+    sourceSets = [sourceSets.main, sourceSets.cucumber]
+}
+
 cucumber {
     formats = ['pretty',
                 // .toString() required here to make sure we convert a Groovy
