@@ -58,6 +58,15 @@ class AppHelper {
         c.call(this.runner.serviceRegistry)
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper Promotion Registry
+     *
+     * @param c (required) Closure to execute
+     */
+    void withPromotionRegistry(Closure c) {
+        c.call(this.runner.promotionRegistry)
+    }
+
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
         StringWriter writer = new StringWriter()

@@ -3,7 +3,7 @@ Feature: Promotion READ APIs
   As a RESTful client or user
   I should be able to read information about promotions
 
-  @wip
+
   Scenario: Fetching all promotions
 
     Given a promotion configuration name "basic":
@@ -22,7 +22,7 @@ Feature: Promotion READ APIs
       }]
     """
 
-  @wip
+
   Scenario: Fetching an promotion by name that exists
 
     Given a promotion configuration name "basic":
@@ -41,7 +41,7 @@ Feature: Promotion READ APIs
       }
     """
 
-  @wip
+
   Scenario: Fetching an promotion by name that doesn't exist
 
     When I GET "/api/promotions/faas"
