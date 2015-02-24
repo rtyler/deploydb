@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
@@ -45,6 +46,7 @@ public class StubAppRunner<C extends Configuration> {
     private ModelRegistry<Service> serviceRegistry
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelLoader<deploydb.models.Environment> environmentLoader
+    private ModelRegistry<Promotion> promotionRegistry
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -91,6 +93,7 @@ public class StubAppRunner<C extends Configuration> {
                              * out of the application once it's up and running
                              */
                             serviceRegistry = application.serviceRegistry
+                            promotionRegistry = application.promotionRegistry
 
                             /* Get a ModelRegistry<Environment>, ModelLoader<Environment>
                              * out of the application once it's up and running

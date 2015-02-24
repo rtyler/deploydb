@@ -30,6 +30,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private ModelRegistry<Service> serviceRegistry
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelLoader<deploydb.models.Environment> environmentLoader
+    private ModelRegistry<Promotion> promotionRegistry
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -104,6 +105,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         serviceRegistry = new ModelRegistry<Service>()
         environmentRegistry = new ModelRegistry<deploydb.models.Environment>()
+        promotionRegistry = new ModelRegistry<Promotion>()
 
         /**
          * Instantiate in memory loaders for yaml parsing
@@ -127,5 +129,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(new DeploymentResource(ddao, adao))
         environment.jersey().register(new ServiceResource(serviceRegistry))
         environment.jersey().register(new EnvironmentResource(environmentRegistry))
+        environment.jersey().register(new PromotionResource(promotionRegistry))
     }
 }

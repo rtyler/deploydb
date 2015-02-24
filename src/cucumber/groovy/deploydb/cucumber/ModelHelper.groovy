@@ -1,6 +1,9 @@
 package deploydb.cucumber
 
-import deploydb.models.*
+
+import deploydb.models.Artifact
+import deploydb.models.Promotion
+import deploydb.models.Service
 import deploydb.registry.ModelRegistry
 
 class ModelHelper {
@@ -46,35 +49,5 @@ class ModelHelper {
                                         'jenkins-smoke' ])
         serviceRegistry.put(service.ident, service)
         return service
-    }
-
-    /**
-     * Creates a sample environment object
-     */
-    Environment sampleEnvironment1(ModelRegistry<Environment> environmentRegistry) {
-        Environment environment = new Environment('faas', 'Fun as a Environment',
-                                      [ 'com.github.lookout:foas',
-                                        'com.github.lookout.puppet:puppet-foas',
-                                        'com.github.lookout:puppet-mysql' ],
-                                      [ 'detoprod' ],
-                                      [ 'status-check',
-                                        'jenkins-smoke' ])
-        environmentRegistry.put(environment.ident, environment)
-        return environment
-    }
-
-    /**
-     * Creates a sample environment object
-     */
-    Environment sampleEnvironment2(ModelRegistry<Environment> environmentRegistry) {
-        Environment environment = new Environment('alas', 'Auditlog as a Environment',
-                                      [ 'com.github.lookout:alas',
-                                        'com.github.lookout.puppet:puppet-alas',
-                                        'com.github.lookout:puppet-mysql' ],
-                                      [ 'detoprod' ],
-                                      [ 'status-check',
-                                        'jenkins-smoke' ])
-        environmentRegistry.put(environment.ident, environment)
-        return environment
     }
 }
