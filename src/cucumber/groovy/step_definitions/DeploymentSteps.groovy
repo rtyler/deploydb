@@ -1,9 +1,10 @@
-import cucumber.api.*
-
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
-import deploydb.dao.*
-import deploydb.models.*
+import deploydb.dao.ArtifactDAO
+import deploydb.dao.DeploymentDAO
+
+import deploydb.models.Artifact
+import deploydb.models.Deployment
 
 Given(~/^there is a deployment$/) { ->
     withSession {

@@ -1,5 +1,5 @@
-import cucumber.api.*
 
+import cucumber.api.DataTable
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.glassfish.jersey.client.JerseyInvocation

@@ -1,27 +1,16 @@
 package webhookTestServer.resources
 
-import ch.qos.logback.classic.pattern.ThreadConverter
 import com.codahale.metrics.annotation.Metered
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.codahale.metrics.annotation.Timed
-import com.google.common.base.Optional
-import io.dropwizard.jersey.caching.CacheControl
-import io.dropwizard.jersey.params.*
-import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import webhookTestServer.models.TestCallbackObject
 
 import javax.servlet.http.HttpServletRequest
-import javax.validation.Valid
-import javax.ws.rs.*
+import javax.ws.rs.Consumes
+import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
-import javax.ws.rs.core.UriInfo
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  *

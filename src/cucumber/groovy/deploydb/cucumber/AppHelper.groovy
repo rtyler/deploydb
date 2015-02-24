@@ -5,7 +5,6 @@ import webhookTestServer.webhookTestServerApp
 
 import com.github.mustachejava.DefaultMustacheFactory
 import com.github.mustachejava.Mustache
-import com.github.mustachejava.MustacheFactory
 
 import org.glassfish.jersey.client.ClientConfig
 import javax.ws.rs.client.Client
@@ -17,10 +16,8 @@ import javax.ws.rs.client.Entity
 
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-import org.hibernate.Transaction
 import org.hibernate.context.internal.ManagedSessionContext
 
-import deploydb.registry.ModelRegistry
 import deploydb.models.Service
 import deploydb.models.Environment
 
