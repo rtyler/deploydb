@@ -3,10 +3,11 @@ Feature: Environment READ APIs
   As a RESTful client or user
   I should be able to read information about environments
 
-  @wip
-  Scenario: Fetching all environments 
 
-    Given a integ environment configuration:
+  @wip
+  Scenario: Fetching all environments
+
+    Given an environment configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -16,16 +17,6 @@ Feature: Environment READ APIs
         completed:
           - http://jenkins.example.com/job/integ-deploy-completed/build
     """
-    And another dev-alpha environment configuration:
-    """
-    description: "DeployDB Primary dev-alpha"
-    webhooks:
-      deployment:
-        created:
-          - http://jenkins.example.com/job/dev-alpha-deploy-created/build
-        completed:
-          - http://jenkins.example.com/job/dev-alpha-deploy-completed/build
-    """
     When I GET "/api/environments"
     Then the response should be 200
     And the body should be JSON:
@@ -34,35 +25,22 @@ Feature: Environment READ APIs
         "ident" : "integ",
         "description" : "DeployDB Primary Integration",
         "webhooks" : {
-            "deployment" : {
-                "started" : [],
-                "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
-                "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"]
-            },
-            "promotions" : {
-                "completed" : []
-            }
-        }
-      },
-      {
-        "ident" : "dev-alpha",
-        "description" : "DeployDB Primary dev-alpha",
-        "webhooks" : {
-            "deployment" : {
-                "started" : [],
-                "created" : ["http://jenkins.example.com/job/dev-alpha-deploy-created/build"],
-                "completed" : ["http://jenkins.example.com/job/dev-alpha-deploy-completed/build"]
-            },
-            "promotions" : {
-                "completed" : []
-            }
+          "deployment" : {
+              "started" : null,
+              "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
+              "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"],
+              "verified" : null
+          },
+          "promotion" : null
         }
       }]
     """
+
+
   @wip
   Scenario: Fetching an environment by name that exists
 
-    Given a integ environment configuration:
+    Given an environment configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -80,18 +58,19 @@ Feature: Environment READ APIs
         "ident" : "integ",
         "description" : "DeployDB Primary Integration",
         "webhooks" : {
-            "deployment" : {
-                "started" : [],
-                "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
-                "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"]
-            },
-            "promotions" : {
-                "completed" : []
-            }
+          "deployment" : {
+              "started" : null,
+              "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
+              "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"],
+              "verified" : null
+          },
+          "promotion" : null
         }
       }
     """
-  @wip
+
+
+  @wip @error
   Scenario: Fetching an environment by name that doesn't exist
 
     When I GET "/api/environments/faas"
