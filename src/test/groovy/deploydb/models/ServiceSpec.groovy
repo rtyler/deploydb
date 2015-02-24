@@ -58,7 +58,6 @@ class ServiceWithArgsSpec extends Specification {
         when:
         String fileContents = ""
         Service service = serviceLoader.loadFromString(fileContents)
-        //Service service = serviceLoader.load('services/test-empty.yml')
 
         then:
         thrown(NullPointerException)
@@ -68,7 +67,6 @@ class ServiceWithArgsSpec extends Specification {
         when:
         String fileContents = "j&&&&"
         Service service = serviceLoader.loadFromString(fileContents)
-        //Service service = serviceLoader.load('services/test-malformed.yml')
 
         then:
         thrown(ConfigurationParsingException)
@@ -78,7 +76,6 @@ class ServiceWithArgsSpec extends Specification {
         when:
         String fileContents = "description: Boop"
         Service service = serviceLoader.loadFromString(fileContents)
-        //Service service = serviceLoader.load('services/test-invalid.yml')
 
         then:
         thrown(ConfigurationValidationException)

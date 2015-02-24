@@ -41,12 +41,10 @@ class EnvironmentWithArgsSpec extends Specification {
         expect:
         environment.ident == 'integ'
         environment.description == 'DeployDB Primary Integration'
-        //environment.webhooks.deployment.started[] == []
         environment.webhooks.deployment.created[0] ==
                 "http://jenkins.example.com/job/integ-deploy-created/build"
         environment.webhooks.deployment.completed[0] ==
                 "http://jenkins.example.com/job/integ-deploy-completed/build"
-        //environment.webhooks.promotion.completed[] == []
         environmentRegistry.get('integ') == environment
         environmentRegistry.getAll() == [environment]
     }
@@ -55,7 +53,6 @@ class EnvironmentWithArgsSpec extends Specification {
         when:
         String fileContents = ""
         Environment environment = environmentLoader.loadFromString(fileContents)
-        //Environment environment = environmentLoader.load('environments/test-empty.yml')
 
         then:
         thrown(NullPointerException)
@@ -65,7 +62,6 @@ class EnvironmentWithArgsSpec extends Specification {
         when:
         String fileContents = "j&&&&"
         Environment environment = environmentLoader.loadFromString(fileContents)
-        //Environment environment = environmentLoader.load('environments/test-malformed.yml')
 
         then:
         thrown(ConfigurationParsingException)
@@ -79,7 +75,6 @@ class EnvironmentWithArgsSpec extends Specification {
                 "    started:\n" +
                 "      - http://jenkins.example.com/job/integ-deploy-started/build\n"
         Environment environment = environmentLoader.loadFromString(fileContents)
-        //Environment environment = environmentLoader.load('environments/test-invalid.yml')
 
         then:
         thrown(ConfigurationValidationException)
