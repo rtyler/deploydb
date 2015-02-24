@@ -2,6 +2,8 @@ package deploydb.models
 
 import com.google.common.collect.Lists
 import com.fasterxml.jackson.annotation.JsonProperty
+import deploydb.models.Webhook.Webhook
+
 import javax.validation.constraints.Size
 import org.hibernate.validator.constraints.NotEmpty
 
@@ -28,27 +30,10 @@ class Environment {
     String description
 
     /**
-     * List of Artifact names (max 10).
-     */
-    @NotEmpty
-    @Size(max=10)
-    @JsonProperty
-    List<String> artifacts
-
-    /**
-     * List of pipelines (max 10).
-     */
-    @NotEmpty
-    @Size(max=10)
-    @JsonProperty
-    List<String> pipelines
-
-    /**
-     * List of promotions (max 10).
+     * Webhook
      */
     @JsonProperty
-    @Size(max=10)
-    List<String> promotions
+    Webhook webhooks
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -60,15 +45,11 @@ class Environment {
      *  of the parameters
      */
     Environment(String ident,
-            String description,
-            List<String> artifacts,
-            List<String> pipelines,
-            List<String> promotions) {
+                String description,
+                Webhook webhooks) {
         this.ident = ident
         this.description = description
-        this.artifacts = artifacts
-        this.pipelines = pipelines
-        this.promotions = promotions
+        this.webhooks = webhooks
     }
 
     @Override
@@ -87,16 +68,13 @@ class Environment {
 
         return Objects.equals(this.ident, that.ident) &&
                 Objects.equals(this.description, that.description) &&
-                Objects.equals(this.artifacts, that.artifacts) &&
-                Objects.equals(this.pipelines, that.pipelines) &&
-                Objects.equals(this.promotions, that.promotions)
+                Objects.equals(this.webhooks, that.webhooks)
     }
 
     @Override
     String toString() {
         String output
-        output += "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, "
-        output += "pipelines = ${pipelines}, promotions = ${promotions}"
+        output += "ident = ${ident}, description: ${description}, webhooks: ${webhooks}"
         return output
     }
 }

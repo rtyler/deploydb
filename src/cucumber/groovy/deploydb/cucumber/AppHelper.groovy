@@ -65,7 +65,7 @@ class AppHelper {
      * @param c (required) Closure to execute
      */
     void withEnvironmentRegistry(Closure c) {
-        c.call(this.runner.environmentRegistry)
+        c.call(this.runner.environmentRegistry, this.runner.environmentLoader)
     }
 
     String processTemplate(String buffer, Map scope) {

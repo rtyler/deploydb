@@ -27,30 +27,27 @@ class EnvironmentWithArgsSpec extends Specification {
     def "Loading of valid environment config file suceeds"() {
         given:
         String fileContents =
-                "description: \"Fun as a Environment\"\n" +
-                "artifacts:\n" +
-                "  - com.github.lookout:foas\n" +
-                "  - com.github.lookout.puppet:puppet-foas\n" +
-                "  - com.github.lookout:puppet-mysql\n" +
-                "pipelines:\n" +
-                "  - devtoprod\n" +
-                "promotions:\n" +
-                "  - status-check\n" +
-                "  - jenkins-smoke"
+                "description: \"DeployDB Primary Integration\"\n" +
+                "webhooks:\n" +
+                "  deployment:\n" +
+                "    created:\n" +
+                "      - http://jenkins.example.com/job/integ-deploy-created/build\n" +
+                "    completed:\n" +
+                "      - http://jenkins.example.com/job/integ-deploy-completed/build"
         Environment environment = environmentLoader.loadFromString(fileContents)
-        environment.ident = "test-valid"
+        environment.ident = "integ"
         environmentRegistry.put(environment.ident, environment)
 
         expect:
-        environment.ident == 'test-valid'
-        environment.description == 'Fun as a Environment'
-        environment.artifacts[0] == 'com.github.lookout:foas'
-        environment.artifacts[1] == 'com.github.lookout.puppet:puppet-foas'
-        environment.artifacts[2] == 'com.github.lookout:puppet-mysql'
-        environment.pipelines[0] == 'devtoprod'
-        environment.promotions[0] == 'status-check'
-        environment.promotions[1] == 'jenkins-smoke'
-        environmentRegistry.get('test-valid') == environment
+        environment.ident == 'integ'
+        environment.description == 'DeployDB Primary Integration'
+        //environment.webhooks.deployment.started[] == []
+        environment.webhooks.deployment.created[0] ==
+                "http://jenkins.example.com/job/integ-deploy-created/build"
+        environment.webhooks.deployment.completed[0] ==
+                "http://jenkins.example.com/job/integ-deploy-completed/build"
+        //environment.webhooks.promotion.completed[] == []
+        environmentRegistry.get('integ') == environment
         environmentRegistry.getAll() == [environment]
     }
 
@@ -76,7 +73,11 @@ class EnvironmentWithArgsSpec extends Specification {
 
     def "Loading a invalid environment config file throws throws a validation exception"() {
         when:
-        String fileContents = "description: Boop"
+        String fileContents =
+                "webhooks:\n" +
+                "  deployment:\n" +
+                "    started:\n" +
+                "      - http://jenkins.example.com/job/integ-deploy-started/build\n"
         Environment environment = environmentLoader.loadFromString(fileContents)
         //Environment environment = environmentLoader.load('environments/test-invalid.yml')
 

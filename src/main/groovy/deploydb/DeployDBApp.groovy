@@ -20,15 +20,16 @@ import deploydb.registry.ModelRegistry
 import deploydb.resources.*
 import deploydb.health.*
 import deploydb.models.*
+import deploydb.ModelLoader
 import deploydb.dao.*
-
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(Artifact, Deployment)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
-    private ModelRegistry<Environment> environmentRegistry
+    private ModelRegistry<deploydb.models.Environment> environmentRegistry
+    private ModelLoader<deploydb.models.Environment> environmentLoader
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -92,17 +93,34 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
+        /**
+         * Instantiate DAO objects
+         */
         final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
         final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
-        serviceRegistry = new ModelRegistry<Service>()
-        environmentRegistry = new ModelRegistry<Environment>()
 
+        /**
+         * Instantiate registries for in memory storage
+         */
+        serviceRegistry = new ModelRegistry<Service>()
+        environmentRegistry = new ModelRegistry<deploydb.models.Environment>()
+
+        /**
+         * Instantiate in memory loaders for yaml parsing
+         */
+        environmentLoader = new ModelLoader<deploydb.models.Environment>(deploydb.models.Environment.class)
+
+        /**
+         * Webhooks
+         */
         environment.lifecycle().manage(webhooks)
 
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
 
-
+        /**
+         * Instantiate Resources classes for Jersey handlers
+         */
         environment.jersey().register(typeProvider)
         environment.jersey().register(new RootResource())
         environment.jersey().register(new ArtifactResource(adao))

@@ -9,7 +9,7 @@ import deploydb.models.Environment
 import deploydb.registry.ModelRegistry
 
 class EnvironmentResourceSpec extends Specification {
-    private ModelRegistry<Environment> environmentRegistry = Mock(ModelRegistry)
+    private ModelRegistry<deploydb.models.Environment> environmentRegistry = Mock(ModelRegistry)
 
     @Rule
     ResourceTestRule dropwizard = ResourceTestRule.builder()
@@ -18,14 +18,9 @@ class EnvironmentResourceSpec extends Specification {
     def "EnvironmentResource byName returns valid item when exists"() {
         given:
         Client client = dropwizard.client()
-        String environmentIdent = 'faas'
-        Environment environment = new Environment('faas', 'Fun-as-a-Environment',
-                                      [ 'com.github.lookout:foas',
-                                        'com.github.lookout.puppet:puppet-foas',
-                                        'com.github.lookout:puppet-mysql' ],
-                                      [ 'detoprod' ],
-                                      [ 'status-check',
-                                        'jenkins-smoke' ])        
+        String environmentIdent = 'integ'
+        deploydb.models.Environment environment = new deploydb.models.Environment()
+        environment.ident = environmentIdent
         Environment fetched = null
         1 * environmentRegistry.get(environmentIdent) >> environment
 
