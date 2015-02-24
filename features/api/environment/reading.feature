@@ -4,7 +4,6 @@ Feature: Environment READ APIs
   I should be able to read information about environments
 
 
-  @wip
   Scenario: Fetching all environments
 
     Given an environment configuration named "integ":
@@ -37,7 +36,6 @@ Feature: Environment READ APIs
     """
 
 
-  @wip
   Scenario: Fetching an environment by name that exists
 
     Given an environment configuration named "integ":
@@ -70,7 +68,7 @@ Feature: Environment READ APIs
     """
 
 
-  @wip @error
+  @error
   Scenario: Fetching an environment by name that doesn't exist
 
     When I GET "/api/environments/faas"

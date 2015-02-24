@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+
 import deploydb.models.Artifact
 import deploydb.models.Promotion
 import deploydb.models.Service
@@ -22,7 +23,7 @@ class ModelHelper {
 
     /**
      * Creates a sample service object
-     */ 
+     */
     Service sampleService1(ModelRegistry<Service> serviceRegistry) {
         Service service = new Service('faas', 'Fun as a Service',
                                       [ 'com.github.lookout:foas',
@@ -37,7 +38,7 @@ class ModelHelper {
 
     /**
      * Creates a sample service object
-     */ 
+     */
     Service sampleService2(ModelRegistry<Service> serviceRegistry) {
         Service service = new Service('alas', 'Auditlog as a Service',
                                       [ 'com.github.lookout:alas',
