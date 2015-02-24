@@ -28,8 +28,8 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
-    private ModelRegistry<deploydb.models.Environment> environmentRegistry
-    private ModelLoader<deploydb.models.Environment> environmentLoader
+    private ModelRegistry<models.Environment> environmentRegistry
+    private ModelLoader<models.Environment> environmentLoader
     private ModelRegistry<Promotion> promotionRegistry
     private provider.V1TypeProvider typeProvider
 
@@ -104,13 +104,13 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          * Instantiate registries for in memory storage
          */
         serviceRegistry = new ModelRegistry<Service>()
-        environmentRegistry = new ModelRegistry<deploydb.models.Environment>()
+        environmentRegistry = new ModelRegistry<models.Environment>()
         promotionRegistry = new ModelRegistry<Promotion>()
 
         /**
          * Instantiate in memory loaders for yaml parsing
          */
-        environmentLoader = new ModelLoader<deploydb.models.Environment>(deploydb.models.Environment.class)
+        environmentLoader = new ModelLoader<models.Environment>(models.Environment.class)
 
         /**
          * Webhooks

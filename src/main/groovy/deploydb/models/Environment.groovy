@@ -25,7 +25,6 @@ class Environment {
      * Environment description
      */
     @NotEmpty
-    @Size(max=8192)
     @JsonProperty
     String description
 

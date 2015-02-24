@@ -26,14 +26,15 @@ class EnvironmentWithArgsSpec extends Specification {
 
     def "Loading of valid environment config file suceeds"() {
         given:
-        String fileContents =
-                "description: \"DeployDB Primary Integration\"\n" +
-                "webhooks:\n" +
-                "  deployment:\n" +
-                "    created:\n" +
-                "      - http://jenkins.example.com/job/integ-deploy-created/build\n" +
-                "    completed:\n" +
-                "      - http://jenkins.example.com/job/integ-deploy-completed/build"
+        String fileContents = """
+description: "DeployDB Primary Integration"
+webhooks:
+  deployment:
+    created:
+      - http://jenkins.example.com/job/integ-deploy-created/build
+    completed:
+      - http://jenkins.example.com/job/integ-deploy-completed/build
+"""
         Environment environment = environmentLoader.loadFromString(fileContents)
         environment.ident = "integ"
         environmentRegistry.put(environment.ident, environment)
@@ -69,14 +70,20 @@ class EnvironmentWithArgsSpec extends Specification {
 
     def "Loading a invalid environment config file throws throws a validation exception"() {
         when:
-        String fileContents =
-                "webhooks:\n" +
-                "  deployment:\n" +
-                "    started:\n" +
-                "      - http://jenkins.example.com/job/integ-deploy-started/build\n"
+        String fileContents = """
+webhooks:
+  deployment:
+    created:
+      - http://jenkins.example.com/job/integ-deploy-created/build
+    completed:
+      - http://jenkins.example.com/job/integ-deploy-completed/build
+"""
         Environment environment = environmentLoader.loadFromString(fileContents)
 
         then:
+        /**
+         *  Exception thrown because, description is mandatory
+         */
         thrown(ConfigurationValidationException)
     }
 

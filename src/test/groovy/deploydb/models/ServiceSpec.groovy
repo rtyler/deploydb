@@ -26,17 +26,18 @@ class ServiceWithArgsSpec extends Specification {
 
     def "Loading of valid service config file suceeds"() {
         given:
-        String fileContents =
-                "description: \"Fun as a Service\"\n" +
-                        "artifacts:\n" +
-                        "  - com.github.lookout:foas\n" +
-                        "  - com.github.lookout.puppet:puppet-foas\n" +
-                        "  - com.github.lookout:puppet-mysql\n" +
-                        "pipelines:\n" +
-                        "  - devtoprod\n" +
-                        "promotions:\n" +
-                        "  - status-check\n" +
-                        "  - jenkins-smoke"
+        String fileContents = """
+description: "Fun as a Service"
+artifacts:
+  - com.github.lookout:foas
+  - com.github.lookout.puppet:puppet-foas
+  - com.github.lookout:puppet-mysql
+pipelines:
+  - devtoprod
+promotions:
+  - status-check
+  - jenkins-smoke
+"""
         Service service = serviceLoader.loadFromString(fileContents)
         service.ident = "test-valid"
         serviceRegistry.put(service.ident, service)

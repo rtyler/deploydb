@@ -9,7 +9,7 @@ import deploydb.models.Environment
 import deploydb.registry.ModelRegistry
 
 class EnvironmentResourceSpec extends Specification {
-    private ModelRegistry<deploydb.models.Environment> environmentRegistry = Mock(ModelRegistry)
+    private ModelRegistry<Environment> environmentRegistry = Mock(ModelRegistry)
 
     @Rule
     ResourceTestRule dropwizard = ResourceTestRule.builder()
@@ -19,7 +19,7 @@ class EnvironmentResourceSpec extends Specification {
         given:
         Client client = dropwizard.client()
         String environmentIdent = 'integ'
-        deploydb.models.Environment environment = new deploydb.models.Environment()
+        Environment environment = new Environment()
         environment.ident = environmentIdent
         Environment fetched = null
         1 * environmentRegistry.get(environmentIdent) >> environment
