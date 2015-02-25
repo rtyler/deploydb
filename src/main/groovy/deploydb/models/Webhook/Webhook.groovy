@@ -1,9 +1,6 @@
 package deploydb.models.Webhook
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.validator.constraints.NotEmpty
-
-import javax.validation.constraints.Size
 
 /**
  * Class to store webhook configuration
@@ -53,6 +50,11 @@ class Webhook {
 
         return Objects.equals(this.deployment, that.deployment) &&
                 Objects.equals(this.promotion, that.promotion)
+    }
+
+    @Override
+    int hashCode() {
+        return Objects.hash(this.deployment, this.promotion)
     }
 
     @Override

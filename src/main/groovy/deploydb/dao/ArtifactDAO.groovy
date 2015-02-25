@@ -1,9 +1,9 @@
 package deploydb.dao
 
-import com.google.common.base.Optional
 import groovy.transform.InheritConstructors
 import io.dropwizard.hibernate.AbstractDAO
-import org.hibernate.criterion.*
+import org.hibernate.criterion.Restrictions
+import org.hibernate.criterion.Order
 
 import deploydb.models.Artifact
 

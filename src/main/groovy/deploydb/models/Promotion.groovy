@@ -67,14 +67,18 @@ class Promotion {
     }
 
 
+    @Override
+    int hashCode() {
+        return Objects.hash(this.ident, this.type, this.Description)
+    }
+
+
     /**
      * Stringy the promotion
      */
     @Override
     String toString() {
-        String output
-        output += "ident = ${ident}, type = ${type}, description = ${description}"
-        return output
+        return "ident = ${ident}, type = ${type}, description = ${description}"
     }
 }
 

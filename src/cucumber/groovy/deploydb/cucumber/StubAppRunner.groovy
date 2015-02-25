@@ -25,7 +25,6 @@ import javax.annotation.Nullable
 import java.util.Enumeration
 
 import deploydb.registry.ModelRegistry
-import deploydb.models.*
 import deploydb.ModelLoader
 
 /**
@@ -43,10 +42,11 @@ public class StubAppRunner<C extends Configuration> {
     private Environment environment
     private Server jettyServer
     private SessionFactory sessionFactory
-    private ModelRegistry<Service> serviceRegistry
+    private ModelRegistry<deploydb.models.Service> serviceRegistry
+    private ModelLoader<deploydb.models.Service> serviceLoader
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelLoader<deploydb.models.Environment> environmentLoader
-    private ModelRegistry<Promotion> promotionRegistry
+    private ModelRegistry<deploydb.models.Promotion> promotionRegistry
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -89,16 +89,16 @@ public class StubAppRunner<C extends Configuration> {
                              */
                             sessionFactory = application.sessionFactory
 
-                            /* Get a ModelRegistry<Service>
-                             * out of the application once it's up and running
+                            /**
+                             * Get a ModelRegistry(s) from the application once it's up and running
                              */
                             serviceRegistry = application.serviceRegistry
+                            environmentRegistry = application.environmentRegistry
                             promotionRegistry = application.promotionRegistry
 
-                            /* Get a ModelRegistry<Environment>, ModelLoader<Environment>
-                             * out of the application once it's up and running
+                            /* Get a ModelLoader(s) from the application once it's up and running
                              */
-                            environmentRegistry = application.environmentRegistry
+                            serviceLoader = application.serviceLoader
                             environmentLoader = application.environmentLoader
 
                             /* We're running the DB migrations here to make sure we're running

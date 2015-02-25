@@ -1,8 +1,7 @@
 package webhookTestServer
 
-import webhookTestServer.models.*
-import webhookTestServer.health.*
-import webhookTestServer.resources.*
+import webhookTestServer.models.TestCallbackObject
+import webhookTestServer.health.webhookTestServerHealthCheck
 
 import com.google.common.collect.ImmutableList
 
@@ -30,7 +29,7 @@ class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
 
         environment.healthChecks().register('sanity', new webhookTestServerHealthCheck())
 
-        environment.jersey().register(new RootResource())
-        environment.jersey().register(new TestCallBackobjectResource())
+        environment.jersey().register(new resources.RootResource())
+        environment.jersey().register(new resources.TestCallBackobjectResource())
     }
 }

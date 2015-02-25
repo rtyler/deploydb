@@ -1,10 +1,9 @@
-import cucumber.api.*
-import deploydb.ModelLoader
-import deploydb.models.Promotion
-
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
+import deploydb.ModelLoader
+import deploydb.models.Promotion
 import deploydb.registry.ModelRegistry
+
 
 Given(~/^a promotion configuration name "(.*?)":$/) { String ident, String configBody ->
     withPromotionRegistry { ModelRegistry<Promotion> promotionRegistry ->

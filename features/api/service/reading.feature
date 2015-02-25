@@ -6,28 +6,24 @@ Feature: Service READ APIs
 
   Scenario: Fetching all services 
 
-    Given there are services
+    Given a service configuration named "faas":
+    """
+    description: "Fun as a Service"
+    artifacts:
+      - com.github.lookout:foas
+      - com.github.lookout.puppet:puppet-foas
+      - com.github.lookout:puppet-mysql
+    pipelines:
+      - devtoprod
+    promotions:
+      - status-check
+      - jenkins-smoke
+    """
     When I GET "/api/services"
     Then the response should be 200
     And the body should be JSON:
     """
       [{
-        "ident" : "alas",
-        "description" : "Auditlog as a Service",
-        "artifacts" : [
-            "com.github.lookout:alas",
-            "com.github.lookout.puppet:puppet-alas",
-            "com.github.lookout:puppet-mysql"
-        ],
-        "pipelines" : [
-            "detoprod"
-        ],
-        "promotions" : [
-            "status-check",
-            "jenkins-smoke"
-        ]
-      },
-      {
         "ident" : "faas",
         "description" : "Fun as a Service",
         "artifacts" : [
@@ -36,18 +32,31 @@ Feature: Service READ APIs
             "com.github.lookout:puppet-mysql"
         ],
         "pipelines" : [
-            "detoprod"
+            "devtoprod"
         ],
         "promotions" : [
             "status-check",
             "jenkins-smoke"
-        ]
+        ],
+        "failure_strategy" : "Stop"
       }]
     """
 
   Scenario: Fetching an service by name that exists
 
-    Given there is an service
+    Given a service configuration named "faas":
+    """
+    description: "Fun as a Service"
+    artifacts:
+      - com.github.lookout:foas
+      - com.github.lookout.puppet:puppet-foas
+      - com.github.lookout:puppet-mysql
+    pipelines:
+      - devtoprod
+    promotions:
+      - status-check
+      - jenkins-smoke
+    """
     When I GET "/api/services/faas"
     Then the response should be 200
     And the body should be JSON:
@@ -61,14 +70,16 @@ Feature: Service READ APIs
             "com.github.lookout:puppet-mysql"
         ],
         "pipelines" : [
-            "detoprod"
+            "devtoprod"
         ],
         "promotions" : [
             "status-check",
             "jenkins-smoke"
-        ]
+        ],
+        "failure_strategy" : "Stop"
       }
     """
+
 
   Scenario: Fetching an service by name that doesn't exist
 
