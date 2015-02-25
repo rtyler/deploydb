@@ -10,14 +10,11 @@ Feature: Pipeline READ APIs
     """
     description: "Development to production pipeline"
     environments:
-      - dev-alpha:
-      - dev-beta:
-      - integ:
-      - preprod:
-          promotions:
-             prod-preflight
-             manual
-      - prod
+        - dev-alpha:
+        - dev-beta:
+        - integ:
+        - preprod:
+        - prod:
     """
     When I GET "/api/pipelines"
     Then the response should be 200

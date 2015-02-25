@@ -3,6 +3,7 @@ plugins {
     id 'org.asciidoctor.gradle.asciidoctor' version '1.5.1'
     id 'com.github.johnrengelman.shadow' version '1.2.0'
     id "com.github.samueltbrown.cucumber" version "0.8"
+    id "com.github.tkruse.groovysh" version "1.0.4"
 }
 
 apply plugin: 'eclipse'
