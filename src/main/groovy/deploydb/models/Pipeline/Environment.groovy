@@ -1,7 +1,6 @@
 package deploydb.models.Pipeline
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.google.common.collect.Maps
 
 /**
  * Class for Environments associated with a pipeline
@@ -44,6 +43,16 @@ class Environment {
         final Environment that = (Environment)o
 
         return Objects.equals(this.promotions, that.promotions)
+    }
+
+    /**
+     * Compute the hash value for environment
+     *
+     * @return computed hash value
+     */
+    @Override
+    int hashCode() {
+        return Objects.hash(this.promotions)
     }
 
     /**

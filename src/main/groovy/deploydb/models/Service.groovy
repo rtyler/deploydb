@@ -1,7 +1,8 @@
 package deploydb.models
 
-import com.google.common.collect.Lists
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.dropwizard.validation.OneOf
+
 import javax.validation.constraints.Size
 import org.hibernate.validator.constraints.NotEmpty
 
@@ -48,7 +49,17 @@ class Service {
      */
     @JsonProperty
     @Size(max=10)
-    List<String> promotions
+    List<String> promotions = []
+
+    /**
+     * Failure Strategy.
+     *
+     * Defines actions to take on deployment failure for this Service:
+     * Stop (default), rollback (future), full_rollback (future)
+     */
+    @OneOf(value = ["Stop"], ignoreCase = true)
+    @JsonProperty
+    String failure_strategy = "Stop"
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -93,10 +104,12 @@ class Service {
     }
 
     @Override
+    int hashCode() {
+        return Objects.hash(this.ident, this.description)
+    }
+
+    @Override
     String toString() {
-        String output
-        output += "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, "
-        output += "pipelines = ${pipelines}, promotions = ${promotions}"
-        return output
+        return "ident = ${ident}, description: ${description}, artifacts: ${artifacts}, pipelines = ${pipelines}, promotions = ${promotions}"
     }
 }

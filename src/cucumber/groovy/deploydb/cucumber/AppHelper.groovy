@@ -5,7 +5,6 @@ import webhookTestServer.webhookTestServerApp
 
 import com.github.mustachejava.DefaultMustacheFactory
 import com.github.mustachejava.Mustache
-import com.github.mustachejava.MustacheFactory
 
 import org.glassfish.jersey.client.ClientConfig
 import javax.ws.rs.client.Client
@@ -17,11 +16,10 @@ import javax.ws.rs.client.Entity
 
 import org.hibernate.Session
 import org.hibernate.SessionFactory
-import org.hibernate.Transaction
 import org.hibernate.context.internal.ManagedSessionContext
 
-import deploydb.registry.ModelRegistry
 import deploydb.models.Service
+import deploydb.models.Environment
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -52,10 +50,19 @@ class AppHelper {
     /**
      *  Execute the {@link Closure} with a proper Service Registry
      *
-     * @param c (required) Closure to execute 
+     * @param c (required) Closure to execute
      */
     void withServiceRegistry(Closure c) {
-        c.call(this.runner.serviceRegistry)
+        c.call(this.runner.serviceRegistry, this.runner.serviceLoader)
+    }
+
+    /**
+     *  Execute the {@link Closure} with a proper Environment Registry
+     *
+     * @param c (required) Closure to execute
+     */
+    void withEnvironmentRegistry(Closure c) {
+        c.call(this.runner.environmentRegistry, this.runner.environmentLoader)
     }
 
     /**

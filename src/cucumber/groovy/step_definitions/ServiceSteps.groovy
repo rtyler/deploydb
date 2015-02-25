@@ -1,18 +1,16 @@
-import cucumber.api.*
-
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import deploydb.models.Service
 import deploydb.registry.ModelRegistry
+import deploydb.ModelLoader
 
-Given(~/^there is an service$/) { ->
-    withServiceRegistry { ModelRegistry<Service> serviceRegistry ->
-        Service a = sampleService1(serviceRegistry)
+Given(~/^a service configuration named "(.*?)":$/) { String serviceIdent, String cfgBody ->
+    withServiceRegistry {
+        ModelRegistry<Service> serviceRegistry,
+        ModelLoader<Service> serviceLoader ->
+            Service a = serviceLoader.loadFromString(cfgBody)
+            a.ident = serviceIdent
+            serviceRegistry.put(serviceIdent, a)
     }
 }
-Given(~/^there are services$/) { ->
-    withServiceRegistry { ModelRegistry<Service> serviceRegistry ->
-        Service s1 = sampleService1(serviceRegistry)
-        Service s2 = sampleService2(serviceRegistry)        
-    }
-}
+

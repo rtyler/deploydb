@@ -61,7 +61,6 @@ class ModelLoader<T> {
                     ConfigurationValidationException {
         File tmpFile = File.createTempFile('tmp', '.yml', new File('./build/tmp/'))
         tmpFile.write(content)
-
         T model = factory.build(tmpFile)
         tmpFile.deleteOnExit()
         return model

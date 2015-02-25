@@ -1,10 +1,7 @@
 package deploydb.cucumber
 
-import deploydb.models.Pipeline.Pipeline
-import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
-import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.cli.ServerCommand
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
@@ -18,17 +15,12 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.flywaydb.core.Flyway
 import org.hibernate.SessionFactory
-import org.junit.rules.TestRule
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
 
 import javax.annotation.Nullable
 import java.util.Enumeration
 
 import deploydb.registry.ModelRegistry
-import deploydb.models.Service
-import deploydb.models.Pipeline.Pipeline
-import deploydb.models.Promotion
+import deploydb.ModelLoader
 
 /**
  * Class for running the Dropwizard app
@@ -45,9 +37,15 @@ public class StubAppRunner<C extends Configuration> {
     private Environment environment
     private Server jettyServer
     private SessionFactory sessionFactory
-    private ModelRegistry<Service> serviceRegistry
-    private ModelRegistry<Promotion> promotionRegistry
-    private ModelRegistry<Pipeline> pipelineRegistry
+    private ModelRegistry<deploydb.models.Service> serviceRegistry
+    private ModelLoader<deploydb.models.Service> serviceLoader
+    private ModelRegistry<deploydb.models.Environment> environmentRegistry
+    private ModelLoader<deploydb.models.Environment> environmentLoader
+    private ModelRegistry<deploydb.models.Promotion> promotionRegistry
+    private ModelLoader<deploydb.models.Promotion> promotionLoader
+    private ModelRegistry<deploydb.models.Pipeline.Pipeline> pipelineRegistry
+    private ModelLoader<deploydb.models.Pipeline.Pipeline> pipelineLoader
+
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -90,12 +88,20 @@ public class StubAppRunner<C extends Configuration> {
                              */
                             sessionFactory = application.sessionFactory
 
-                            /* Get a ModelRegistry<Service> out of the application once
-                             * it's up and running
+                            /**
+                             * Get a ModelRegistry(s) from the application once it's up and running
                              */
                             serviceRegistry = application.serviceRegistry
+                            environmentRegistry = application.environmentRegistry
                             promotionRegistry = application.promotionRegistry
                             pipelineRegistry = application.pipelineRegistry
+
+                            /* Get a ModelLoader(s) from the application once it's up and running
+                             */
+                            serviceLoader = application.serviceLoader
+                            environmentLoader = application.environmentLoader
+                            promotionLoader = application.promotionLoader
+                            pipelineLoader = application.pipelineLoader
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB

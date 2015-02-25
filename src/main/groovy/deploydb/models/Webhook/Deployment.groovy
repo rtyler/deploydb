@@ -1,9 +1,6 @@
 package deploydb.models.Webhook
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.validator.constraints.NotEmpty
-
-import javax.validation.constraints.Size
 
 /**
  * Class for Webhook's deployment configuration.
@@ -33,7 +30,7 @@ class Deployment {
      */
     @JsonProperty
     List<String> verified
-    
+
     /**
      * Empty constructor used by Jackson for object deserialization
      */

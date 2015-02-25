@@ -16,8 +16,6 @@ import javax.ws.rs.Produces
 import javax.ws.rs.core.Response
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Resource to handle the REST api for pipeline

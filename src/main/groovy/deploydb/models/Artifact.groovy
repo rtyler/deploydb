@@ -2,8 +2,6 @@ package deploydb.models
 
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.NamedQueries
-import javax.persistence.NamedQuery
 import javax.persistence.Table
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.NotEmpty
@@ -80,8 +78,8 @@ class Artifact extends AbstractModel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(this.id, this.group, this.name, 
+    int hashCode() {
+        return Objects.hash(this.id, this.group, this.name,
                             this.version, this.sourceUrl)
     }
 }

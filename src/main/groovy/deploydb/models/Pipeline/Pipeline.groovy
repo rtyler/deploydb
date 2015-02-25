@@ -2,9 +2,6 @@ package deploydb.models.Pipeline
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-import javax.validation.OverridesAttribute
-import com.google.common.collect.Maps
-
 /**
  * Class for deployment pipeline. It list all the environments
  * that are part of the pipeline
@@ -65,6 +62,15 @@ class Pipeline {
 
     }
 
+    /**
+     * Function to calculate hash for pipeline
+     *
+     * @return hash value
+     */
+    @Override
+    int hashCode() {
+        return Objects.hash(this.ident, this.description, this.environments)
+    }
     /**
      * Stringfy the pipeline
      */

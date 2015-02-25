@@ -1,8 +1,7 @@
 package webhookTestServer
 
-import webhookTestServer.models.*
-import webhookTestServer.health.*
-import webhookTestServer.resources.*
+import webhookTestServer.models.TestCallbackObject
+import webhookTestServer.health.webhookTestServerHealthCheck
 
 import com.google.common.collect.ImmutableList
 
@@ -10,7 +9,8 @@ import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 
 /**
- *
+ * Class for WebhookTestServer. Based on the configuration, this class
+ * will send appropriate responses
  */
 class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
     private final ImmutableList models = ImmutableList.of(TestCallbackObject)
@@ -30,7 +30,7 @@ class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
 
         environment.healthChecks().register('sanity', new webhookTestServerHealthCheck())
 
-        environment.jersey().register(new RootResource())
-        environment.jersey().register(new TestCallBackobjectResource())
+        environment.jersey().register(new resources.RootResource())
+        environment.jersey().register(new resources.TestCallBackobjectResource())
     }
 }

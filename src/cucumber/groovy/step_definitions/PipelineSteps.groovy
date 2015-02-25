@@ -1,9 +1,7 @@
-import cucumber.api.*
-import deploydb.ModelLoader
-import deploydb.models.Pipeline.Pipeline
-
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
+import deploydb.ModelLoader
+import deploydb.models.Pipeline.Pipeline
 import deploydb.registry.ModelRegistry
 
 Given(~/^a pipeline configuration name "(.*?)":$/) { String ident, String configBody ->

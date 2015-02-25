@@ -5,7 +5,8 @@ import com.google.common.collect.ImmutableList
 import io.dropwizard.Application
 import io.dropwizard.assets.AssetsBundle
 import io.dropwizard.db.DataSourceFactory
-import io.dropwizard.flyway.*
+import io.dropwizard.flyway.FlywayBundle
+import io.dropwizard.flyway.FlywayFactory
 import io.dropwizard.hibernate.HibernateBundle
 import io.dropwizard.hibernate.SessionFactoryFactory
 import io.dropwizard.setup.Bootstrap
@@ -17,20 +18,19 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import deploydb.registry.ModelRegistry
-import deploydb.resources.*
-import deploydb.health.*
-import deploydb.models.*
-import deploydb.dao.*
-import deploydb.models.Pipeline.Pipeline
-
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
-    private final ImmutableList models = ImmutableList.of(Artifact, Deployment)
+    private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
-    private ModelRegistry<Service> serviceRegistry
-    private ModelRegistry<Promotion> promotionRegistry
-    private ModelRegistry<Pipeline> pipelineRegistry
+    private ModelRegistry<models.Service> serviceRegistry
+    private ModelLoader<models.Service> serviceLoader
+    private ModelRegistry<models.Environment> environmentRegistry
+    private ModelLoader<models.Environment> environmentLoader
+    private ModelRegistry<models.Promotion> promotionRegistry
+    private ModelLoader<models.Promotion> promotionLoader
+    private ModelRegistry<models.Pipeline.Pipeline> pipelineRegistry
+    private ModelLoader<models.Pipeline.Pipeline> pipelineLoader
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -94,23 +94,49 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
-        final ArtifactDAO adao = new ArtifactDAO(hibernate.sessionFactory)
-        final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
-        serviceRegistry = new ModelRegistry<Service>()
-        promotionRegistry = new ModelRegistry<Promotion>()
-        pipelineRegistry = new ModelRegistry<Pipeline>()
+        /**
+         * Instantiate DAO objects
+         */
+        final dao.ArtifactDAO adao = new dao.ArtifactDAO(hibernate.sessionFactory)
+        final dao.DeploymentDAO ddao = new dao.DeploymentDAO(hibernate.sessionFactory)
+
+        /**
+         * Instantiate registries for in memory storage
+         */
+        environmentRegistry = new ModelRegistry<>()
+        serviceRegistry = new ModelRegistry<>()
+        promotionRegistry = new ModelRegistry<>()
+        pipelineRegistry = new ModelRegistry<>()
+
+        /**
+         * Instantiate in memory loaders for yaml parsing
+         */
+        serviceLoader = new ModelLoader<>(models.Service.class)
+        environmentLoader = new ModelLoader<>(models.Environment.class)
+        promotionLoader = new ModelLoader<>(models.Promotion.class)
+        pipelineLoader = new ModelLoader<>(models.Pipeline.Pipeline.class)
+
+        /**
+         * Webhooks
+         */
         environment.lifecycle().manage(webhooks)
 
-        environment.healthChecks().register('sanity', new SanityHealthCheck())
-        environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
+        /**
+         * Healthchecks
+         */
+        environment.healthChecks().register('sanity', new health.SanityHealthCheck())
+        environment.healthChecks().register('webhook', new health.WebhookHealthCheck(webhooks))
 
-
+        /**
+         * Instantiate Resources classes for Jersey handlers
+         */
         environment.jersey().register(typeProvider)
-        environment.jersey().register(new RootResource())
-        environment.jersey().register(new ArtifactResource(adao))
-        environment.jersey().register(new DeploymentResource(ddao, adao))
-        environment.jersey().register(new ServiceResource(serviceRegistry))
-        environment.jersey().register(new PromotionResource(promotionRegistry))
-        environment.jersey().register(new PipelineResource(pipelineRegistry))
+        environment.jersey().register(new resources.RootResource())
+        environment.jersey().register(new resources.ArtifactResource(adao))
+        environment.jersey().register(new resources.DeploymentResource(ddao, adao))
+        environment.jersey().register(new resources.ServiceResource(serviceRegistry))
+        environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))
+        environment.jersey().register(new resources.PromotionResource(promotionRegistry))
+        environment.jersey().register(new resources.PipelineResource(pipelineRegistry))
     }
 }
