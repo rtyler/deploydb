@@ -21,6 +21,7 @@ import deploydb.resources.*
 import deploydb.health.*
 import deploydb.models.*
 import deploydb.dao.*
+import deploydb.models.Pipeline.Pipeline
 
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
@@ -29,6 +30,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
     private ModelRegistry<Promotion> promotionRegistry
+    private ModelRegistry<Pipeline> pipelineRegistry
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -96,7 +98,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         final DeploymentDAO ddao = new DeploymentDAO(hibernate.sessionFactory)
         serviceRegistry = new ModelRegistry<Service>()
         promotionRegistry = new ModelRegistry<Promotion>()
-
+        pipelineRegistry = new ModelRegistry<Pipeline>()
         environment.lifecycle().manage(webhooks)
 
         environment.healthChecks().register('sanity', new SanityHealthCheck())
@@ -109,5 +111,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(new DeploymentResource(ddao, adao))
         environment.jersey().register(new ServiceResource(serviceRegistry))
         environment.jersey().register(new PromotionResource(promotionRegistry))
+        environment.jersey().register(new PipelineResource(pipelineRegistry))
     }
 }

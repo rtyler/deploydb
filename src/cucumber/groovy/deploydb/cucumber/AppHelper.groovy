@@ -67,6 +67,16 @@ class AppHelper {
         c.call(this.runner.promotionRegistry)
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper Pipeline Registry
+     *
+     * @param c (required) Closure to execute
+     */
+    void withPipelineRegistry(Closure c) {
+        c.call(this.runner.pipelineRegistry)
+    }
+
+
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
         StringWriter writer = new StringWriter()

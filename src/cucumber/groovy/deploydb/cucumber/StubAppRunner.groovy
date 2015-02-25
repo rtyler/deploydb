@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+import deploydb.models.Pipeline.Pipeline
 import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
@@ -26,6 +27,8 @@ import java.util.Enumeration
 
 import deploydb.registry.ModelRegistry
 import deploydb.models.Service
+import deploydb.models.Pipeline.Pipeline
+import deploydb.models.Promotion
 
 /**
  * Class for running the Dropwizard app
@@ -44,6 +47,7 @@ public class StubAppRunner<C extends Configuration> {
     private SessionFactory sessionFactory
     private ModelRegistry<Service> serviceRegistry
     private ModelRegistry<Promotion> promotionRegistry
+    private ModelRegistry<Pipeline> pipelineRegistry
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -91,6 +95,7 @@ public class StubAppRunner<C extends Configuration> {
                              */
                             serviceRegistry = application.serviceRegistry
                             promotionRegistry = application.promotionRegistry
+                            pipelineRegistry = application.pipelineRegistry
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB
