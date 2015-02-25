@@ -27,12 +27,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -63,12 +63,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "SUCCESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -140,12 +140,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "SUCCESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -165,12 +165,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "SUCCESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -215,12 +215,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "SUCCESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -250,12 +250,12 @@ Feature: Deployment READ APIs
         "state" : "STARTED",
         "promotionStatus" : [{
           "ident" : "jenkins-smoke",
-          "state" : "inProgress",
+          "state" : "IN_PROGRESS",
           "resultsUrl : ""
          },
          {
           "ident" : "jenkins-smoke",
-          "state" : "success",
+          "state" : "SUCCESS",
           "resultsUrl : ""
         }]
         "createdAt" : "{{created_timestamp}}"
@@ -263,61 +263,8 @@ Feature: Deployment READ APIs
     """
 
   @freezetime @wip
-  Scenario: Fetching an deployment by pageNumber=0 and perPageSize=0 returns all deployments
+  Scenario: Fetching an deployment by pageNumber=0 and perPageSize=0 returns 0 deployments
 
     Given there are deployments
     When I GET "/api/deployments?pageNumber=0&perPageSize=0"
     Then the response should be 200
-    And the body should be JSON:
-    """
-       [{
-        "id" : 2,
-        "artifact" : {
-          "id" : 2,
-          "group" : "com.example.cucumber",
-          "name" : "cucumber-artifact",
-          "version" : "1.0.2",
-          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar",
-          "createdAt" : "{{created_timestamp}}"
-        },
-        "environment" : "pre-prod",
-        "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "inProgress",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "success",
-          "resultsUrl : ""
-        }]
-        "createdAt" : "{{created_timestamp}}"
-      },
-      {
-        "id" : 1,
-        "artifact" : {
-          "id" : 1,
-          "group" : "com.example.cucumber",
-          "name" : "cucumber-artifact",
-          "version" : "1.0.1",
-          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
-          "createdAt" : "{{created_timestamp}}"
-        },
-        "environment" : "pre-prod",
-        "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "inProgress",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "success",
-          "resultsUrl : ""
-        }]
-        "createdAt" : "{{created_timestamp}}"
-      }]
-    """

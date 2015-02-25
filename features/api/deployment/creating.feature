@@ -1,2 +1,0 @@
-Feature: Deployment CREATE APIs
-
