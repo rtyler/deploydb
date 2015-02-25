@@ -1,5 +1,3 @@
-import cucumber.api.*
-
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import deploydb.models.Service

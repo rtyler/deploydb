@@ -2,9 +2,6 @@ package deploydb.models.Webhook
 
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.validator.constraints.NotEmpty
-
-import javax.validation.constraints.Size
 
 /**
  * Class for webhook's promotion configuration.

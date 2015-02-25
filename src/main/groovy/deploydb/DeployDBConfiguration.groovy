@@ -5,7 +5,6 @@ import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.flyway.FlywayFactory
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.validator.constraints.NotEmpty
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
 

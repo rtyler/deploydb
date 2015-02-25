@@ -1,10 +1,8 @@
 package deploydb.models
 
-import com.google.common.collect.Lists
 import com.fasterxml.jackson.annotation.JsonProperty
 import deploydb.models.Webhook.Webhook
 
-import javax.validation.constraints.Size
 import org.hibernate.validator.constraints.NotEmpty
 
 /**
@@ -68,6 +66,11 @@ class Environment {
         return Objects.equals(this.ident, that.ident) &&
                 Objects.equals(this.description, that.description) &&
                 Objects.equals(this.webhooks, that.webhooks)
+    }
+
+    @Override
+    int hashCode() {
+        return Objects.hash(this.ident, this.description, this.webhooks)
     }
 
     @Override

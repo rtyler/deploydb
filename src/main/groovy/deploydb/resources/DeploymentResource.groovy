@@ -1,22 +1,22 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
-import io.dropwizard.jersey.*
-import io.dropwizard.jersey.params.*
+import io.dropwizard.jersey.params.LongParam
+import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
 
-import javax.ws.rs.*
+import javax.ws.rs.Consumes
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
+import javax.ws.rs.PathParam
+import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.HttpHeaders
-import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
-import java.util.concurrent.TimeUnit
 
 import deploydb.dao.ArtifactDAO
 import deploydb.dao.DeploymentDAO
-import deploydb.models.Artifact
 import deploydb.models.Deployment
-import deploydb.mappers.DeploymentMapper
 
 @Path("/api/deployments")
 @Produces(MediaType.APPLICATION_JSON)
@@ -31,7 +31,7 @@ public class DeploymentResource {
     }
 
     /**
-     * WIP: Not implemented yet, see: 
+     * WIP: Not implemented yet, see:
      * <https://github.com/lookout/deploydb/issues/50>
      */
     @GET

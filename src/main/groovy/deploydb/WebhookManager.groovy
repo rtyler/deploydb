@@ -2,7 +2,6 @@ package deploydb
 
 import deploydb.registry.ModelRegistry
 import deploydb.models.Webhook.Webhook
-import deploydb.models.*
 
 import io.dropwizard.lifecycle.Managed
 
