@@ -68,7 +68,6 @@ Feature: Environment READ APIs
     """
 
 
-  @error
   Scenario: Fetching an environment by name that doesn't exist
 
     When I GET "/api/environments/faas"

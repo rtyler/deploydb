@@ -28,6 +28,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<Service> serviceRegistry
+    private ModelLoader<Service> serviceLoader
     private ModelRegistry<models.Environment> environmentRegistry
     private ModelLoader<models.Environment> environmentLoader
     private ModelRegistry<Promotion> promotionRegistry
@@ -110,6 +111,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         /**
          * Instantiate in memory loaders for yaml parsing
          */
+        serviceLoader = new ModelLoader<Service>(Service.class)
         environmentLoader = new ModelLoader<models.Environment>(models.Environment.class)
 
         /**
@@ -117,6 +119,9 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         environment.lifecycle().manage(webhooks)
 
+        /**
+         * Healthchecks
+         */
         environment.healthChecks().register('sanity', new SanityHealthCheck())
         environment.healthChecks().register('webhook', new WebhookHealthCheck(webhooks))
 
