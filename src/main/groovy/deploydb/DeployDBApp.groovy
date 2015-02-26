@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 import deploydb.registry.ModelRegistry
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
-    private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment)
+    private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment, models.PromotionResult)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<models.Service> serviceRegistry
@@ -96,6 +96,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         final dao.ArtifactDAO adao = new dao.ArtifactDAO(hibernate.sessionFactory)
         final dao.DeploymentDAO ddao = new dao.DeploymentDAO(hibernate.sessionFactory)
+        final dao.PromotionResultDAO pdao = new dao.PromotionResultDAO(hibernate.sessionFactory)
 
         /**
          * Instantiate registries for in memory storage
