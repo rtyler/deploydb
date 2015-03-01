@@ -1,6 +1,6 @@
 /*
  * Add some of the additional properties onto the deployments table that were
- * missed in the V1 migration
+ * missed in the V4 migration
  */
 
 ALTER TABLE deployments

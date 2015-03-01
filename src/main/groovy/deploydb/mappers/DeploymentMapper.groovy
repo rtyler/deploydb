@@ -5,8 +5,8 @@ import deploydb.Status
 
 
 /**
- * Simple Jackson mapper class to deserialize deployment creation requests
- * properly
+ * Simple Jackson mapper class to deserialize
+ * deployment update requests properly
  */
 class DeploymentUpdateMapper {
     @JsonProperty()

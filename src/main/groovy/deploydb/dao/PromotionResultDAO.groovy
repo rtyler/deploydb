@@ -3,28 +3,28 @@ package deploydb.dao
 import groovy.transform.InheritConstructors
 import io.dropwizard.hibernate.AbstractDAO
 
-import deploydb.models.Deployment
+import deploydb.models.PromotionResult
 import org.hibernate.criterion.Order
 
 /**
- * Deployment Data access object
+ * PromotionResult Data access object
  */
 @InheritConstructors
-class DeploymentDAO extends AbstractDAO<Deployment> {
+class PromotionResultDAO extends AbstractDAO<PromotionResult> {
 
     /**
-     * Locate an Deployment based on the (group, name) pair
+     * Locate an PromotionResult based on the (group, name) pair
      *
      * @param pageNumber A valid page number for pagination
      * @param perPageSize A valid per page size
      */
-    List<Deployment> getByPage(int pageNumber, int perPageSize) {
+    List<PromotionResult> getByPage(int pageNumber, int perPageSize) {
 
-        List<Deployment> deployments = criteria()
+        List<PromotionResult> promotionResults = criteria()
                 .setFirstResult(pageNumber)
                 .setMaxResults(perPageSize)
                 .addOrder(Order.desc('createdAt')).list()
-        return deployments
+        return promotionResults
     }
 
 }

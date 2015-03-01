@@ -38,4 +38,5 @@ abstract class AbstractModel {
     void setCreatedAt(String iso8601String) {
         this.createdAt = DateTime.parse(iso8601String)
     }
+
 }

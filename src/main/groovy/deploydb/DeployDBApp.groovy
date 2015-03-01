@@ -96,7 +96,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         final dao.ArtifactDAO adao = new dao.ArtifactDAO(hibernate.sessionFactory)
         final dao.DeploymentDAO ddao = new dao.DeploymentDAO(hibernate.sessionFactory)
-        final dao.PromotionResultDAO pdao = new dao.PromotionResultDAO(hibernate.sessionFactory)
 
         /**
          * Instantiate registries for in memory storage
@@ -128,7 +127,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(typeProvider)
         environment.jersey().register(new resources.RootResource())
         environment.jersey().register(new resources.ArtifactResource(adao))
-        environment.jersey().register(new resources.DeploymentResource(ddao, adao))
+        environment.jersey().register(new resources.DeploymentResource(ddao))
         environment.jersey().register(new resources.ServiceResource(serviceRegistry))
         environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))
         environment.jersey().register(new resources.PromotionResource(promotionRegistry))

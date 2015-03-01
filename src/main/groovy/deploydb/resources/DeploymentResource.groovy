@@ -2,12 +2,13 @@ package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
 import deploydb.mappers.DeploymentUpdateMapper
-import deploydb.models.Artifact
+import deploydb.dao.DeploymentDAO
+import deploydb.models.Deployment
+import deploydb.Status
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
-
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
@@ -16,25 +17,18 @@ import javax.ws.rs.Produces
 import javax.ws.rs.PathParam
 import javax.ws.rs.QueryParam
 import javax.ws.rs.WebApplicationException
-import javax.ws.rs.core.Context
-import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
-import deploydb.dao.ArtifactDAO
-import deploydb.dao.DeploymentDAO
-import deploydb.models.Deployment
 
 @Path("/api/deployments")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class DeploymentResource {
     private final DeploymentDAO dao
-    private final ArtifactDAO adao
 
-    DeploymentResource(DeploymentDAO dao, ArtifactDAO adao) {
+    DeploymentResource(DeploymentDAO dao) {
         this.dao = dao
-        this.adao = adao
     }
 
     /**
@@ -50,24 +44,19 @@ public class DeploymentResource {
         /**
          * Return empty list, if pageNumber and perPageSize is 0
          */
-        if (pageNumber == 0 && perPageSize == 0) {
+        if (pageNumber.get() == 0 && perPageSize.get() == 0) {
             return []
         }
 
         /**
          * Fetch deployment by page
          */
-        List<Deployment> deployTable = this.dao.getByPage(pageNumber, perPageSize)
+        List<Deployment> deployTable = this.dao.getByPage(pageNumber.get(), perPageSize.get())
 
         if (deployTable.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
 
-        /*
-        return deployTable.collect() { Deployment deploy ->
-            new DeploymentResponseMapper(deploy)
-        }
-        */
         return deployTable
     }
 
@@ -88,13 +77,33 @@ public class DeploymentResource {
         return deploy
     }
 
+    /**
+     * Returns the latest Deployment object
+     */
+    @GET
+    @Path("latest")
+    @UnitOfWork
+    @Timed(name = "get-requests")
+    Deployment getLatest() {
+        Deployment deploy = this.dao.getLatest()
+
+        if (deploy == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        return deploy
+    }
+
+    /**
+     * Patch the Deployment object
+     */
     @PATCH
     @Path('{id}')
     @UnitOfWork
     @Timed(name='patch-requests')
     @Consumes('application/json-patch')
     void updateDeployment(@PathParam('id') LongParam deploymentId,
-                                DeploymentUpdateMapper deploymentUpdateMapper ) {
+                          DeploymentUpdateMapper deploymentUpdateMapper) {
         Deployment deploy = this.dao.get(deploymentId.get())
 
         if (deploy == null) {

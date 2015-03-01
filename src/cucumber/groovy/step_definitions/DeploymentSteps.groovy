@@ -1,55 +1,85 @@
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
+
 import deploydb.dao.ArtifactDAO
 import deploydb.dao.DeploymentDAO
 import deploydb.dao.PromotionResultDAO
 import deploydb.models.Artifact
 import deploydb.models.Deployment
 import deploydb.models.PromotionResult
+import deploydb.Status
+
 
 Given(~/^there is a deployment$/) { ->
     withSession {
+
+        /**
+         * Create sample artifact
+         */
         ArtifactDAO adao = new ArtifactDAO(sessionFactory)
         Artifact a1 = sampleArtifact()
+        adao.persist(a1)
 
-        PromotionResultDAO pdao = new PromotionResultDAO(sessionFactory)
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", NOT_STARTED, "")
-        PromotionResult p2 = new PromotionResult("status-check", NOT_STARTED, "")
+        /**
+         * Create sample promotionResult(s)
+         */
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
 
+        /**
+         * Create deployment
+         */
+        Deployment d1 = new Deployment(a1,
+                "pre-prod",
+                "faas",
+                Status.STARTED)
+        d1.addPromotionResult(p1)
+
+        /**
+         * Save deployment in DB, which will save the promotionResults as well
+         */
         DeploymentDAO dao = new DeploymentDAO(sessionFactory)
-        Deployment d1 = new Deployment(adao.persist(a1),
-            "pre-prod",
-            "faas",
-            "NOT_STARTED",
-            [pdao.persist(p1), pdao.persist(p2)])
         dao.persist(d1)
     }
 }
 
 Given(~/^there are deployments$/) { ->
     withSession {
+
+        /**
+         * Create sample artifact
+         */
         ArtifactDAO adao = new ArtifactDAO(sessionFactory)
         Artifact a1 = sampleArtifact()
-        Artifact a2 = sampleArtifact2()
+        Artifact a2 = sampleArtifactV2()
+        adao.persist(a1)
+        adao.persist(a2)
 
-        PromotionResultDAO pdao = new PromotionResultDAO(sessionFactory)
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", NOT_STARTED, "")
-        PromotionResult p2 = new PromotionResult("status-check", NOT_STARTED, "")
-        PromotionResult p3 = new PromotionResult("jenkins-smoke", NOT_STARTED, "")
-        PromotionResult p4 = new PromotionResult("status-check", NOT_STARTED, "")
+        /**
+         * Create sample promotionResult(s)
+         */
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p2 = new PromotionResult("status-check", Status.IN_PROGRESS,
+                "http://local.lookout.com/jenkins/job-id/2/results")
 
-        DeploymentDAO dao = new DeploymentDAO(sessionFactory)
+        /**
+         * Create deployment
+         */
         Deployment d1 = new Deployment(adao.persist(a1),
                 "pre-prod",
                 "faas",
-                "NOT_STARTED",
-                [pdao.persist(p1), pdao.persist(p2)])
-        dao.persist(d1)
+                Status.STARTED)
+        d1.addPromotionResult(p1)
         Deployment d2 = new Deployment(adao.persist(a2),
                 "pre-prod",
                 "faas",
-                "NOT_STARTED",
-                [pdao.persist(p3), pdao.persist(p4)])
+                Status.STARTED)
+        d2.addPromotionResult(p2)
+
+        /**
+         * Save deployment in DB, which will save the promotionResults as well
+         */
+        DeploymentDAO dao = new DeploymentDAO(sessionFactory)
+        dao.persist(d1)
         dao.persist(d2)
     }
 }

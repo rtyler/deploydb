@@ -7,10 +7,12 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
 import javax.persistence.EnumType
+import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
+import org.eclipse.jetty.util.ConcurrentHashSet
 
 
 /**
@@ -34,15 +36,22 @@ class Deployment extends AbstractModel {
     @JsonProperty(value = "service")
     String serviceIdent
 
-    @Column(name="state", nullable=false)
+    @Column(name="status", nullable=false)
     @Enumerated(EnumType.ORDINAL)
     @JsonProperty
     Status status = Status.NOT_STARTED
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="id")
-    //@JoinColumn(name="promotionResultsId", unique=false, nullable=false, updatable=false)
+    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="deployment")
     @JsonProperty
-    Set<PromotionResult> promotionResultList
+    Set<PromotionResult> promotionResultSet = new ConcurrentHashSet<>()
+
+    /**
+     * Add Promotion Result to collection
+     */
+    void addPromotionResult(PromotionResult promotionResult) {
+        promotionResult.deployment = this
+        promotionResultSet.add(promotionResult)
+    }
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -56,13 +65,11 @@ class Deployment extends AbstractModel {
     Deployment(Artifact artifact,
                String environmentIdent,
                String serviceIdent,
-               Status status,
-               List<PromotionResult> promotionResultList) {
+               Status status) {
         this.artifact = artifact
         this.environmentIdent = environmentIdent
         this.serviceIdent = serviceIdent
         this.status = status
-        this.promotionResultList = promotionResultList
     }
 
     @Override
@@ -83,12 +90,22 @@ class Deployment extends AbstractModel {
                 Objects.equals(this.environmentIdent, that.environmentIdent) &&
                 Objects.equals(this.serviceIdent, that.serviceIdent) &&
                 Objects.equals(this.status, that.status) &&
-                Objects.equals(this.promotionResultList, that.promotionResultList)
+                Objects.equals(this.promotionResultSet, that.promotionResultSet)
     }
 
     @Override
     int hashCode() {
         return Objects.hash(this.id, this.artifact, this.environmentIdent,
-                this.serviceIdent, this.status, this.promotionResultList)
+                this.serviceIdent, this.status, this.promotionResultSet)
     }
+
+    @Override
+    String toString() {
+        String output = ""
+        output += "id = ${id}, environment: ${environmentIdent}, "
+        output += "service = ${serviceIdent}, status: ${status}, "
+        output += "promotionResultSet: ${promotionResultSet}"
+        return output
+    }
+
 }

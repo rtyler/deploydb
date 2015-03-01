@@ -5,6 +5,14 @@ CREATE TABLE promotionResults (
     promotion VARCHAR(8192) NOT NULL,
     status INT(11) NOT NULL,
     infoUrl TEXT,
+    deploymentId BIGINT(11) NOT NULL,
 
-    PRIMARY KEY (id)
+    /*
+     * Timestamps for keeping track of data
+     */
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    deletedAt TIMESTAMP DEFAULT NULL,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (deploymentId) REFERENCES deployments(id)
 );
