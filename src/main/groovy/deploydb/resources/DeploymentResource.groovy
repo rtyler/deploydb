@@ -8,12 +8,10 @@ import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
-
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
-
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.PathParam
@@ -42,13 +40,6 @@ public class DeploymentResource {
     List<Deployment> getAll(
             @QueryParam("pageNumber") @DefaultValue("0") IntParam pageNumber,
             @QueryParam("perPageSize") @DefaultValue("20") IntParam perPageSize) {
-
-        /**
-         * Return empty list, if pageNumber and perPageSize is 0
-         */
-        if (pageNumber.get() == 0 && perPageSize.get() == 0) {
-            return []
-        }
 
         /**
          * Fetch deployment by page

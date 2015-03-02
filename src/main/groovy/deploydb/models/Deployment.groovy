@@ -57,9 +57,9 @@ class Deployment extends AbstractModel {
     /**
      * Add Promotion Result to collection
      */
-    void addPromotionResult(PromotionResult promotionResult) {
+    boolean addPromotionResult(PromotionResult promotionResult) {
         promotionResult.deployment = this
-        promotionResultSet.add(promotionResult)
+        return promotionResultSet.add(promotionResult)
     }
 
     /**

@@ -29,7 +29,7 @@ Feature: Deployment READ APIs
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
-          "infoUrl" : "",
+          "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
          }],
         "createdAt" : "{{created_timestamp}}"
@@ -62,7 +62,7 @@ Feature: Deployment READ APIs
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
-          "infoUrl" : "",
+          "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
          }],
         "createdAt" : "{{created_timestamp}}"
@@ -136,7 +136,7 @@ Feature: Deployment READ APIs
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
-          "infoUrl" : "",
+          "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
         }],
         "createdAt" : "{{created_timestamp}}"
@@ -205,7 +205,7 @@ Feature: Deployment READ APIs
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
-          "infoUrl" : "",
+          "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
         }],
         "createdAt" : "{{created_timestamp}}"
@@ -244,7 +244,7 @@ Feature: Deployment READ APIs
       }
     """
 
-  @freezetime
+  @freezetime @wip
   Scenario: Fetching an deployment by pageNumber=0 and perPageSize=0 returns 0 deployments
 
     Given there are deployments

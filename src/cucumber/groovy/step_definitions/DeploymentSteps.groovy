@@ -22,7 +22,7 @@ Given(~/^there is a deployment$/) { ->
         /**
          * Create sample promotionResult(s)
          */
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, null)
 
         /**
          * Create deployment
@@ -56,7 +56,7 @@ Given(~/^there are deployments$/) { ->
         /**
          * Create sample promotionResult(s)
          */
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, null)
         PromotionResult p2 = new PromotionResult("status-check", Status.IN_PROGRESS,
                 "http://local.lookout.com/jenkins/job-id/2/results")
 

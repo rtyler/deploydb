@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotEmpty
 
 
 /**
- * Representation class for the concept of a Deployment
+ * Representation class for the concept of a PromotionResult
  */
 @Entity
 @Table(name='promotionResults')
@@ -32,7 +32,7 @@ class PromotionResult extends AbstractModel {
     @JsonProperty
     Status status = Status.NOT_STARTED
 
-    @Column(name="infoUrl")
+    @Column(name="infoUrl", nullable=true)
     @JsonProperty
     String infoUrl
 
