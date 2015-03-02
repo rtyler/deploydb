@@ -1,4 +1,3 @@
-
 CREATE TABLE promotionResults (
     id BIGINT(11) AUTO_INCREMENT,
 
@@ -16,3 +15,5 @@ CREATE TABLE promotionResults (
     PRIMARY KEY (id),
     FOREIGN KEY (deploymentId) REFERENCES deployments(id)
 );
+
+ALTER TABLE deployments ADD COLUMN service VARCHAR(8192) NOT NULL;

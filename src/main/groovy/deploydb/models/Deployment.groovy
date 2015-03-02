@@ -1,6 +1,7 @@
 package deploydb.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonIgnore
 import deploydb.Status
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -10,6 +11,7 @@ import javax.persistence.EnumType
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
+import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.OrderBy
 import javax.persistence.Table
@@ -46,6 +48,11 @@ class Deployment extends AbstractModel {
     @JsonProperty
     @OrderBy(value="id")
     Set<PromotionResult> promotionResultSet = new ConcurrentHashSet<>()
+
+    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinColumn(name="flowId")
+    @JsonIgnore
+    Flow flow
 
     /**
      * Add Promotion Result to collection
@@ -107,7 +114,7 @@ class Deployment extends AbstractModel {
         output += "id = ${id}, environment: ${environmentIdent}, "
         output += "service = ${serviceIdent}, status: ${status}, "
         output += "promotionResultSet: ${promotionResultSet}"
+        output += "flow = ${flow.id}"
         return output
     }
-
 }
