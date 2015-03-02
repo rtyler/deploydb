@@ -11,6 +11,7 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
+import javax.persistence.OrderBy
 import javax.persistence.Table
 import org.eclipse.jetty.util.ConcurrentHashSet
 
@@ -43,6 +44,7 @@ class Deployment extends AbstractModel {
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="deployment")
     @JsonProperty
+    @OrderBy(value="id")
     Set<PromotionResult> promotionResultSet = new ConcurrentHashSet<>()
 
     /**

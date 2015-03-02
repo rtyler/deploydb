@@ -11,10 +11,7 @@ import javax.persistence.EnumType
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 import javax.persistence.Table
-import org.assertj.core.internal.Comparables
 import org.hibernate.validator.constraints.NotEmpty
 
 
@@ -77,15 +74,12 @@ class PromotionResult extends AbstractModel {
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.promotionIdent, that.promotionIdent) &&
                 Objects.equals(this.status, that.status) &&
-                Objects.equals(this.infoUrl, that.infoUrl) &&
-                Objects.equals(this.deployment.id, that.deployment.id)
+                Objects.equals(this.infoUrl, that.infoUrl)
     }
 
     @Override
     int hashCode() {
-        int val = Objects.hash(this.id, this.promotionIdent, this.status,
-                this.infoUrl, this.deployment.id)
-        return val
+        return Objects.hash(this.id, this.promotionIdent, this.status, this.infoUrl)
     }
 
     @Override

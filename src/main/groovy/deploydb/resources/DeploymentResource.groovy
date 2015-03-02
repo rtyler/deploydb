@@ -4,14 +4,16 @@ import com.codahale.metrics.annotation.Timed
 import deploydb.mappers.DeploymentUpdateMapper
 import deploydb.dao.DeploymentDAO
 import deploydb.models.Deployment
-import deploydb.Status
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
+
+import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
+
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.PathParam
@@ -52,7 +54,6 @@ public class DeploymentResource {
          * Fetch deployment by page
          */
         List<Deployment> deployTable = this.dao.getByPage(pageNumber.get(), perPageSize.get())
-
         if (deployTable.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
@@ -101,9 +102,8 @@ public class DeploymentResource {
     @Path('{id}')
     @UnitOfWork
     @Timed(name='patch-requests')
-    @Consumes('application/json-patch')
     void updateDeployment(@PathParam('id') LongParam deploymentId,
-                          DeploymentUpdateMapper deploymentUpdateMapper) {
+                          @Valid DeploymentUpdateMapper deploymentUpdateMapper) {
         Deployment deploy = this.dao.get(deploymentId.get())
 
         if (deploy == null) {
@@ -113,8 +113,10 @@ public class DeploymentResource {
         /**
          *  FIXME: valid deploymentUpdateMapper.status are (Started, Completed, Failed)
          */
+        /*
         if (deploymentUpdateMapper.status != deploy.status) {
-            /* FIXME: Take Actions */
+            FIXME: Take Actions
         }
+        */
     }
 }

@@ -5,7 +5,7 @@ import spock.lang.*
 class ArtifactSpec extends Specification {
 
 
-    def "ensure it can be instantiated"() {
+    def "ensure artifact can be instantiated"() {
         when:
         def artifact = new Artifact()
 
@@ -17,7 +17,7 @@ class ArtifactSpec extends Specification {
 class ArtifactWithArgsSpec extends Specification {
 
 
-    def "its properties should be correct"() {
+    def "artifact's properties should be correct"() {
         given:
         Artifact artifact = new Artifact('spock.group',
                                          'spock-test-name',

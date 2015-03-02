@@ -3,7 +3,6 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import deploydb.dao.ArtifactDAO
 import deploydb.dao.DeploymentDAO
-import deploydb.dao.PromotionResultDAO
 import deploydb.models.Artifact
 import deploydb.models.Deployment
 import deploydb.models.PromotionResult
