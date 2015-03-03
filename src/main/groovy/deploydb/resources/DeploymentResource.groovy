@@ -110,8 +110,8 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!Deployment.class.deploymentStatusTransitionPairs.containsAll(
-                [Pair.of(deploy.status, deploymentUpdateMapper.status)])) {
+        if (!Deployment.class.deploymentStatusTransitionPairs.contains(
+                Pair.of(deploy.status, deploymentUpdateMapper.status))) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
 
@@ -146,8 +146,8 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!PromotionResult.class.promotionResultStatusTransitionPairs.containsAll(
-                [Pair.of(promotionResult.status, promotionResultAddMapper.status)])) {
+        if (!PromotionResult.class.promotionResultStatusTransitionPairs.contains(
+                Pair.of(promotionResult.status, promotionResultAddMapper.status))) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
 
