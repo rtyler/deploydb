@@ -32,35 +32,9 @@ import javax.ws.rs.core.Response
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class DeploymentResource {
     private final DeploymentDAO dao
-    Set<Pair<Status, Status>> deploymentStatusTransitionPairs
-    Set<Pair<Status, Status>> promotionResultStatusTransitionPairs
 
     DeploymentResource(DeploymentDAO dao) {
         this.dao = dao
-
-        /**
-         *  Valid State transitions for deployment are:
-         *  NOT_STARTED -> STARTED
-         *  NOT_STARTED -> COMPLETED
-         *  NOT_STARTED -> FAILED
-         *  STARTED -> COMPLETED
-         *  STARTED -> FAILED
-         */
-        deploymentStatusTransitionPairs = new HashSet<>()
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.STARTED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.COMPLETED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.FAILED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.COMPLETED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
-
-        /**
-         *  Valid State transitions for PromotionResult are:
-         *  STARTED -> SUCCESS
-         *  STARTED -> FAILED
-         */
-        promotionResultStatusTransitionPairs = new HashSet<>()
-        promotionResultStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.SUCCESS))
-        promotionResultStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
     }
 
     /**
@@ -136,8 +110,8 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!deploymentStatusTransitionPairs.containsAll(
-         [Pair.of(deploy.status, deploymentUpdateMapper.status)])) {
+        if (!Deployment.class.deploymentStatusTransitionPairs.containsAll(
+                [Pair.of(deploy.status, deploymentUpdateMapper.status)])) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
 
@@ -172,7 +146,7 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!promotionResultStatusTransitionPairs.containsAll(
+        if (!PromotionResult.class.promotionResultStatusTransitionPairs.containsAll(
                 [Pair.of(promotionResult.status, promotionResultAddMapper.status)])) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }

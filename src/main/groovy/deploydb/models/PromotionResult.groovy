@@ -12,6 +12,8 @@ import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import org.apache.commons.lang3.tuple.Pair
+import org.eclipse.jetty.util.ConcurrentHashSet
 import org.hibernate.validator.constraints.NotEmpty
 
 
@@ -21,6 +23,18 @@ import org.hibernate.validator.constraints.NotEmpty
 @Entity
 @Table(name='promotionResults')
 class PromotionResult extends AbstractModel {
+    private static Set<Pair<Status, Status>> promotionResultStatusTransitionPairs
+
+    static {
+        /**
+         *  Valid State transitions for PromotionResult are:
+         *  STARTED -> SUCCESS
+         *  STARTED -> FAILED
+         */
+        promotionResultStatusTransitionPairs = new ConcurrentHashSet<>()
+        promotionResultStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.SUCCESS))
+        promotionResultStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
+    }
 
     @NotEmpty
     @Column(name="promotion", nullable=false)
