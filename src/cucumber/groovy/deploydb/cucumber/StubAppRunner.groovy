@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+import deploydb.WebhookManager
 import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
@@ -47,6 +48,7 @@ public class StubAppRunner<C extends Configuration> {
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelLoader<deploydb.models.Environment> environmentLoader
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
+    private WebhookManager webhookManager
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -100,6 +102,12 @@ public class StubAppRunner<C extends Configuration> {
                              */
                             serviceLoader = application.serviceLoader
                             environmentLoader = application.environmentLoader
+                            webhookManager = application.webhooksManager
+
+                            /*
+                             * initialize the webhook configuration
+                             */
+                            application.initializeWebhook("webhooks/test-cucumber.yml")
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB

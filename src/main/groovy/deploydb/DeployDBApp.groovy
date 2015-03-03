@@ -22,7 +22,7 @@ import deploydb.registry.ModelRegistry
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
-    private WebhookManager webhooks
+    private WebhookManager webhooksManager
     private ModelRegistry<models.Service> serviceRegistry
     private ModelLoader<models.Service> serviceLoader
     private ModelRegistry<models.Environment> environmentRegistry
@@ -58,12 +58,21 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
             }
 
 
+    /*
+     *  Place holder, call to initialize the webhooksManager, this should
+     *  be folded into overall configuration load code
+     */
+    void initializeWebhook(String configFile)
+    {
+      webhooksManager.loadConfiguration(configFile)
+    }
+
     @Override
     public void initialize(Bootstrap<DeployDBConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle())
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
-        webhooks = new WebhookManager()
+        webhooksManager = new WebhookManager()
 
         /*
          * Force our default timezone to always be UTC
@@ -111,22 +120,22 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environmentLoader = new ModelLoader<>(models.Environment.class)
 
         /**
-         * Webhooks
+         * webhooksManager
          */
-        environment.lifecycle().manage(webhooks)
+        environment.lifecycle().manage(webhooksManager)
 
         /**
          * Healthchecks
          */
         environment.healthChecks().register('sanity', new health.SanityHealthCheck())
-        environment.healthChecks().register('webhook', new health.WebhookHealthCheck(webhooks))
+        environment.healthChecks().register('webhook', new health.WebhookHealthCheck(webhooksManager))
 
         /**
          * Instantiate Resources classes for Jersey handlers
          */
         environment.jersey().register(typeProvider)
         environment.jersey().register(new resources.RootResource())
-        environment.jersey().register(new resources.ArtifactResource(adao))
+        environment.jersey().register(new resources.ArtifactResource(adao, webhooksManager))
         environment.jersey().register(new resources.DeploymentResource(ddao, adao))
         environment.jersey().register(new resources.ServiceResource(serviceRegistry))
         environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))

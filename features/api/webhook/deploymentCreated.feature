@@ -1,14 +1,15 @@
 Feature: Webhook invocation  when deployment is created
 
-  @wip @webhook
+  @freezetime
   Scenario: Webhooks should be invoked when artifacts are created
     Given the webhooks configuration:
     """
       deployment:
-        created: "http://{{webhook_url}}"
+        created:
+           - http://localhost:10000/job/notify-deployment-started/build
     """
-    And Given a service is configured
-    When I POST to "/api/v1/artifacts" with an artifact
+    Given a service named faas
+    When I POST to "/api/artifacts" with an artifact
     Then the webhook should be invoked with the JSON:
     """
       {
@@ -21,9 +22,8 @@ Feature: Webhook invocation  when deployment is created
           "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
           "createdAt" : "{{created_timestamp}}"
         },
-        "service" : "fun as service"
-        "environment" : "dev-apha",
-        "status" : "NOTSTARTED",
+        "status" : "STARTED",
+        "environment" : "dev-integ",
         "createdAt" : "{{created_timestamp}}"
       }
     """

@@ -7,13 +7,15 @@ import spock.lang.*
 
 import deploydb.models.Artifact
 import deploydb.dao.ArtifactDAO
+import deploydb.WebhookManager
 
 class ArtifactResourceSpec extends Specification {
     private ArtifactDAO dao = Mock(ArtifactDAO)
 
+    private final WebhookManager webhookManager = new WebhookManager()
     @Rule
     ResourceTestRule dropwizard = ResourceTestRule.builder()
-                .addResource(new ArtifactResource(dao)).build();
+                .addResource(new ArtifactResource(dao, webhookManager)).build();
 
     def "byIdentifier when the item exists"() {
         given:

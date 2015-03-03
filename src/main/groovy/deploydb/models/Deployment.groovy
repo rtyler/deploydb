@@ -1,5 +1,7 @@
 package deploydb.models
 
+import deploydb.WebhookModelMapper
+
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -18,7 +20,7 @@ enum DeploymentStatus {STARTED, COMPLETED, FAILED}
  */
 @Entity
 @Table(name='deployments')
-class Deployment extends AbstractModel {
+class Deployment extends AbstractModel implements WebhookModelMapper {
 
     @OneToOne(optional=false)
     @JoinColumn(name='artifactId', unique=false, nullable=false, updatable=false)
@@ -47,5 +49,13 @@ class Deployment extends AbstractModel {
     Deployment(Artifact deployedArtifact, String environment) {
         this.artifact = deployedArtifact
         this.environment = environment
+    }
+
+    /*
+     *
+     */
+    String toPayload()
+    {
+        return "artifact = ${artifact}, environment = ${environment}, status = ${status}"
     }
 }

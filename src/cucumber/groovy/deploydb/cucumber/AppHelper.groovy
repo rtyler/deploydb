@@ -74,6 +74,25 @@ class AppHelper {
         c.call(this.runner.promotionRegistry)
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper WebhookManager
+     *
+     * @param c (required) Closure to execute
+     */
+    void withWebhookManager(Closure c) {
+        c.call(this.runner.webhookManager)
+    }
+
+    /**
+     *  Execute the {@link Closure} with a proper testWebhookServer's
+     *  receivedWebhookObject
+     *
+     * @param c (required) Closure to execute
+     */
+    void withReceivedWebhookObject(Closure c) {
+        c.call(this.webhookRunner.getApplication().receivedWebhookObject)
+    }
+
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
         StringWriter writer = new StringWriter()

@@ -13,4 +13,12 @@ Given(~/^a service configuration named "(.*?)":$/) { String serviceIdent, String
             serviceRegistry.put(serviceIdent, a)
     }
 }
-
+Given(~/^a service named (.*?)/) { String serviceIdent ->
+    withServiceRegistry {
+        ModelRegistry<Service> serviceRegistry,
+        ModelLoader<Service> serviceLoader ->
+            Service a = new Service()
+            a.ident =  serviceIdent
+            serviceRegistry.put(serviceIdent, a)
+    }
+}

@@ -1,6 +1,6 @@
 package deploydb
 
-import deploydb.registry.ModelRegistry
+import com.github.lookout.whoas.HookRequest
 import deploydb.models.Webhook.Webhook
 
 import io.dropwizard.lifecycle.Managed
@@ -19,15 +19,35 @@ class WebhookManager implements Managed {
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
-    private ModelRegistry<Webhook> webhookModelRegistry
+    private Webhook webhook
 
-    WebhookManager() {
+    WebhookManager( ) {
         runner = new SequentialHookRunner(this.queue)
+
+
+        /*
+         * Instantiate the loader to load the webhook object from
+         * parsed object
+         */
+        webhook = new Webhook()
+
         runnerThread = new Thread({
             runner.run()
         })
         runnerThread.name = 'WebhookManager Thread'
         logger.info("Webhook runner thread created: ${runnerThread}")
+    }
+
+    void loadConfiguration(String fileName) {
+        ModelLoader<Webhook> webhookLoader = new
+                ModelLoader<Webhook>(models.Webhook.Webhook.class)
+        webhook = webhookLoader.load(fileName)
+    }
+
+    void loadConfigurationFromString(String configData) {
+        ModelLoader<Webhook> webhookLoader = new
+            ModelLoader<Webhook>(models.Webhook.Webhook.class)
+        webhook = webhookLoader.loadFromString(configData)
     }
 
     @Override
@@ -42,6 +62,16 @@ class WebhookManager implements Managed {
         logger.info("${runnerThread} stopped")
     }
 
+    boolean createDeploymentWebhook(WebhookModelMapper webhookModelMapper, String eventType)
+    {
+        String urlName = webhook.deployment.created[0]
+        HookRequest hookRequest = new HookRequest(urlName,
+                webhookModelMapper.toPayload())
+
+        String urlPayload = webhookModelMapper.toPayload()
+        println("urlName ${urlName} payload ${urlPayload}")
+        return queue.push(hookRequest)
+    }
     /**
      * Return true if the webhook thread is running
      */

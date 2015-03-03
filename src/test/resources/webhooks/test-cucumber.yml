@@ -1,0 +1,12 @@
+deployment:
+  created:
+    - http://localhost:10000/job/notify-deployment-started/build
+  started:
+    - http://jenkins.example.com/job/notify-deployment-started/build
+  completed:
+    - http://jenkins.example.com/job/notify-deployment-completed/build
+  verified:
+    - http://jenkins.example.com/job/notify-deployment-verified/build
+promotion:
+  completed:
+    - http://jenkins.example.com/job/notify-promotion-completed/build
