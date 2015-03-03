@@ -81,8 +81,17 @@ class Deployment extends AbstractModel {
         this.status = status
     }
 
+    /**
+     * Find Promotion Result in the Set with matching promotionIdent
+     * @param S
+     * @return
+     */
+    PromotionResult getPromotionResult(String promotionIdent) {
+        this.promotionResultSet.find { pr -> pr.promotionIdent == promotionIdent }
+    }
+
     @Override
-    public boolean equals(Object o) {
+    boolean equals(Object o) {
         /* First object identity */
         if (this.is(o)) {
             return true

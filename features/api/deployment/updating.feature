@@ -10,7 +10,7 @@ Feature: Deployment UPDATE APIs
     When I PATCH "/api/deployments/1" with:
     """
       {
-        "status" : "STARTED"
+        "status" : "COMPLETED"
       }
     """
     Then the response should be 204
@@ -22,26 +22,26 @@ Feature: Deployment UPDATE APIs
     When I PATCH "/api/deployments/1" with:
     """
       {
-        "status" : "COMPLETED"
-      }
-    """
-    Then the response should be 204
-
-
-  Scenario: Updating a deployment with a status FAILED
-
-    Given there is a deployment
-    When I PATCH "/api/deployments/1" with:
-    """
-      {
         "status" : "FAILED"
       }
     """
     Then the response should be 204
 
 
+  Scenario: Updating a deployment with invalid status transition
+
+    Given there is a deployment
+    When I PATCH "/api/deployments/1" with:
+    """
+      {
+        "status" : "NOT_STARTED"
+      }
+    """
+    Then the response should be 406
+
+
   @error
-  Scenario: Updating a deployment with an invalid status
+  Scenario: Updating a deployment with an malformed status
 
     Given there is a deployment
     When I PATCH "/api/deployments/1" with:
