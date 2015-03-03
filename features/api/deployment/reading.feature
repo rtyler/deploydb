@@ -25,7 +25,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
@@ -58,7 +58,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
@@ -132,7 +132,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
@@ -154,7 +154,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 2,
           "promotion" : "status-check",
           "status" : "IN_PROGRESS",
@@ -201,7 +201,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
           "status" : "IN_PROGRESS",
@@ -233,7 +233,7 @@ Feature: Deployment READ APIs
         "environment" : "pre-prod",
         "service" : "faas",
         "status" : "STARTED",
-        "promotionResultSet" : [{
+        "promotions" : [{
           "id" : 2,
           "promotion" : "status-check",
           "status" : "IN_PROGRESS",

@@ -45,7 +45,7 @@ class Deployment extends AbstractModel {
     Status status = Status.NOT_STARTED
 
     @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="deployment")
-    @JsonProperty
+    @JsonProperty(value = "promotions")
     @OrderBy(value="id")
     Set<PromotionResult> promotionResultSet = new ConcurrentHashSet<>()
 

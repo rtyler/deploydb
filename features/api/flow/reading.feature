@@ -35,7 +35,7 @@ Feature: Flow READ APIs
         },
         "environment" : "pre-production",
         "service" : "bluffdale",
-        "promotionResultSet":[],
+        "promotions":[],
         "status" : "STARTED",
         "createdAt" : "{{created_timestamp}}"
       },
@@ -51,7 +51,7 @@ Feature: Flow READ APIs
         },
         "environment" : "production",
         "service" : "bluffdale",
-        "promotionResultSet":[],
+        "promotions":[],
         "status" : "STARTED",
         "createdAt" : "{{created_timestamp}}"
       }],
