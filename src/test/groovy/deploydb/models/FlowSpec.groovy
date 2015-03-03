@@ -1,5 +1,6 @@
 package deploydb.models
 
+import deploydb.Status
 import spock.lang.Specification
 
 class FlowSpec extends Specification {
@@ -21,8 +22,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment preProdDeployment = new Deployment(artifact, "pre-production")
-        Deployment prodDeployment = new Deployment(artifact, "production")
+        Deployment preProdDeployment = new Deployment(artifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment prodDeployment = new Deployment(artifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> deployments = new HashSet<Deployment>()
         Flow flow = new Flow()
 
@@ -48,8 +51,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production")
-        Deployment prodDeployment = new Deployment(firstArtifact, "production")
+        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment prodDeployment = new Deployment(firstArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> firstDeployments = new HashSet<Deployment>()
         Flow firstFlow = new Flow()
 
@@ -66,8 +71,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "pre-production")
-        Deployment secondProdDeployment = new Deployment(secondArtifact, "production")
+        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment secondProdDeployment = new Deployment(secondArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> secondDeployments = new HashSet<Deployment>()
         Flow secondFlow = new Flow()
 
@@ -88,8 +95,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production")
-        Deployment prodDeployment = new Deployment(firstArtifact, "production")
+        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment prodDeployment = new Deployment(firstArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> firstDeployments = new HashSet<Deployment>()
         Flow firstFlow = new Flow()
 
@@ -106,8 +115,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "dev-integ")
-        Deployment secondProdDeployment = new Deployment(secondArtifact, "dev-beta")
+        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "dev-integ",
+                "bluffdale", Status.STARTED)
+        Deployment secondProdDeployment = new Deployment(secondArtifact, "dev-beta",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> secondDeployments = new HashSet<Deployment>()
         Flow secondFlow = new Flow()
 
@@ -153,8 +164,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production")
-        Deployment prodDeployment = new Deployment(firstArtifact, "production")
+        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment prodDeployment = new Deployment(firstArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> firstDeployments = new HashSet<Deployment>()
         Flow firstFlow = new Flow()
 
@@ -170,8 +183,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "pre-production")
-        Deployment secondProdDeployment = new Deployment(secondArtifact, "production")
+        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment secondProdDeployment = new Deployment(secondArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> secondDeployments = new HashSet<Deployment>()
         Flow secondFlow = new Flow()
 
@@ -192,8 +207,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production")
-        Deployment prodDeployment = new Deployment(firstArtifact, "production")
+        Deployment preProdDeployment = new Deployment(firstArtifact, "pre-production",
+                "bluffdale", Status.STARTED)
+        Deployment prodDeployment = new Deployment(firstArtifact, "production",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> firstDeployments = new HashSet<Deployment>()
         Flow firstFlow = new Flow()
 
@@ -210,8 +227,10 @@ class FlowSpecWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "dev-integ")
-        Deployment secondProdDeployment = new Deployment(secondArtifact, "dev-beta")
+        Deployment secondPreProdDeployment = new Deployment(secondArtifact, "dev-integ",
+                "bluffdale", Status.STARTED)
+        Deployment secondProdDeployment = new Deployment(secondArtifact, "dev-beta",
+                "bluffdale", Status.STARTED)
         HashSet<Deployment> secondDeployments = new HashSet<Deployment>()
         Flow secondFlow = new Flow()
 

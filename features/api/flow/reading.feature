@@ -34,6 +34,8 @@ Feature: Flow READ APIs
           "createdAt" : "{{created_timestamp}}"
         },
         "environment" : "pre-production",
+        "service" : "bluffdale",
+        "promotions":[],
         "status" : "STARTED",
         "createdAt" : "{{created_timestamp}}"
       },
@@ -48,6 +50,8 @@ Feature: Flow READ APIs
           "createdAt" : "{{created_timestamp}}"
         },
         "environment" : "production",
+        "service" : "bluffdale",
+        "promotions":[],
         "status" : "STARTED",
         "createdAt" : "{{created_timestamp}}"
       }],

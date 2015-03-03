@@ -1,12 +1,14 @@
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
+
 import deploydb.dao.ArtifactDAO
 import deploydb.dao.DeploymentDAO
 import deploydb.dao.FlowDAO
-
 import deploydb.models.Artifact
 import deploydb.models.Deployment
 import deploydb.models.Flow
+import deploydb.Status
+
 
 Given(~/^there is a flow$/) { ->
     withSession {
@@ -15,8 +17,8 @@ Given(~/^there is a flow$/) { ->
         FlowDAO fdao = new FlowDAO(sessionFactory)
 
         Artifact a = sampleArtifact()
-        Deployment d = new Deployment(adao.persist(a), "pre-production")
-        Deployment d1 = new Deployment(adao.persist(a), "production")
+        Deployment d = new Deployment(adao.persist(a), "pre-production", "bluffdale", Status.STARTED)
+        Deployment d1 = new Deployment(adao.persist(a), "production", "bluffdale", Status.STARTED)
 
         Flow f = new Flow()
         f.setArtifact(a)

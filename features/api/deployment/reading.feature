@@ -4,7 +4,7 @@ Feature: Deployment READ APIs
   I should be able to read information about deployments
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching all deployments
 
     Given there is a deployment
@@ -24,23 +24,20 @@ Feature: Deployment READ APIs
         },
         "environment" : "pre-prod",
         "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-        }]
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 1,
+          "promotion" : "jenkins-smoke",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : null,
+          "createdAt" : "{{created_timestamp}}"
+         }],
         "createdAt" : "{{created_timestamp}}"
       }]
     """
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching a deployment by ID
 
     Given there is a deployment
@@ -60,17 +57,14 @@ Feature: Deployment READ APIs
         },
         "environment" : "pre-prod",
         "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "SUCCESS",
-          "resultsUrl : ""
-        }]
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 1,
+          "promotion" : "jenkins-smoke",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : null,
+          "createdAt" : "{{created_timestamp}}"
+         }],
         "createdAt" : "{{created_timestamp}}"
       }
     """
@@ -117,7 +111,7 @@ Feature: Deployment READ APIs
     Then the response should be 406
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching an deployment by the pageNumber and perPageSize
 
     Given there are deployments
@@ -126,31 +120,6 @@ Feature: Deployment READ APIs
     And the body should be JSON:
     """
        [{
-        "id" : 2,
-        "artifact" : {
-          "id" : 2,
-          "group" : "com.example.cucumber",
-          "name" : "cucumber-artifact",
-          "version" : "1.0.2",
-          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar",
-          "createdAt" : "{{created_timestamp}}"
-        },
-        "environment" : "pre-prod",
-        "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "SUCCESS",
-          "resultsUrl : ""
-        }]
-        "createdAt" : "{{created_timestamp}}"
-      },
-      {
         "id" : 1,
         "artifact" : {
           "id" : 1,
@@ -162,37 +131,56 @@ Feature: Deployment READ APIs
         },
         "environment" : "pre-prod",
         "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "SUCCESS",
-          "resultsUrl : ""
-        }]
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 1,
+          "promotion" : "jenkins-smoke",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : null,
+          "createdAt" : "{{created_timestamp}}"
+        }],
+        "createdAt" : "{{created_timestamp}}"
+      },
+      {
+        "id" : 2,
+        "artifact" : {
+          "id" : 2,
+          "group" : "com.example.cucumber",
+          "name" : "cucumber-artifact",
+          "version" : "1.0.2",
+          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.2/cucumber-artifact-1.0.2.jar",
+          "createdAt" : "{{created_timestamp}}"
+        },
+        "environment" : "pre-prod",
+        "service" : "faas",
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 2,
+          "promotion" : "status-check",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results",
+          "createdAt" : "{{created_timestamp}}"
+        }],
         "createdAt" : "{{created_timestamp}}"
       }]
       """
 
 
-  @error @wip
+  @error
   Scenario: Fetching an deployment with invalid page number
 
     When I GET "/api/deployments?pageNumber=1&perPageSize=5"
     Then the response should be 404
 
 
-  @error @wip
+  @error
   Scenario: Fetching an deployment with invalid data type for pageSize
 
     When I GET "/api/deployments?pageNumber=-1&perPageSize=0xdeadbeef"
     Then the response should be 400
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching the latest deployment
 
     Given there is a deployment
@@ -212,22 +200,19 @@ Feature: Deployment READ APIs
         },
         "environment" : "pre-prod",
         "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "SUCCESS",
-          "resultsUrl : ""
-        }]
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 1,
+          "promotion" : "jenkins-smoke",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : null,
+          "createdAt" : "{{created_timestamp}}"
+        }],
         "createdAt" : "{{created_timestamp}}"
       }
     """
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching the latest deployment when multiple deployments are present
 
     Given there are deployments
@@ -247,17 +232,14 @@ Feature: Deployment READ APIs
         },
         "environment" : "pre-prod",
         "service" : "faas",
-        "state" : "STARTED",
-        "promotionStatus" : [{
-          "ident" : "jenkins-smoke",
-          "state" : "IN_PROGRESS",
-          "resultsUrl : ""
-         },
-         {
-          "ident" : "jenkins-smoke",
-          "state" : "SUCCESS",
-          "resultsUrl : ""
-        }]
+        "status" : "STARTED",
+        "promotions" : [{
+          "id" : 2,
+          "promotion" : "status-check",
+          "status" : "IN_PROGRESS",
+          "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results",
+          "createdAt" : "{{created_timestamp}}"
+        }],
         "createdAt" : "{{created_timestamp}}"
       }
     """

@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory
 import deploydb.registry.ModelRegistry
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
-    private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment, models.Flow)
+    private final ImmutableList models = ImmutableList.of(
+            models.Artifact, models.Deployment,
+            models.PromotionResult, models.Flow)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<models.Service> serviceRegistry
@@ -128,7 +130,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(typeProvider)
         environment.jersey().register(new resources.RootResource())
         environment.jersey().register(new resources.ArtifactResource(adao))
-        environment.jersey().register(new resources.DeploymentResource(ddao, adao))
+        environment.jersey().register(new resources.DeploymentResource(ddao))
         environment.jersey().register(new resources.FlowResource(fdao, ddao, adao))
         environment.jersey().register(new resources.ServiceResource(serviceRegistry))
         environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))
