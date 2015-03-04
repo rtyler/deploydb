@@ -89,8 +89,8 @@ class AppHelper {
      *
      * @param c (required) Closure to execute
      */
-    void withReceivedWebhookObject(Closure c) {
-        c.call(this.webhookRunner.getApplication().receivedWebhookObject)
+    void withRequestWebhookObject(Closure c) {
+        c.call(this.webhookRunner.getApplication().requestWebhookObject)
     }
 
     String processTemplate(String buffer, Map scope) {

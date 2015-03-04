@@ -3,7 +3,7 @@ package webhookTestServer.resources
 import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import webhookTestServer.models.ReceivedWebhookObject
+import webhookTestServer.models.RequestWebhookObject
 import webhookTestServer.models.ResponseWebhookObject
 
 import javax.servlet.http.HttpServletRequest
@@ -25,13 +25,13 @@ import javax.ws.rs.core.Response
 public class TestCallBackobjectResource {
 
     private final Logger logger = LoggerFactory.getLogger(TestCallBackobjectResource.class)
-    private final ReceivedWebhookObject receivedWebhookObject
+    private final RequestWebhookObject requestWebhookObject
     private final ResponseWebhookObject responseWebhookObject
     private boolean validObject = false
 
-    TestCallBackobjectResource(ReceivedWebhookObject receivedWebhookObject,
+    TestCallBackobjectResource(RequestWebhookObject RequestWebhookObject,
                                ResponseWebhookObject responseWebhookObject) {
-        this.receivedWebhookObject = receivedWebhookObject
+        this.requestWebhookObject = RequestWebhookObject
         this.responseWebhookObject = responseWebhookObject
     }
 
@@ -45,14 +45,14 @@ public class TestCallBackobjectResource {
         /*
          * If the received request URI is not same as configured, then we throw BAD_REQUEST
          */
-        if (receivedWebhookObject.configuredUrl != requestUri){
+        if (requestWebhookObject.configuredUrl != requestUri){
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
         /*
          * save the received message body
          */
-        receivedWebhookObject.setRequestMessageBody(messageBody)
+        requestWebhookObject.setRequestMessageBody(messageBody)
 
         /*
          * If the payload is valid, then we respond with configured data and response code

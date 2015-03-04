@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.WebhookManager
 import org.joda.time.DateTime
-import webhookTestServer.models.ReceivedWebhookObject
+import webhookTestServer.models.RequestWebhookObject
 
 Given(~/^the webhooks configuration:$/) { String configBody ->
     withWebhookManager { WebhookManager webhookManager ->
@@ -25,10 +25,10 @@ When (~/^I POST to "(.*?)" with an artifact/) { String path ->
 }
 
 Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessageBody ->
-    withReceivedWebhookObject { ReceivedWebhookObject receivedWebhookObject ->
+    withRequestWebhookObject { RequestWebhookObject requestWebhookObject ->
         ObjectMapper mapper = new ObjectMapper()
 
-        String requestMessageBody = receivedWebhookObject.getRequestMessageBody()
+        String requestMessageBody = requestWebhookObject.getRequestMessageBody()
 
         templateVariables = [
                 'created_timestamp' : DateTime.now(),
@@ -44,4 +44,8 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
 
 And (~/^Wait for (\d+) seconds/) { int secondsToWait ->
     sleep(secondsToWait * 1000)
+}
+
+When(~/I trigger deployment PATCH "(.*?)" with:$/) { String path ->
+    response = postJsonToPath(path, requestBody)
 }

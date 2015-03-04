@@ -1,7 +1,7 @@
 package webhookTestServer
 
 import io.dropwizard.setup.Bootstrap
-import webhookTestServer.models.ReceivedWebhookObject
+import webhookTestServer.models.RequestWebhookObject
 import webhookTestServer.models.ResponseWebhookObject
 import webhookTestServer.health.webhookTestServerHealthCheck
 
@@ -14,8 +14,8 @@ import io.dropwizard.setup.Environment
  *
  */
 class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
-//    private final ImmutableList models = ImmutableList.of(ReceivedWebhookObject, ResponseWebhookObject)
-    private ReceivedWebhookObject receivedWebhookObject
+//    private final ImmutableList models = ImmutableList.of(RequestWebhookObject, ResponseWebhookObject)
+    private RequestWebhookObject requestWebhookObject
     private ResponseWebhookObject responseWebhookObject
 
     static void main(String[] args) throws Exception {
@@ -29,7 +29,7 @@ class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
 
     @Override
     public void initialize(Bootstrap<webhookTestServerConfiguration> bootstrap) {
-        receivedWebhookObject = new ReceivedWebhookObject()
+        requestWebhookObject = new RequestWebhookObject()
         responseWebhookObject = new ResponseWebhookObject()
     }
 
@@ -42,17 +42,13 @@ class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
         /**
          * remove this after testing
          */
-        receivedWebhookObject.setConfiguredUrl("/job/notify-deployment-started/build")
+        requestWebhookObject.setConfiguredUrl("/job/notify-deployment-started/build")
         responseWebhookObject.responseCode = "201"
         responseWebhookObject.delayBeforeResponseInSecs = 0
 
         environment.jersey().register(new resources.RootResource())
-        environment.jersey().register(new resources.TestCallBackobjectResource(receivedWebhookObject,
+        environment.jersey().register(new resources.TestCallBackobjectResource(requestWebhookObject,
                 responseWebhookObject))
 
-        /**
-         * new TestCallbackObject(
-         "/job/notify-deployment-started/build", "POST", "200", "", 0))
-         */
     }
 }
