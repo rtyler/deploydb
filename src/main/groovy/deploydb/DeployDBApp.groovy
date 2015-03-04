@@ -20,7 +20,9 @@ import org.slf4j.LoggerFactory
 import deploydb.registry.ModelRegistry
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
-    private final ImmutableList models = ImmutableList.of(models.Artifact, models.Deployment)
+    private final ImmutableList models = ImmutableList.of(
+            models.Artifact, models.Deployment,
+            models.PromotionResult, models.Flow)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
     private ModelRegistry<models.Service> serviceRegistry
@@ -99,6 +101,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         final dao.ArtifactDAO adao = new dao.ArtifactDAO(hibernate.sessionFactory)
         final dao.DeploymentDAO ddao = new dao.DeploymentDAO(hibernate.sessionFactory)
+        final dao.FlowDAO fdao = new dao.FlowDAO(hibernate.sessionFactory)
 
         /**
          * Instantiate registries for in memory storage
@@ -133,7 +136,8 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         environment.jersey().register(typeProvider)
         environment.jersey().register(new resources.RootResource())
         environment.jersey().register(new resources.ArtifactResource(adao))
-        environment.jersey().register(new resources.DeploymentResource(ddao, adao))
+        environment.jersey().register(new resources.DeploymentResource(ddao))
+        environment.jersey().register(new resources.FlowResource(fdao, ddao, adao))
         environment.jersey().register(new resources.ServiceResource(serviceRegistry))
         environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))
         environment.jersey().register(new resources.PromotionResource(promotionRegistry))
