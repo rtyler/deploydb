@@ -4,7 +4,6 @@ Feature: Promotion Result APIs
   I should be able to add Promotion result for a Deployment in the system
 
 
-  @wip
   Scenario: Adding a result for a Promotion associated with a Deployment
 
     Given there is a deployment
@@ -19,7 +18,20 @@ Feature: Promotion Result APIs
     Then the response should be 204
 
 
-  @wip
+  Scenario: Adding a result with invalid status for a Promotion associated with a Deployment
+
+    Given there is a deployment
+    When I POST to "/api/deployments/1/promotions" with:
+    """
+      {
+        "name"  : "jenkins-smoke",
+        "status" : "IN_PROGRESS",
+        "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results"
+      }
+    """
+    Then the response should be 406
+
+
   Scenario: Adding Promotion result for a Deployment that doesn't exist
 
     When I POST to "/api/deployments/1/promotions" with:
@@ -33,7 +45,7 @@ Feature: Promotion Result APIs
     Then the response should be 404
 
 
-  @wip @error
+  @error
   Scenario: Adding a result for a Promotion which is not associated with the Deployment
 
     When I POST to "/api/deployments/1/promotions" with:

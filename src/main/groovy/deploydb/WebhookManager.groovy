@@ -69,7 +69,6 @@ class WebhookManager implements Managed {
                 webhookModelMapper.toPayload())
 
         String urlPayload = webhookModelMapper.toPayload()
-        println("urlName ${urlName} payload ${urlPayload}")
         return queue.push(hookRequest)
     }
     /**

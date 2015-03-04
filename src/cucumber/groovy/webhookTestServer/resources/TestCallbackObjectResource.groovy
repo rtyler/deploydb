@@ -42,16 +42,12 @@ public class TestCallBackobjectResource {
 
         String requestUri = request.getRequestURI()
 
-        println("requestUri: ${requestUri}")
-
         /*
          * If the received request URI is not same as configured, then we throw BAD_REQUEST
          */
         if (receivedWebhookObject.configuredUrl != requestUri){
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
-
-        println("saving message body : ${messageBody}")
 
         /*
          * save the received message body

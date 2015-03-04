@@ -30,9 +30,6 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
 
         String requestMessageBody = receivedWebhookObject.getRequestMessageBody()
 
-        println("expectedMessageBody: ${expectedMessageBody}")
-        println("receivedMessageBody: ${requestMessageBody}")
-
         templateVariables = [
                 'created_timestamp' : DateTime.now(),
         ]

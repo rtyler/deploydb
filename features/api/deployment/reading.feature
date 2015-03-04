@@ -28,7 +28,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
          }],
@@ -61,7 +61,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
          }],
@@ -135,7 +135,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
         }],
@@ -157,7 +157,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 2,
           "promotion" : "status-check",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results",
           "createdAt" : "{{created_timestamp}}"
         }],
@@ -204,7 +204,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 1,
           "promotion" : "jenkins-smoke",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : null,
           "createdAt" : "{{created_timestamp}}"
         }],
@@ -236,7 +236,7 @@ Feature: Deployment READ APIs
         "promotions" : [{
           "id" : 2,
           "promotion" : "status-check",
-          "status" : "IN_PROGRESS",
+          "status" : "STARTED",
           "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results",
           "createdAt" : "{{created_timestamp}}"
         }],

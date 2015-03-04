@@ -6,11 +6,13 @@ import deploydb.WebhookModelMapper
 import deploydb.models.Artifact
 import deploydb.Status
 
+import javax.persistence.Entity
+
 /**
  * Simple Jackson mapper class to deserialize
- * deployment. Used during notifies to clients
+ * deployment. Used during webhook notifies to clients
  */
-class DeploymentMapper implements WebhookModelMapper{
+class DeploymentWebhookMapper implements WebhookModelMapper{
 
     @JsonProperty
     Long id
@@ -31,4 +33,14 @@ class DeploymentMapper implements WebhookModelMapper{
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(this) ;
     }
+}
+
+/**
+ *  Simple Jackson mapper class to deserialzie
+ *  deployment update requests properly
+ */
+@Entity
+class DeploymentUpdateMapper {
+    @JsonProperty
+    Status status
 }

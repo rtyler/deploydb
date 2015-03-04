@@ -1,17 +1,24 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
-import deploydb.mappers.DeploymentMapper
+
 import deploydb.dao.DeploymentDAO
+import deploydb.mappers.PromotionResultAddMapper
 import deploydb.models.Deployment
+import deploydb.models.PromotionResult
+import deploydb.mappers.DeploymentUpdateMapper
+
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
+import org.apache.commons.lang3.tuple.Pair
+
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
 import javax.ws.rs.GET
+import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
 import javax.ws.rs.PathParam
@@ -87,14 +94,14 @@ public class DeploymentResource {
     }
 
     /**
-     * Patch the Deployment object
+     * Patch the Deployment object with status update
      */
     @PATCH
     @Path('{id}')
     @UnitOfWork
     @Timed(name='patch-requests')
     void updateDeployment(@PathParam('id') LongParam deploymentId,
-                          @Valid DeploymentMapper deploymentUpdateMapper) {
+                          @Valid DeploymentUpdateMapper deploymentUpdateMapper) {
         Deployment deploy = this.dao.get(deploymentId.get())
 
         if (deploy == null) {
@@ -102,12 +109,51 @@ public class DeploymentResource {
         }
 
         /**
-         *  FIXME: valid deploymentUpdateMapper.status are (Started, Completed, Failed)
+         *  Check for valid status transitions. Throw exception if not found
          */
-        /*
-        if (deploymentUpdateMapper.status != deploy.status) {
-            FIXME: Take Actions
+        if (!Deployment.class.deploymentStatusTransitionPairs.contains(
+                Pair.of(deploy.status, deploymentUpdateMapper.status))) {
+            throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
-        */
+
+        /**
+         * FIXME - inject triggerDeploymentStarted/Failed/Completed - issue #83
+         */
+    }
+
+    /**
+     * Add the promotion results on the Deployment object
+     */
+    @POST
+    @Path('{id}/promotions')
+    @UnitOfWork
+    @Timed(name='post-requests')
+    void addPromotionResult(@PathParam('id') LongParam deploymentId,
+                            @Valid PromotionResultAddMapper promotionResultAddMapper) {
+        Deployment deploy = this.dao.get(deploymentId.get())
+
+        if (deploy == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        /**
+         * Get Promotion Result model from deployment and throw error if not found
+         */
+        PromotionResult promotionResult = deploy.getPromotionResult(promotionResultAddMapper.promotionIdent)
+        if (promotionResult == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        /**
+         *  Check for valid status transitions. Throw exception if not found
+         */
+        if (!PromotionResult.class.promotionResultStatusTransitionPairs.contains(
+                Pair.of(promotionResult.status, promotionResultAddMapper.status))) {
+            throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
+        }
+
+        /**
+         * FIXME - inject triggerPromotionCompleted - issue #83
+         */
     }
 }

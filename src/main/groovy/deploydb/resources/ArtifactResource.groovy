@@ -1,8 +1,6 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
-import deploydb.WebhookManager
-import deploydb.Status
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.hibernate.UnitOfWork
@@ -24,9 +22,11 @@ import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
 
+import deploydb.WebhookManager
+import deploydb.Status
 import deploydb.dao.ArtifactDAO
 import deploydb.models.Artifact
-import deploydb.mappers.DeploymentMapper
+import deploydb.mappers.DeploymentWebhookMapper
 
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,15 +51,14 @@ public class ArtifactResource {
         /*
          * create the deployment, get all the configured models
          */
-        DeploymentMapper deploymentMapper = new DeploymentMapper()
-        deploymentMapper.id = created.id
-        deploymentMapper.createdAt = created.createdAt
-        deploymentMapper.artifact = created
-        deploymentMapper.status = Status.STARTED
-        deploymentMapper.environment = "dev-integ"
+        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper()
+        deploymentWebhookMapper.id = created.id
+        deploymentWebhookMapper.createdAt = created.createdAt
+        deploymentWebhookMapper.artifact = created
+        deploymentWebhookMapper.status = Status.STARTED
+        deploymentWebhookMapper.environment = "dev-integ"
 
-        println("about to call createDeploymentWebhook")
-        if (webhookManager.createDeploymentWebhook(deploymentMapper, "CREATED") == false) {
+        if (webhookManager.createDeploymentWebhook(deploymentWebhookMapper, "CREATED") == false) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
         return Response.status(201).entity(created).build()

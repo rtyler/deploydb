@@ -22,11 +22,9 @@ class ReceivedWebhookObject {
 
     void setRequestMessageBody(String requestMessageBody) {
         this.requestMessageBody = requestMessageBody
-        println("stored message body in ReceivedWebhookObject: ${this.requestMessageBody}")
     }
 
     String getRequestMessageBody() {
-        println("returning body in ReceivedWebhookObject: ${this.requestMessageBody}")
         return this.requestMessageBody
     }
 
