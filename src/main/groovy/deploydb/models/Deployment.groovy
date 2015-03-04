@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.OrderBy
 import javax.persistence.Table
+import org.apache.commons.lang3.tuple.Pair
 import org.eclipse.jetty.util.ConcurrentHashSet
 
 
@@ -25,6 +26,24 @@ import org.eclipse.jetty.util.ConcurrentHashSet
 @Entity
 @Table(name='deployments')
 class Deployment extends AbstractModel {
+    private static Set<Pair<Status, Status>> deploymentStatusTransitionPairs
+
+    static {
+        /**
+         *  Valid State transitions for deployment are:
+         *  NOT_STARTED -> STARTED
+         *  NOT_STARTED -> COMPLETED
+         *  NOT_STARTED -> FAILED
+         *  STARTED -> COMPLETED
+         *  STARTED -> FAILED
+         */
+        deploymentStatusTransitionPairs = new ConcurrentHashSet<>()
+        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.STARTED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.COMPLETED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.FAILED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.COMPLETED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
+    }
 
     @OneToOne(optional=false)
     @JoinColumn(name='artifactId', unique=false, nullable=false, updatable=false)
@@ -81,8 +100,17 @@ class Deployment extends AbstractModel {
         this.status = status
     }
 
+    /**
+     * Find Promotion Result in the Set with matching promotionIdent
+     * @param S
+     * @return
+     */
+    PromotionResult getPromotionResult(String promotionIdent) {
+        this.promotionResultSet.find { pr -> pr.promotionIdent == promotionIdent }
+    }
+
     @Override
-    public boolean equals(Object o) {
+    boolean equals(Object o) {
         /* First object identity */
         if (this.is(o)) {
             return true
