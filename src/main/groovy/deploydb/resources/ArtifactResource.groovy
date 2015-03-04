@@ -2,7 +2,7 @@ package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
 import deploydb.WebhookManager
-import deploydb.models.DeploymentStatus
+import deploydb.Status
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.hibernate.UnitOfWork
@@ -55,7 +55,7 @@ public class ArtifactResource {
         deploymentMapper.id = created.id
         deploymentMapper.createdAt = created.createdAt
         deploymentMapper.artifact = created
-        deploymentMapper.status = DeploymentStatus.STARTED
+        deploymentMapper.status = Status.STARTED
         deploymentMapper.environment = "dev-integ"
 
         println("about to call createDeploymentWebhook")

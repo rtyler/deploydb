@@ -22,7 +22,6 @@ When (~/^I POST to "(.*?)" with an artifact/) { String path ->
 }"""
 
     response = postJsonToPath(path, requestBody)
-    sleep(1000)
 }
 
 Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessageBody ->
@@ -44,4 +43,8 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
 
         assert expectedNode == requestNode
     }
+}
+
+And (~/^Wait for (\d+) seconds/) { int secondsToWait ->
+    sleep(secondsToWait * 1000)
 }

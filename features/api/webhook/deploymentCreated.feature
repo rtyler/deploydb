@@ -10,6 +10,7 @@ Feature: Webhook invocation  when deployment is created
     """
     Given a service named faas
     When I POST to "/api/artifacts" with an artifact
+    And Wait for 1 seconds
     Then the webhook should be invoked with the JSON:
     """
       {
