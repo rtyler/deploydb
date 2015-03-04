@@ -5,7 +5,7 @@ Feature: Pipeline READ APIs
 
   Scenario: Fetching all pipelines
 
-    Given a pipeline configuration name "devtoprod":
+    Given a pipeline configuration named "devtoprod":
     """
     description: "Development to production pipeline"
     environments:
@@ -51,7 +51,7 @@ Feature: Pipeline READ APIs
 
     Scenario: Fetching an pipeline by name that exists
 
-      Given a pipeline configuration name "devtoprod":
+      Given a pipeline configuration named "devtoprod":
       """
     description: "Development to production pipeline"
     environments:

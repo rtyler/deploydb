@@ -4,7 +4,7 @@ import deploydb.ModelLoader
 import deploydb.models.pipeline.Pipeline
 import deploydb.registry.ModelRegistry
 
-Given(~/^a pipeline configuration name "(.*?)":$/) { String ident, String configBody ->
+Given(~/^a pipeline configuration named "(.*?)":$/) { String ident, String configBody ->
     withPipelineRegistry { ModelRegistry<Pipeline> pipelineRegistry ->
         ModelLoader<Pipeline> pipelineLoader = new ModelLoader<Pipeline>(Pipeline.class)
         Pipeline pipeline = pipelineLoader.loadFromString(configBody)
