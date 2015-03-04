@@ -9,7 +9,8 @@ import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 
 /**
- *
+ * Class for WebhookTestServer. Based on the configuration, this class
+ * will send appropriate responses
  */
 class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
     private final ImmutableList models = ImmutableList.of(TestCallbackObject)

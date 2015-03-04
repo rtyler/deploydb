@@ -1,9 +1,7 @@
 package deploydb.cucumber
 
-import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
-import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.cli.ServerCommand
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
@@ -17,9 +15,6 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.flywaydb.core.Flyway
 import org.hibernate.SessionFactory
-import org.junit.rules.TestRule
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
 
 import javax.annotation.Nullable
 import java.util.Enumeration
@@ -47,6 +42,10 @@ public class StubAppRunner<C extends Configuration> {
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelLoader<deploydb.models.Environment> environmentLoader
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
+    private ModelLoader<deploydb.models.Promotion> promotionLoader
+    private ModelRegistry<deploydb.models.pipeline.Pipeline> pipelineRegistry
+    private ModelLoader<deploydb.models.pipeline.Pipeline> pipelineLoader
+
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -95,11 +94,14 @@ public class StubAppRunner<C extends Configuration> {
                             serviceRegistry = application.serviceRegistry
                             environmentRegistry = application.environmentRegistry
                             promotionRegistry = application.promotionRegistry
+                            pipelineRegistry = application.pipelineRegistry
 
                             /* Get a ModelLoader(s) from the application once it's up and running
                              */
                             serviceLoader = application.serviceLoader
                             environmentLoader = application.environmentLoader
+                            promotionLoader = application.promotionLoader
+                            pipelineLoader = application.pipelineLoader
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB
