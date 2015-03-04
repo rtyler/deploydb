@@ -43,8 +43,8 @@ public class StubAppRunner<C extends Configuration> {
     private ModelLoader<deploydb.models.Environment> environmentLoader
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
     private ModelLoader<deploydb.models.Promotion> promotionLoader
-    private ModelRegistry<deploydb.models.Pipeline.Pipeline> pipelineRegistry
-    private ModelLoader<deploydb.models.Pipeline.Pipeline> pipelineLoader
+    private ModelRegistry<deploydb.models.pipeline.Pipeline> pipelineRegistry
+    private ModelLoader<deploydb.models.pipeline.Pipeline> pipelineLoader
 
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,

@@ -29,8 +29,8 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private ModelLoader<models.Environment> environmentLoader
     private ModelRegistry<models.Promotion> promotionRegistry
     private ModelLoader<models.Promotion> promotionLoader
-    private ModelRegistry<models.Pipeline.Pipeline> pipelineRegistry
-    private ModelLoader<models.Pipeline.Pipeline> pipelineLoader
+    private ModelRegistry<models.pipeline.Pipeline> pipelineRegistry
+    private ModelLoader<models.pipeline.Pipeline> pipelineLoader
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -114,7 +114,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         serviceLoader = new ModelLoader<>(models.Service.class)
         environmentLoader = new ModelLoader<>(models.Environment.class)
         promotionLoader = new ModelLoader<>(models.Promotion.class)
-        pipelineLoader = new ModelLoader<>(models.Pipeline.Pipeline.class)
+        pipelineLoader = new ModelLoader<>(models.pipeline.Pipeline.class)
 
         /**
          * Webhooks

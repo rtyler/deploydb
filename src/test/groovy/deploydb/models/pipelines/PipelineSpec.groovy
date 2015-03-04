@@ -1,4 +1,4 @@
-package deploydb.models.Pipeline
+package deploydb.models.pipelines
 
 import deploydb.ModelLoader
 import deploydb.registry.ModelRegistry
@@ -7,6 +7,7 @@ import spock.lang.Specification
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import deploydb.models.pipeline.Pipeline
 
 class PipelineSpec extends Specification {
 

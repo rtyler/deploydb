@@ -2,7 +2,7 @@ package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
 import com.sun.research.ws.wadl.Response
-import deploydb.models.Pipeline.Pipeline
+import deploydb.models.pipeline.Pipeline
 import deploydb.registry.ModelRegistry
 import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
@@ -27,7 +27,7 @@ public class PipelineResource {
     private final ModelRegistry<Pipeline> pipelineRegistry
     private final Logger logger = LoggerFactory.getLogger(PipelineResource.class)
 
-    PipelineResource(ModelRegistry<Pipeline> pipelineRegistry){
+    PipelineResource(ModelRegistry<Pipeline> pipelineRegistry) {
         this.pipelineRegistry = pipelineRegistry
     }
 
@@ -37,10 +37,11 @@ public class PipelineResource {
     @GET
     @UnitOfWork
     @Timed(name = "get-requests")
-    List<Pipeline> getAll(){
+    List<Pipeline> getAll() {
+
         List<Pipeline> pipelineList = this.pipelineRegistry.getAll()
 
-        if(pipelineList.isEmpty()){
+        if (pipelineList.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
         return pipelineList
@@ -53,10 +54,11 @@ public class PipelineResource {
     @Path("{name}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    Pipeline byName(@PathParam("name") String pipelineIdent){
+    Pipeline byName(@PathParam("name") String pipelineIdent) {
+
         Pipeline pipeline = this.pipelineRegistry.get(pipelineIdent)
 
-        if(pipeline == null){
+        if (pipeline == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
         return pipeline

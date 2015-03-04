@@ -1,5 +1,4 @@
 Feature: Pipeline READ APIs
-
   As a RESTful client or user
   I should be able to read information about pipelines
 
@@ -11,21 +10,13 @@ Feature: Pipeline READ APIs
     description: "Development to production pipeline"
     environments:
          dev-alpha:
-           promotions:
-              -
          dev-beta:
-           promotions:
-              -
          integ:
-           promotions:
-              -
          preprod:
            promotions:
               - prod-preflight
               - manual
          prod:
-           promotions:
-              -
     """
     When I GET "/api/pipelines"
     Then the response should be 200
@@ -36,13 +27,13 @@ Feature: Pipeline READ APIs
           "description": "Development to production pipeline",
           "environments": {
             "dev-alpha": {
-              "promotions": [""]
+              "promotions": []
             },
             "dev-beta": {
-              "promotions": [""]
+              "promotions": []
             },
             "integ": {
-              "promotions": [""]
+              "promotions": []
             },
             "preprod": {
               "promotions": [
@@ -51,7 +42,7 @@ Feature: Pipeline READ APIs
               ]
             },
             "prod": {
-              "promotions": [""]
+              "promotions": []
             }
           }
       }]
@@ -64,48 +55,40 @@ Feature: Pipeline READ APIs
       """
     description: "Development to production pipeline"
     environments:
-         dev-alpha:
-           promotions:
-              -
-         dev-beta:
-           promotions:
-              -
-         integ:
-           promotions:
-              -
-         preprod:
-           promotions:
-              - prod-preflight
-              - manual
-         prod:
-           promotions:
-              -
+        dev-alpha:
+        dev-beta:
+        integ:
+        pre-prod:
+          promotions:
+            - prod-preflight
+            - manual
+        prod:
       """
       When I GET "/api/pipelines/devtoprod"
       Then the response should be 200
-      And the body of the JSON:
+      And the body should be JSON:
       """
       {
         "ident" : "devtoprod",
         "description": "Development to production pipeline",
         "environments": {
           "dev-alpha": {
-            "promotions": [""]
+            "promotions": []
           },
           "dev-beta": {
-            "promotions": [""]
+            "promotions": []
           },
           "integ": {
-            "promotions": [""]
+            "promotions": []
           },
-          "preprod": {
+          "pre-prod": {
             "promotions": [
               "prod-preflight",
               "manual"
             ]
           },
           "prod": {
-            "promotions": [""]
+            "promotions": []
           }
         }
       }

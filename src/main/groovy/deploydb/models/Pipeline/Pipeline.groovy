@@ -1,6 +1,7 @@
-package deploydb.models.Pipeline
+package deploydb.models.pipeline
 
 import com.fasterxml.jackson.annotation.JsonProperty
+
 
 /**
  * Class for deployment pipeline. It list all the environments
@@ -21,10 +22,13 @@ class Pipeline {
     String description
 
     /**
-     * list of environments that are part of this pipeline
+     * Value represents the list of deploydb.models.pipeline.Environment that
+     * are part of this pipeline
+     * Key to the map deploydb.models.Environment ident
      */
     @JsonProperty
-    Map<String, Environment> environments
+    Map<String, Environment> environments =
+            new LinkedHashMap<String, Environment>()
 
     /**
      * Default constructor used by Jackson for deserialization
@@ -75,8 +79,6 @@ class Pipeline {
      * Stringfy the pipeline
      */
     String toString(){
-        String output
-        output += "ident = ${ident}, description: ${description}, environments:${environments}"
-        return output
+        return "ident = ${ident}, description: ${description}, environments:${environments}"
     }
 }

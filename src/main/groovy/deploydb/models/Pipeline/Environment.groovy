@@ -1,12 +1,15 @@
-package deploydb.models.Pipeline
+package deploydb.models.pipeline
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Class for Environments associated with a pipeline
  */
 class Environment {
 
+    private final Logger logger = LoggerFactory.getLogger(Environment.class)
     /**
      * List of promotions that should be run when you
      * transition from this environment
@@ -24,6 +27,20 @@ class Environment {
      */
     Environment(List<String> promotions) {
         this.promotions = promotions
+    }
+
+    /**
+     *  This constructor is for JSON to call us to create an empty
+     *  promotions for Environment object.
+     *
+     * @param nullJsonString
+     */
+    Environment(String nullJsonString) {
+        if (nullJsonString.size() == 0) {
+            this.promotions = []
+        } else {
+            logger.error("Error creating Environment form JSON %s",nullJsonString)
+        }
     }
 
     /**
@@ -58,9 +75,7 @@ class Environment {
     /**
      * Stringfy the environment
      */
-    String toString(){
-        String output
-        output += "promotions:${promotions}"
-        return output
+    String toString() {
+        return "promotions: ${promotions}"
     }
 }
