@@ -144,8 +144,7 @@ class AppHelper {
      * Execute a PATCH to the test server for step definitions
      */
     Response patchJsonToPath(String path, String requestBody) {
-        String mediaType = 'application/json-patch'
-        return this.makeRequestToPath(path, 'PATCH', Entity.entity(requestBody, mediaType)).invoke()
+        return this.makeRequestToPath(path, 'PATCH', Entity.json(requestBody)).invoke()
     }
 
     Response deleteFromPath(String path) {

@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.WebhookModelMapper
 import deploydb.models.Artifact
-import deploydb.models.DeploymentStatus
-
+import deploydb.Status
 
 /**
- * Simple Jackson mapper class to deserialize deployment creation requests
- * properly
+ * Simple Jackson mapper class to deserialize
+ * deployment. Used during notifies to clients
  */
 class DeploymentMapper implements WebhookModelMapper{
 
@@ -26,7 +25,7 @@ class DeploymentMapper implements WebhookModelMapper{
     String environment
 
     @JsonProperty
-    DeploymentStatus status
+    Status status
 
     String toPayload() {
         ObjectMapper mapper = new ObjectMapper();
