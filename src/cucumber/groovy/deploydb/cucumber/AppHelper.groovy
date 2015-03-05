@@ -53,7 +53,7 @@ class AppHelper {
      * @param c (required) Closure to execute
      */
     void withServiceRegistry(Closure c) {
-        c.call(this.runner.serviceRegistry, this.runner.serviceLoader)
+        c.call(this.runner.serviceRegistry)
     }
 
     /**
@@ -62,7 +62,7 @@ class AppHelper {
      * @param c (required) Closure to execute
      */
     void withEnvironmentRegistry(Closure c) {
-        c.call(this.runner.environmentRegistry, this.runner.environmentLoader)
+        c.call(this.runner.environmentRegistry)
     }
 
     /**

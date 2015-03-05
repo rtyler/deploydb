@@ -1,12 +1,9 @@
 package deploydb.models
 
-
-import org.hibernate.annotations.CascadeType
-
-import javax.persistence.Column
-
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-
+import deploydb.Status
+import javax.persistence.Column
 import javax.persistence.CascadeType;
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -14,6 +11,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 import javax.persistence.OneToOne
 import javax.persistence.Table
+
 
 /**
  * Class to represent the flow as artifact moves from one
@@ -37,9 +35,9 @@ class Flow extends AbstractModel {
     @JsonProperty
     String service
 
-    void addDeployment(Deployment deployment) {
-        deployments.add(deployment)
-    }
+    @Column(name="status")
+    @JsonIgnore
+    Status status = Status.CREATED
 
     /**
      * Empty constructor used by Jackson for object deserialization
@@ -50,11 +48,17 @@ class Flow extends AbstractModel {
      * Default constructor to create a valid Flow object to save in
      * the database
      */
-    Flow(Artifact deployedArtifact, Set<Deployment> deployments,
-         String service) {
+    Flow(Artifact deployedArtifact, String service) {
         this.artifact = deployedArtifact
-        this.deployments = deployments
         this.service = service
+    }
+
+    /**
+     * Add Promotion Result to collection
+     */
+    boolean addDeployment(Deployment deployment) {
+        deployment.flow = this
+        return deployments.add(deployment)
     }
 
     /**

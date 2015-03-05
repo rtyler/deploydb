@@ -20,7 +20,6 @@ import javax.annotation.Nullable
 import java.util.Enumeration
 
 import deploydb.registry.ModelRegistry
-import deploydb.ModelLoader
 
 /**
  * Class for running the Dropwizard app
@@ -38,14 +37,9 @@ public class StubAppRunner<C extends Configuration> {
     private Server jettyServer
     private SessionFactory sessionFactory
     private ModelRegistry<deploydb.models.Service> serviceRegistry
-    private ModelLoader<deploydb.models.Service> serviceLoader
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
-    private ModelLoader<deploydb.models.Environment> environmentLoader
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
-    private ModelLoader<deploydb.models.Promotion> promotionLoader
     private ModelRegistry<deploydb.models.pipeline.Pipeline> pipelineRegistry
-    private ModelLoader<deploydb.models.pipeline.Pipeline> pipelineLoader
-
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -91,17 +85,10 @@ public class StubAppRunner<C extends Configuration> {
                             /**
                              * Get a ModelRegistry(s) from the application once it's up and running
                              */
-                            serviceRegistry = application.serviceRegistry
-                            environmentRegistry = application.environmentRegistry
-                            promotionRegistry = application.promotionRegistry
-                            pipelineRegistry = application.pipelineRegistry
-
-                            /* Get a ModelLoader(s) from the application once it's up and running
-                             */
-                            serviceLoader = application.serviceLoader
-                            environmentLoader = application.environmentLoader
-                            promotionLoader = application.promotionLoader
-                            pipelineLoader = application.pipelineLoader
+                            serviceRegistry = application.workFlow.serviceRegistry
+                            environmentRegistry = application.workFlow.environmentRegistry
+                            promotionRegistry = application.workFlow.promotionRegistry
+                            pipelineRegistry = application.workFlow.pipelineRegistry
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB

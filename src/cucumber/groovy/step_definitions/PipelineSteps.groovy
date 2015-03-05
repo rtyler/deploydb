@@ -13,3 +13,10 @@ Given(~/^a pipeline configuration named "(.*?)":$/) { String ident, String confi
         pipelineRegistry.put(pipeline.ident, pipeline)
     }
 }
+
+Given(~/^a pipeline is configured$/) { ->
+    withPipelineRegistry { ModelRegistry<Pipeline> pipelineRegistry ->
+        Pipeline a = samplePipeline1()
+        pipelineRegistry.put(a.ident, a)
+    }
+}

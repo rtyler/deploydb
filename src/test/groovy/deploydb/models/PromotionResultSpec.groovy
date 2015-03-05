@@ -21,22 +21,22 @@ class PromotionResultWithArgsSpec extends Specification {
     def "promotionResult's properties should be correct"() {
         given:
         PromotionResult promotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
 
         expect:
         promotionResult.promotionIdent == 'jenkins-smoke'
-        promotionResult.status == Status.IN_PROGRESS
+        promotionResult.status == Status.CREATED
         promotionResult.infoUrl == "http://local.lookout.com/jenkins/job-id/2/results"
     }
 
     def "equals passes for promotionResults with same info"() {
         given:
         PromotionResult firstPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
         PromotionResult secondPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
 
         expect:
@@ -46,10 +46,10 @@ class PromotionResultWithArgsSpec extends Specification {
     def "hash compare passes for promotionResults with same info"() {
         given:
         PromotionResult firstPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
         PromotionResult secondPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
 
         expect:
@@ -59,7 +59,7 @@ class PromotionResultWithArgsSpec extends Specification {
     def "equals fails for promotionResults with different info"() {
         given:
         PromotionResult firstPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
         PromotionResult secondPromotionResult = new PromotionResult("jenkins-smoke",
                 Status.FAILED,
@@ -72,7 +72,7 @@ class PromotionResultWithArgsSpec extends Specification {
     def "hash compare fails for promotionResults with different info"() {
         given:
         PromotionResult firstPromotionResult = new PromotionResult("jenkins-smoke",
-                Status.IN_PROGRESS,
+                Status.CREATED,
                 "http://local.lookout.com/jenkins/job-id/2/results")
         PromotionResult secondPromotionResult = new PromotionResult("jenkins-smoke",
                 Status.FAILED,

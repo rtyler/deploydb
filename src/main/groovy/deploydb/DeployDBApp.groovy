@@ -1,7 +1,6 @@
 package deploydb
 
 import com.google.common.collect.ImmutableList
-
 import io.dropwizard.Application
 import io.dropwizard.assets.AssetsBundle
 import io.dropwizard.db.DataSourceFactory
@@ -17,7 +16,6 @@ import org.joda.time.DateTimeZone
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import deploydb.registry.ModelRegistry
 
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(
@@ -25,14 +23,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
             models.PromotionResult, models.Flow)
     private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooks
-    private ModelRegistry<models.Service> serviceRegistry
-    private ModelLoader<models.Service> serviceLoader
-    private ModelRegistry<models.Environment> environmentRegistry
-    private ModelLoader<models.Environment> environmentLoader
-    private ModelRegistry<models.Promotion> promotionRegistry
-    private ModelLoader<models.Promotion> promotionLoader
-    private ModelRegistry<models.pipeline.Pipeline> pipelineRegistry
-    private ModelLoader<models.pipeline.Pipeline> pipelineLoader
+    private WorkFlow workFlow
     private provider.V1TypeProvider typeProvider
 
     static void main(String[] args) throws Exception {
@@ -69,6 +60,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
         webhooks = new WebhookManager()
+        workFlow = new WorkFlow(this)
 
         /*
          * Force our default timezone to always be UTC
@@ -90,34 +82,16 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
 
 
         typeProvider = new provider.V1TypeProvider(bootstrap.objectMapper,
-                                                    bootstrap.validatorFactory.validator)
+                bootstrap.validatorFactory.validator)
     }
 
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
         /**
-         * Instantiate DAO objects
+         * Initialize the workflow object
          */
-        final dao.ArtifactDAO adao = new dao.ArtifactDAO(hibernate.sessionFactory)
-        final dao.DeploymentDAO ddao = new dao.DeploymentDAO(hibernate.sessionFactory)
-        final dao.FlowDAO fdao = new dao.FlowDAO(hibernate.sessionFactory)
-
-        /**
-         * Instantiate registries for in memory storage
-         */
-        environmentRegistry = new ModelRegistry<>()
-        serviceRegistry = new ModelRegistry<>()
-        promotionRegistry = new ModelRegistry<>()
-        pipelineRegistry = new ModelRegistry<>()
-
-        /**
-         * Instantiate in memory loaders for yaml parsing
-         */
-        serviceLoader = new ModelLoader<>(models.Service.class)
-        environmentLoader = new ModelLoader<>(models.Environment.class)
-        promotionLoader = new ModelLoader<>(models.Promotion.class)
-        pipelineLoader = new ModelLoader<>(models.pipeline.Pipeline.class)
+        workFlow.initialize()
 
         /**
          * Webhooks
@@ -135,12 +109,12 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         environment.jersey().register(typeProvider)
         environment.jersey().register(new resources.RootResource())
-        environment.jersey().register(new resources.ArtifactResource(adao))
-        environment.jersey().register(new resources.DeploymentResource(ddao))
-        environment.jersey().register(new resources.FlowResource(fdao, ddao, adao))
-        environment.jersey().register(new resources.ServiceResource(serviceRegistry))
-        environment.jersey().register(new resources.EnvironmentResource(environmentRegistry))
-        environment.jersey().register(new resources.PromotionResource(promotionRegistry))
-        environment.jersey().register(new resources.PipelineResource(pipelineRegistry))
+        environment.jersey().register(new resources.ArtifactResource(workFlow))
+        environment.jersey().register(new resources.DeploymentResource(workFlow))
+        environment.jersey().register(new resources.FlowResource(workFlow))
+        environment.jersey().register(new resources.PromotionResource(workFlow.promotionRegistry))
+        environment.jersey().register(new resources.EnvironmentResource(workFlow.environmentRegistry))
+        environment.jersey().register(new resources.PipelineResource(workFlow.pipelineRegistry))
+        environment.jersey().register(new resources.ServiceResource(workFlow.serviceRegistry))
     }
 }

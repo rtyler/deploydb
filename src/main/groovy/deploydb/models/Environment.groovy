@@ -75,8 +75,6 @@ class Environment {
 
     @Override
     String toString() {
-        String output
-        output += "ident = ${ident}, description: ${description}, webhooks: ${webhooks}"
-        return output
+        return "ident = ${ident}, description: ${description}, webhooks: ${webhooks}"
     }
 }
