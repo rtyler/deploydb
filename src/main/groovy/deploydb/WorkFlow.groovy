@@ -56,10 +56,7 @@ public class WorkFlow {
      *
      * @param artifact
      */
-    void triggerArtifactCreated(models.Artifact artifact_) {
-
-        /* Persist the Artifact */
-        models.Artifact artifact = this.artifactDAO.persist(artifact_)
+    void triggerArtifactCreated(models.Artifact artifact) {
 
         /* Lookup Service */
         models.Service service = this.serviceRegistry.getAll().find() { models.Service service ->
@@ -69,7 +66,6 @@ public class WorkFlow {
         }
         if (service == null) {
             /* Artifact is left hanging */
-            String serviceIdent = artifact.group + ":" + artifact.name
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
 
@@ -86,14 +82,14 @@ public class WorkFlow {
 
         /* Get all environments */
         List<deploydb.models.Environment> environments = []
-        List<models.Promotion> pipePromotions = []
+        List<models.Promotion> pipelinePromotions = []
         pipelines.each() {
             models.pipeline.Pipeline pipeline ->
                 pipeline.environments.each() {
                     String environmentIdent,
-                    models.pipeline.Environment pipeEnv ->
+                    models.pipeline.Environment pipelineEnvironment ->
                         environments.add(this.environmentRegistry.get(environmentIdent))
-                        pipePromotions = pipeEnv.promotions.collect() {
+                        pipelinePromotions = pipelineEnvironment.promotions.collect() {
                             String pipePromotionIdent ->
                                 this.promotionRegistry.get(pipePromotionIdent)
                         }
@@ -107,12 +103,12 @@ public class WorkFlow {
         environments.each() { models.Environment environment ->
 
             /* Create deployment */
-            models.Deployment deploy = new models.Deployment(artifact,
+            models.Deployment deployment = new models.Deployment(artifact,
                     environment.ident, service.ident, Status.NOT_STARTED)
-            if (deploy == null) {
+            if (deployment == null) {
                 throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
             }
-            if (!flow.addDeployment(deploy)) {
+            if (!flow.addDeployment(deployment)) {
                 throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
             }
 
@@ -121,7 +117,7 @@ public class WorkFlow {
                 this.promotionRegistry.get(promotionIdent)
             }
 
-            promotions.addAll(pipePromotions)
+            promotions.addAll(pipelinePromotions)
             if (promotions.isEmpty() || promotions.contains(null)) {
                 throw new WebApplicationException(Response.Status.NOT_FOUND)
             }
@@ -133,13 +129,14 @@ public class WorkFlow {
                 if (promotionResult == null) {
                     throw new WebApplicationException(Response.Status.NOT_FOUND)
                 }
-                if (!deploy.addPromotionResult(promotionResult)) {
+                if (!deployment.addPromotionResult(promotionResult)) {
                     throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
                 }
             }
         }
 
-        /* Persist the flow/deployment/promotionResult, with one whammy */
+        /* Persist the artifact and flow/deployment/promotionResult, with one whammy */
+        this.artifactDAO.persist(artifact)
         this.flowDAO.persist(flow)
 
         /* Get deployment from the flow and start it */
@@ -162,21 +159,21 @@ public class WorkFlow {
         }
 
         /* Make Sure no deployment in progress */
-        models.Deployment deploy = flow.getDeployments().find() { d ->
+        models.Deployment deployment = flow.getDeployments().find() { d ->
             d.status == Status.STARTED ||
                     d.status == Status.CREATED ||
                     d.status == Status.COMPLETED
         }
-        if (deploy != null) {
+        if (deployment != null) {
             throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
         }
 
         /* Get deployment from the flow and start it */
-        deploy = flow.getDeployments().find() {
+        deployment = flow.getDeployments().find() {
             d -> d.status == Status.NOT_STARTED
         }
-        if (deploy == null) {
-            /* No more deployments to deploy. All Done. Update flow status */
+        if (deployment == null) {
+            /* No more deployments to deployment. All Done. Update flow status */
             if (flow.status != Status.FAILED) {
                 flow.status = Status.SUCCESS
             }
@@ -184,9 +181,7 @@ public class WorkFlow {
         }
 
         /* Mark Deployment as ready for deploying */
-        deploy.status = Status.CREATED
-
-        println "***MVK: triggerDeploymentCreated: deploy: ${deploy}"
+        deployment.status = Status.CREATED
 
         /* FIXME - Invoke deployment created webhooks */
     }
@@ -196,12 +191,12 @@ public class WorkFlow {
      *
      * Updates the deployment status to note a forward progress
      *
-     * @param deploy
+     * @param deployment
      */
-    void triggerDeploymentStarted(models.Deployment deploy) {
+    void triggerDeploymentStarted(models.Deployment deployment) {
 
         /* Update deployment status */
-        deploy.status = Status.STARTED
+        deployment.status = Status.STARTED
 
         /* FIXME - Invoke deployment started webhooks */
     }
@@ -211,15 +206,15 @@ public class WorkFlow {
      *
      * Updates the deployment status to note a forward progress
      *
-     * @param deploy
+     * @param deployment
      */
-    void triggerDeploymentCompleted(models.Deployment deploy) {
+    void triggerDeploymentCompleted(models.Deployment deployment) {
 
         /* Update deployment status */
-        deploy.status = Status.COMPLETED
+        deployment.status = Status.COMPLETED
 
         /* Update promotion results status */
-        deploy.getPromotionResultSet().collect() { pr -> pr.status = Status.STARTED }
+        deployment.getPromotionResultSet().collect() { pr -> pr.status = Status.STARTED }
 
         /* FIXME - Invoke deployment completed webhooks */
     }
@@ -229,15 +224,15 @@ public class WorkFlow {
      *
      * Mark the deployment and flow with failure
      *
-     * @param deploy
+     * @param deployment
      */
-    void triggerDeploymentFailed(models.Deployment deploy) {
+    void triggerDeploymentFailed(models.Deployment deployment) {
 
         /* Update deployment status */
-        deploy.status = Status.FAILED
+        deployment.status = Status.FAILED
 
         /* Update flow status */
-        deploy.getFlow().status = Status.FAILED
+        deployment.getFlow().status = Status.FAILED
 
         /* FIXME - Invoke deployment failed webhooks */
     }
@@ -248,12 +243,14 @@ public class WorkFlow {
      * Add promotion results to deployment. Updates deployment/flow when last
      * promotion has succeeded
      *
-     * @param deploy
+     * @param deployment
      */
-    void triggerPromotionSuccess(models.Deployment deploy) {
+    void triggerPromotionSuccess(models.Deployment deployment) {
+
+        /* FIXME - Invoke deployment/promotion verified(success) webhooks */
 
         /* Find out if any other promotions are waiting for results */
-        models.PromotionResult promotionResult = deploy.getPromotionResultSet().find() {
+        models.PromotionResult promotionResult = deployment.getPromotionResultSet().find() {
             pr -> pr.promotionIdent == Status.STARTED
         }
         if (promotionResult != null) {
@@ -262,13 +259,13 @@ public class WorkFlow {
         }
 
         /* Update deployment status */
-        if (deploy.status != Status.FAILED) {
-            deploy.status = Status.SUCCESS
-            /* FIXME - Invoke deployment completed webhooks */
+        if (deployment.status != Status.FAILED) {
+            deployment.status = Status.SUCCESS
+            /* FIXME - Invoke deployment verified webhooks */
         }
 
         /* Trigger NEXT deployment created for next one */
-        triggerDeploymentCreated(deploy.getFlow())
+        triggerDeploymentCreated(deployment.getFlow())
 
     }
 
@@ -277,16 +274,18 @@ public class WorkFlow {
      *
      * Update the deployment and flow with failed status
      *
-     * @param deploy
+     * @param deployment
      */
-    void triggerPromotionFailed(models.Deployment deploy) {
+    void triggerPromotionFailed(models.Deployment deployment) {
+
+        /* FIXME - Invoke promotion verified(failed) webhooks */
 
         /* Update deployment status */
-        deploy.status = Status.FAILED
+        deployment.status = Status.FAILED
 
         /* Update flow status */
-        deploy.getFlow().status = Status.FAILED
+        deployment.getFlow().status = Status.FAILED
 
-        /* FIXME - Invoke deployment/promotion failed webhooks */
+        /* FIXME - Invoke deployment verified(failed) webhooks */
     }
 }
