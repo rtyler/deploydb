@@ -6,9 +6,9 @@ package webhookTestServer.models
 class RequestWebhookObject {
 
     /*
-     * Url of the RequestWebhookObject
+     * UriPath of the RequestWebhookObject
      */
-    String configuredUrl
+    String configuredUriPath
 
     /**
      *  Request message body of the object
@@ -31,7 +31,7 @@ class RequestWebhookObject {
     /*
      * Constructor to initialize from application
      */
-    RequestWebhookObject(String configuredUrl) {
-        this.configuredUrl = configuredUrl
+    RequestWebhookObject(String configuredUriPath) {
+        this.configuredUriPath = configuredUriPath
     }
 }

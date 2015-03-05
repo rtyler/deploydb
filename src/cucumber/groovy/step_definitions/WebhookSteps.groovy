@@ -3,12 +3,18 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import deploydb.WebhookManager
+
 import org.joda.time.DateTime
+
+import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
 
 Given(~/^the webhooks configuration:$/) { String configBody ->
-    withWebhookManager { WebhookManager webhookManager ->
+
+    String path = configBody.split("-",2)[1].trim().toURI().getPath()
+
+    withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
+        requestWebhookObject.setConfiguredUriPath(path)
         webhookManager.loadConfigurationFromString(configBody)
    }
 }

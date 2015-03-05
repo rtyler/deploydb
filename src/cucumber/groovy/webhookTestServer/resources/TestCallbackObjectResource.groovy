@@ -45,7 +45,7 @@ public class TestCallBackobjectResource {
         /*
          * If the received request URI is not same as configured, then we throw BAD_REQUEST
          */
-        if (requestWebhookObject.configuredUrl != requestUri){
+        if (requestWebhookObject.configuredUriPath != requestUri){
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 

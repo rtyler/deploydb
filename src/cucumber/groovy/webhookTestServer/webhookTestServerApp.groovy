@@ -40,9 +40,8 @@ class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
         environment.healthChecks().register('sanity', new webhookTestServerHealthCheck())
 
         /**
-         * remove this after testing
+         * FIXME: remove this after testing
          */
-        requestWebhookObject.setConfiguredUrl("/job/notify-deployment-started/build")
         responseWebhookObject.responseCode = "201"
         responseWebhookObject.delayBeforeResponseInSecs = 0
 
