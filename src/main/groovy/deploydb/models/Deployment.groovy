@@ -38,9 +38,9 @@ class Deployment extends AbstractModel {
          *  STARTED -> FAILED
          */
         deploymentStatusTransitionPairs = new ConcurrentHashSet<>()
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.STARTED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.COMPLETED))
-        deploymentStatusTransitionPairs.add(Pair.of(Status.NOT_STARTED, Status.FAILED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.CREATED, Status.STARTED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.CREATED, Status.COMPLETED))
+        deploymentStatusTransitionPairs.add(Pair.of(Status.CREATED, Status.FAILED))
         deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.COMPLETED))
         deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
     }
@@ -74,14 +74,6 @@ class Deployment extends AbstractModel {
     Flow flow
 
     /**
-     * Add Promotion Result to collection
-     */
-    boolean addPromotionResult(PromotionResult promotionResult) {
-        promotionResult.deployment = this
-        return promotionResultSet.add(promotionResult)
-    }
-
-    /**
      * Empty constructor used by Jackson for object deserialization
      */
     Deployment() { }
@@ -107,6 +99,14 @@ class Deployment extends AbstractModel {
      */
     PromotionResult getPromotionResult(String promotionIdent) {
         this.promotionResultSet.find { pr -> pr.promotionIdent == promotionIdent }
+    }
+
+    /**
+     * Add Promotion Result to collection
+     */
+    boolean addPromotionResult(PromotionResult promotionResult) {
+        promotionResult.deployment = this
+        return promotionResultSet.add(promotionResult)
     }
 
     @Override
@@ -141,7 +141,7 @@ class Deployment extends AbstractModel {
         String output = ""
         output += "id = ${id}, environment: ${environmentIdent}, "
         output += "service = ${serviceIdent}, status: ${status}, "
-        output += "promotionResultSet: ${promotionResultSet}"
+        output += "promotionResultSet: ${promotionResultSet}, "
         output += "flow = ${flow.id}"
         return output
     }

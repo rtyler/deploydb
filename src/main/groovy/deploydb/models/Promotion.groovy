@@ -31,7 +31,7 @@ class Promotion {
     String description
 
     /**
-     * Empty constructor used by Jackson during deserialaization
+     * Empty constructor used by Jackson during deserialization
      */
     Promotion(){}
 
@@ -69,7 +69,7 @@ class Promotion {
 
     @Override
     int hashCode() {
-        return Objects.hash(this.ident, this.type, this.Description)
+        return Objects.hash(this.ident, this.type, this.description)
     }
 
 

@@ -25,7 +25,7 @@ Feature: Promotion Result APIs
     """
       {
         "name"  : "jenkins-smoke",
-        "status" : "IN_PROGRESS",
+        "status" : "CREATED",
         "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results"
       }
     """
