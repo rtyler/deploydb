@@ -10,7 +10,7 @@ package deploydb
  */
 enum Status {
     NOT_STARTED,  /* 0 */
-    IN_PROGRESS,  /* 1 */
+    CREATED,      /* 1 */
     STARTED,
     COMPLETED,
     SUCCESS,

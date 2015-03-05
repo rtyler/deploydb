@@ -3,8 +3,10 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import deploydb.dao.ArtifactDAO
 import deploydb.dao.DeploymentDAO
+import deploydb.dao.FlowDAO
 import deploydb.models.Artifact
 import deploydb.models.Deployment
+import deploydb.models.Flow
 import deploydb.models.PromotionResult
 import deploydb.Status
 
@@ -33,11 +35,15 @@ Given(~/^there is a deployment$/) { ->
                 Status.STARTED)
         d1.addPromotionResult(p1)
 
+        /* Create a flow */
+        Flow f = new Flow(a1, "faas")
+        f.addDeployment(d1)
+
         /**
-         * Save deployment in DB, which will save the promotionResults as well
+         * Save flow in DB, which will save the deployments & promotionResults as well
          */
-        DeploymentDAO dao = new DeploymentDAO(sessionFactory)
-        dao.persist(d1)
+        FlowDAO fdao = new FlowDAO(sessionFactory)
+        fdao.persist(f)
     }
 }
 

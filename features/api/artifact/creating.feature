@@ -9,6 +9,10 @@ Feature: Artifact CREATE APIs
 
     The creation of an artifact requires group, name, version and sourceUrl.
 
+    Given promotions are configured
+    And an environment is configured
+    And a pipeline is configured
+    And a service is configured
     When I POST to "/api/artifacts" with:
     """
       {
@@ -31,6 +35,7 @@ Feature: Artifact CREATE APIs
       }
     """
 
+
   @error
   Scenario: The request should fail when creating an Artifact without a group name
 
@@ -43,6 +48,7 @@ Feature: Artifact CREATE APIs
       }
     """
     Then the response should be 422
+
 
   @error
   Scenario: The request should fail when creating an Artifact without a name
@@ -57,6 +63,7 @@ Feature: Artifact CREATE APIs
     """
     Then the response should be 422
 
+
   @error
   Scenario: The request should fail when creating an Artifact without a version
 
@@ -69,6 +76,7 @@ Feature: Artifact CREATE APIs
       }
     """
     Then the response should be 422
+
 
   @error
   Scenario: The request should fail when creating an Artifact without a sourceUrl
@@ -83,6 +91,7 @@ Feature: Artifact CREATE APIs
     """
     Then the response should be 422
 
+
   @error
   Scenario: Creating an artifact with too large of a group name
 
@@ -90,6 +99,7 @@ Feature: Artifact CREATE APIs
     And the group is over 8192 characters
     When I POST to "/api/artifacts"
     Then the response should be 422
+
 
   @error
   Scenario: Creating an artifact with too large of a name
@@ -99,6 +109,7 @@ Feature: Artifact CREATE APIs
     When I POST to "/api/artifacts"
     Then the response should be 422
 
+
   @error
   Scenario: Creating an artifact with too large of a version
 
@@ -107,6 +118,7 @@ Feature: Artifact CREATE APIs
     When I POST to "/api/artifacts"
     Then the response should be 422
 
+
   @error
   Scenario: Creating an artifact with too large of a sourceUrl
 
@@ -114,3 +126,76 @@ Feature: Artifact CREATE APIs
     And the sourceUrl is over 8192 characters
     When I POST to "/api/artifacts"
     Then the response should be 422
+
+
+  @error
+  Scenario: Creating a new artifact with missing promotion fails
+
+    Given an environment is configured
+    And a pipeline is configured
+    And a service is configured
+    When I POST to "/api/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 404
+
+
+  @error
+  Scenario: Creating a new artifact with missing environment fails
+
+    Given a promotion is configured
+    And a pipeline is configured
+    And a service is configured
+    When I POST to "/api/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 404
+
+
+  @error
+  Scenario: Creating a new artifact with missing pipeline fails
+
+    Given a promotion is configured
+    And an environment is configured
+    And a service is configured
+    When I POST to "/api/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 404
+
+
+  @error
+  Scenario: Creating a new artifact with missing service fails
+
+
+    Given a promotion is configured
+    And an environment is configured
+    And a pipeline is configured
+    When I POST to "/api/artifacts" with:
+    """
+      {
+        "group" : "com.example.cucumber",
+        "name" : "cukes",
+        "version" : "1.2.345",
+        "sourceUrl" : "http://example.com/cucumber.jar"
+      }
+    """
+    Then the response should be 404

@@ -21,6 +21,10 @@ class WebhookManager implements Managed {
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
     private Webhook webhook
 
+    def getMemberOfObject(klass, variable) {
+        return klass."$variable"
+    }
+
     WebhookManager( ) {
         runner = new SequentialHookRunner(this.queue)
 
@@ -62,14 +66,31 @@ class WebhookManager implements Managed {
         logger.info("${runnerThread} stopped")
     }
 
-    boolean createDeploymentWebhook(WebhookModelMapper webhookModelMapper, String eventType)
-    {
-        String urlName = webhook.deployment.created[0]
-        HookRequest hookRequest = new HookRequest(urlName,
-                webhookModelMapper.toPayload())
+    boolean createDeploymentWebhook(WebhookModelMapper webhookModelMapper, String eventType)  {
 
-        String urlPayload = webhookModelMapper.toPayload()
-        return queue.push(hookRequest)
+        /**
+         *  if global webhook is not defined just return true, there is nothing to do here
+         */
+        if (webhook.deployment == null) {
+            return true
+        }
+        /*
+         * Need to iterate over the deployment webhooks
+         */
+        List<String> eventUrlList = getMemberOfObject(webhook.deployment, eventType)
+
+        eventUrlList.each() { urlName ->
+            HookRequest hookRequest = new HookRequest(urlName,
+                    webhookModelMapper.toPayload())
+
+            /*
+             * if any one of the push request fail return false
+             */
+            if(! queue.push(hookRequest)) {
+                return false
+            }
+        }
+        return true
     }
     /**
      * Return true if the webhook thread is running

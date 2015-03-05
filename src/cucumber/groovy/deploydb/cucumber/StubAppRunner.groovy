@@ -1,10 +1,8 @@
 package deploydb.cucumber
 
 import deploydb.WebhookManager
-import deploydb.models.Promotion
 import io.dropwizard.Application
 import io.dropwizard.Configuration
-import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.cli.ServerCommand
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
@@ -18,15 +16,11 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.flywaydb.core.Flyway
 import org.hibernate.SessionFactory
-import org.junit.rules.TestRule
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
 
 import javax.annotation.Nullable
 import java.util.Enumeration
 
 import deploydb.registry.ModelRegistry
-import deploydb.ModelLoader
 
 /**
  * Class for running the Dropwizard app
@@ -44,10 +38,9 @@ public class StubAppRunner<C extends Configuration> {
     private Server jettyServer
     private SessionFactory sessionFactory
     private ModelRegistry<deploydb.models.Service> serviceRegistry
-    private ModelLoader<deploydb.models.Service> serviceLoader
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
-    private ModelLoader<deploydb.models.Environment> environmentLoader
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
+    private ModelRegistry<deploydb.models.pipeline.Pipeline> pipelineRegistry
     private WebhookManager webhookManager
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
@@ -90,24 +83,20 @@ public class StubAppRunner<C extends Configuration> {
                              * it's up and running
                              */
                             sessionFactory = application.sessionFactory
+                            webhookManager = application.webhooksManager
+
+                            /* FIXME: Move this to cucumber feature file
+                             * initialize the webhook configuration
+                             */
+                            //application.initializeWebhook("webhooks/test-cucumber.yml")
 
                             /**
                              * Get a ModelRegistry(s) from the application once it's up and running
                              */
-                            serviceRegistry = application.serviceRegistry
-                            environmentRegistry = application.environmentRegistry
-                            promotionRegistry = application.promotionRegistry
-
-                            /* Get a ModelLoader(s) from the application once it's up and running
-                             */
-                            serviceLoader = application.serviceLoader
-                            environmentLoader = application.environmentLoader
-                            webhookManager = application.webhooksManager
-
-                            /*
-                             * initialize the webhook configuration
-                             */
-                            application.initializeWebhook("webhooks/test-cucumber.yml")
+                            serviceRegistry = application.workFlow.serviceRegistry
+                            environmentRegistry = application.workFlow.environmentRegistry
+                            promotionRegistry = application.workFlow.promotionRegistry
+                            pipelineRegistry = application.workFlow.pipelineRegistry
 
                             /* We're running the DB migrations here to make sure we're running
                             * them in the same classloader environment as the DeployDB

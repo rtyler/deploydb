@@ -22,7 +22,7 @@ Given(~/^the webhooks configuration:$/) { String configBody ->
 When (~/^I POST to "(.*?)" with an artifact/) { String path ->
     String requestBody = """{
 "group" : "com.example.cucumber",
-"name" : "cucumber-artifact",
+"name" : "cukes",
 "version" : "1.0.1",
 "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
 }"""

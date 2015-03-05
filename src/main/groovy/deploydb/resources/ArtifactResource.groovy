@@ -1,12 +1,11 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
+import deploydb.models.Artifact
+import deploydb.WorkFlow
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.hibernate.UnitOfWork
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
@@ -21,24 +20,19 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-import deploydb.WebhookManager
-import deploydb.Status
-import deploydb.dao.ArtifactDAO
-import deploydb.models.Artifact
-import deploydb.mappers.DeploymentWebhookMapper
 
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class ArtifactResource {
-    private final ArtifactDAO dao
-    private final WebhookManager webhookManager
+    private final WorkFlow workFlow
     private final Logger logger = LoggerFactory.getLogger(ArtifactResource.class)
 
-    ArtifactResource(ArtifactDAO dao, WebhookManager webhookManagerArg) {
-        this.dao = dao
-        this.webhookManager = webhookManagerArg
+    ArtifactResource(WorkFlow workFlow) {
+        this.workFlow = workFlow
     }
 
     @POST
@@ -46,22 +40,9 @@ public class ArtifactResource {
     @Timed(name='put-requests')
     Response createArtifact(@Valid Artifact artifact) {
 
-        Artifact created = this.dao.persist(artifact)
+        this.workFlow.triggerArtifactCreated(artifact)
 
-        /*
-         * create the deployment, get all the configured models
-         */
-        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper()
-        deploymentWebhookMapper.id = created.id
-        deploymentWebhookMapper.createdAt = created.createdAt
-        deploymentWebhookMapper.artifact = created
-        deploymentWebhookMapper.status = Status.STARTED
-        deploymentWebhookMapper.environment = "dev-integ"
-
-        if (webhookManager.createDeploymentWebhook(deploymentWebhookMapper, "CREATED") == false) {
-            throw new WebApplicationException(Response.Status.BAD_REQUEST)
-        }
-        return Response.status(201).entity(created).build()
+        return Response.status(201).entity(artifact).build()
     }
 
     @GET
@@ -70,7 +51,7 @@ public class ArtifactResource {
     @Timed(name = "get-requests")
     Artifact byIdentifier(@Context HttpHeaders headers,
                                @PathParam("id") LongParam artifactId) {
-        Artifact artifact = this.dao.get(artifactId.get())
+        Artifact artifact = workFlow.artifactDAO.get(artifactId.get())
 
         if (artifact == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -86,8 +67,10 @@ public class ArtifactResource {
                          @PathParam("name") String artifactName,
                          @QueryParam("pageNumber") @DefaultValue("0") IntParam artifactPageNumber,
                          @QueryParam("perPageSize") @DefaultValue("5") IntParam artifactPerPageSize){
-        List<Artifact> artifacts = this.dao.findByGroupAndName(artifactGroup,
-                                                        artifactName, artifactPageNumber.get(), artifactPerPageSize.get())
+        List<Artifact> artifacts =
+                this.workFlow.artifactDAO.findByGroupAndName(
+                        artifactGroup, artifactName, artifactPageNumber.get(),
+                        artifactPerPageSize.get())
 
         if (artifacts.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -101,8 +84,9 @@ public class ArtifactResource {
     @Timed(name = "get-requests")
     Artifact byNameLatest(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName){
-        Artifact artifact = this.dao.findLatestByGroupAndName(artifactGroup,
-                                                            artifactName)
+        Artifact artifact =
+                this.workFlow.artifactDAO.findLatestByGroupAndName(
+                        artifactGroup, artifactName)
 
         if (artifact == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)

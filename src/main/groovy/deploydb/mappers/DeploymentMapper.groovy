@@ -18,16 +18,38 @@ class DeploymentWebhookMapper implements WebhookModelMapper{
     Long id
 
     @JsonProperty
-    String createdAt
+    Artifact artifact
 
     @JsonProperty
-    Artifact artifact
+    String service
 
     @JsonProperty
     String environment
 
     @JsonProperty
+    String createdAt
+
+    @JsonProperty
     Status status
+
+    /**
+     *  Constructor with all the arguments
+     * @param id Identity of the deployment
+     * @param artifact Deployed artifact
+     * @param service Service that this artifact is part of
+     * @param environment Environment that this deployment is in now
+     * @param createdAt Deployment create time
+     * @param status Status of the Deployment
+     */
+    DeploymentWebhookMapper(Long id, Artifact artifact, String service,
+                            String environment, String createdAt, Status status){
+        this.id = id
+        this.artifact = artifact
+        this.service = service
+        this.environment = environment
+        this.createdAt = createdAt
+        this.status = status
+    }
 
     String toPayload() {
         ObjectMapper mapper = new ObjectMapper();

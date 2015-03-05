@@ -2,7 +2,8 @@ package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
 
-import deploydb.dao.DeploymentDAO
+import deploydb.Status
+import deploydb.WorkFlow
 import deploydb.mappers.PromotionResultAddMapper
 import deploydb.models.Deployment
 import deploydb.models.PromotionResult
@@ -32,10 +33,10 @@ import javax.ws.rs.core.Response
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class DeploymentResource {
-    private final DeploymentDAO dao
+    private final WorkFlow workFlow
 
-    DeploymentResource(DeploymentDAO dao) {
-        this.dao = dao
+    DeploymentResource(WorkFlow workFlow) {
+        this.workFlow = workFlow
     }
 
     /**
@@ -51,7 +52,8 @@ public class DeploymentResource {
         /**
          * Fetch deployment by page
          */
-        List<Deployment> deployTable = this.dao.getByPage(pageNumber.get(), perPageSize.get())
+        List<Deployment> deployTable = this.workFlow.deploymentDAO.getByPage(
+                pageNumber.get(), perPageSize.get())
         if (deployTable.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
@@ -67,7 +69,7 @@ public class DeploymentResource {
     @UnitOfWork
     @Timed(name = "get-requests")
     Deployment byIdentifier(@PathParam("id") LongParam deploymentId) {
-        Deployment deploy = this.dao.get(deploymentId.get())
+        Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
 
         if (deploy == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -84,7 +86,7 @@ public class DeploymentResource {
     @UnitOfWork
     @Timed(name = "get-requests")
     Deployment getLatest() {
-        Deployment deploy = this.dao.getLatest()
+        Deployment deploy = this.workFlow.deploymentDAO.getLatest()
 
         if (deploy == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -102,7 +104,7 @@ public class DeploymentResource {
     @Timed(name='patch-requests')
     void updateDeployment(@PathParam('id') LongParam deploymentId,
                           @Valid DeploymentUpdateMapper deploymentUpdateMapper) {
-        Deployment deploy = this.dao.get(deploymentId.get())
+        Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
 
         if (deploy == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -111,14 +113,24 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!Deployment.class.deploymentStatusTransitionPairs.contains(
+        if (!Deployment.deploymentStatusTransitionPairs.contains(
                 Pair.of(deploy.status, deploymentUpdateMapper.status))) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
 
+        /* Update status */
+        deploy.status = deploymentUpdateMapper.status
+
         /**
-         * FIXME - inject triggerDeploymentStarted/Failed/Completed - issue #83
+         * Inject the trigger in pseudo state machine
          */
+        if (deploymentUpdateMapper.status == Status.STARTED) {
+            this.workFlow.triggerDeploymentStarted(deploy)
+        } else if (deploymentUpdateMapper.status == Status.COMPLETED) {
+            this.workFlow.triggerDeploymentCompleted(deploy)
+        } else if (deploymentUpdateMapper.status == Status.FAILED) {
+            this.workFlow.triggerDeploymentFailed(deploy)
+        }
     }
 
     /**
@@ -130,7 +142,7 @@ public class DeploymentResource {
     @Timed(name='post-requests')
     void addPromotionResult(@PathParam('id') LongParam deploymentId,
                             @Valid PromotionResultAddMapper promotionResultAddMapper) {
-        Deployment deploy = this.dao.get(deploymentId.get())
+        Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
 
         if (deploy == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -139,7 +151,8 @@ public class DeploymentResource {
         /**
          * Get Promotion Result model from deployment and throw error if not found
          */
-        PromotionResult promotionResult = deploy.getPromotionResult(promotionResultAddMapper.promotionIdent)
+        PromotionResult promotionResult = deploy.getPromotionResult(
+                promotionResultAddMapper.promotionIdent)
         if (promotionResult == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
@@ -147,13 +160,22 @@ public class DeploymentResource {
         /**
          *  Check for valid status transitions. Throw exception if not found
          */
-        if (!PromotionResult.class.promotionResultStatusTransitionPairs.contains(
+        if (!PromotionResult.promotionResultStatusTransitionPairs.contains(
                 Pair.of(promotionResult.status, promotionResultAddMapper.status))) {
             throw new WebApplicationException(Response.Status.NOT_ACCEPTABLE)
         }
 
+        /* Add results */
+        promotionResult.status = promotionResultAddMapper.status
+        promotionResult.infoUrl = promotionResultAddMapper.infoUrl
+
         /**
-         * FIXME - inject triggerPromotionCompleted - issue #83
+         * Inject the trigger in pseudo state machine
          */
+        if (promotionResultAddMapper.status == Status.SUCCESS) {
+            this.workFlow.triggerPromotionSuccess(deploy)
+        } else if (promotionResultAddMapper.status == Status.FAILED) {
+            this.workFlow.triggerPromotionFailed(deploy)
+        }
     }
 }

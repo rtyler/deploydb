@@ -2,7 +2,7 @@ package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
 import com.sun.research.ws.wadl.Response
-import deploydb.models.Promotion
+import deploydb.models.pipeline.Pipeline
 import deploydb.registry.ModelRegistry
 import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
@@ -18,47 +18,49 @@ import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
 
 /**
- * Resource to handle the REST api for promotion
+ * Resource to handle the REST api for pipeline
  */
-@Path("/api/promotions")
+@Path("/api/pipelines")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
-public class PromotionResource {
-    private final ModelRegistry<Promotion> promotionRegistry
-    private final Logger logger = LoggerFactory.getLogger(PromotionResource.class)
+public class PipelineResource {
+    private final ModelRegistry<Pipeline> pipelineRegistry
+    private final Logger logger = LoggerFactory.getLogger(PipelineResource.class)
 
-    PromotionResource(ModelRegistry<Promotion> promotionRegistry){
-        this.promotionRegistry = promotionRegistry
+    PipelineResource(ModelRegistry<Pipeline> pipelineRegistry) {
+        this.pipelineRegistry = pipelineRegistry
     }
 
     /**
-     * Return all the configured promotions
+     * Return all the configured pipelines
      */
     @GET
     @UnitOfWork
     @Timed(name = "get-requests")
-    List<Promotion> getAll(){
-        List<Promotion> promotionList = this.promotionRegistry.getAll()
+    List<Pipeline> getAll() {
 
-        if(promotionList.isEmpty()){
+        List<Pipeline> pipelineList = this.pipelineRegistry.getAll()
+
+        if (pipelineList.isEmpty()) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
-        return promotionList
+        return pipelineList
     }
 
     /**
-     * Return a configured Promotion
+     * Return a configured Pipeline
      */
     @GET
     @Path("{name}")
     @UnitOfWork
     @Timed(name = "get-requests")
-    Promotion byName(@PathParam("name") String promotionIdent){
-        Promotion promotion = this.promotionRegistry.get(promotionIdent)
+    Pipeline byName(@PathParam("name") String pipelineIdent) {
 
-        if(promotion == null){
+        Pipeline pipeline = this.pipelineRegistry.get(pipelineIdent)
+
+        if (pipeline == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
-        return promotion
+        return pipeline
     }
 }

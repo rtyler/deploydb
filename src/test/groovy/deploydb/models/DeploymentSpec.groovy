@@ -25,7 +25,7 @@ class DeploymentWithArgsSpec extends Specification {
                                    'spock-test-name',
                                    'v1.0.0',
                                    'http://example.com/cucumber.jar')
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d1 = new Deployment(a1,
                 "pre-prod",
                 "faas",
@@ -46,7 +46,7 @@ class DeploymentWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d1 = new Deployment(a1,
                 "pre-prod",
                 "faas",
@@ -57,7 +57,7 @@ class DeploymentWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        PromotionResult p2 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p2 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d2 = new Deployment(a1,
                 "pre-prod",
                 "faas",
@@ -74,7 +74,7 @@ class DeploymentWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d1 = new Deployment(a1,
                 "pre-prod",
                 "faas",
@@ -85,7 +85,7 @@ class DeploymentWithArgsSpec extends Specification {
                 'spock-test-name',
                 'v1.0.0',
                 'http://example.com/cucumber.jar')
-        PromotionResult p2 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p2 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d2 = new Deployment(a1,
                 "pre-prod",
                 "faas",
@@ -122,7 +122,7 @@ class DeploymentWithArgsSpec extends Specification {
 
     def "equals fails for deployments with different promotionResults"() {
         given:
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d1 = new Deployment()
         d1.addPromotionResult(p1)
 
@@ -160,7 +160,7 @@ class DeploymentWithArgsSpec extends Specification {
 
     def "hashCode compare fails for deployments with different promotionResults"() {
         given:
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.IN_PROGRESS, "")
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
         Deployment d1 = new Deployment()
         d1.addPromotionResult(p1)
 
