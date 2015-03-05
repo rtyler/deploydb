@@ -1,19 +1,21 @@
 package deploydb.resources
 
+import deploydb.DeployDBApp
 import deploydb.Status
 import deploydb.WorkFlow
 import deploydb.models.Artifact
-import deploydb.models.PromotionResult
 import io.dropwizard.testing.junit.ResourceTestRule
 import javax.ws.rs.client.Client
 import org.junit.Rule
 import spock.lang.*
-
 import deploydb.models.Deployment
 import deploydb.dao.DeploymentDAO
 
+
 class DeploymentResourceSpec extends Specification {
-    private WorkFlow workFlow = Mock(WorkFlow)
+    def app = new DeployDBApp()
+    private WorkFlow workFlow = new WorkFlow(app)
+    private DeploymentDAO dao = Mock(DeploymentDAO)
 
     @Rule
     ResourceTestRule dropwizard = ResourceTestRule.builder()
@@ -27,19 +29,17 @@ class DeploymentResourceSpec extends Specification {
         deploymentResource instanceof DeploymentResource
     }
 
-/* COMMENTED OUT TEMPORARILY
-
     def "byIdentifier when the item exists"() {
         given:
         Client client = dropwizard.client()
-
+        workFlow.deploymentDAO = dao
+        Long deploymentId = 12
         Artifact a1 = new Artifact()
         Deployment deployment = new Deployment(a1,
                 "pre-prod",
                 "faas",
                 Status.STARTED)
 
-        Long deploymentId = 12
         Deployment fetched = null
         1 * dao.get(deploymentId) >> deployment
 
@@ -52,5 +52,4 @@ class DeploymentResourceSpec extends Specification {
         then:
         fetched == deployment
     }
-    */
 }
