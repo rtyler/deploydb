@@ -1,5 +1,8 @@
 package deploydb.cucumber
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.JsonToken
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import deploydb.DeployDBApp
 import webhookTestServer.webhookTestServerApp
 
@@ -74,15 +77,34 @@ class AppHelper {
         c.call(this.runner.promotionRegistry)
     }
 
-    /**
-     *  Execute the {@link Closure} with a proper Pipeline Registry
-     *
-     * @param c (required) Closure to execute
-     */
+   /**
+    *  Execute the {@link Closure} with a proper Pipeline Registry
+    *
+    * @param c (required) Closure to execute
+    */
     void withPipelineRegistry(Closure c) {
         c.call(this.runner.pipelineRegistry)
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper WebhookManager
+     *
+     * @param c (required) Closure to execute
+     */
+    void withWebhookManager(Closure c) {
+        c.call(this.runner.webhookManager,
+                this.webhookRunner.getApplication().requestWebhookObject)
+    }
+
+    /**
+     *  Execute the {@link Closure} with a proper testWebhookServer's
+     *  receivedWebhookObject
+     *
+     * @param c (required) Closure to execute
+     */
+    void withRequestWebhookObject(Closure c) {
+        c.call(this.webhookRunner.getApplication().requestWebhookObject)
+    }
 
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
@@ -140,6 +162,42 @@ class AppHelper {
 
     Response deleteFromPath(String path) {
         return this.makeRequestToPath(path, 'DELETE', null).invoke()
+    }
+
+    /**
+     * get the path from yaml config body
+     */
+    String getUrlPathFromConfigBody(String configBody, String eventType) {
+        YAMLFactory factory = new YAMLFactory()
+        JsonParser jParser = factory.createJsonParser(configBody)
+        String url = ""
+        while (jParser.nextToken() != JsonToken.END_OBJECT) {
+
+            String fieldname = jParser.getCurrentName();
+            if ("deployment".equals(fieldname)) {
+
+                jParser.nextToken(); // current token is "[", move next
+
+                // messages is array, loop until token equal to "]"
+                while (jParser.nextToken() != JsonToken.END_ARRAY) {
+
+                    String nextFieldName = jParser.getCurrentName()
+                    if (eventType.equals(nextFieldName)) {
+                        jParser.nextToken(); // current token is "[", move next
+
+                        // messages is array, loop until token equal to "]"
+                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                            url = jParser.getText()
+                            break
+                        }
+                    }
+                }
+
+            }
+
+        }
+        jParser.close();
+        return url.toURI().getPath()
     }
 
     /**

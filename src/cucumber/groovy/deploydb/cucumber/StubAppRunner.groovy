@@ -1,5 +1,6 @@
 package deploydb.cucumber
 
+import deploydb.WebhookManager
 import io.dropwizard.Application
 import io.dropwizard.Configuration
 import io.dropwizard.cli.ServerCommand
@@ -40,6 +41,7 @@ public class StubAppRunner<C extends Configuration> {
     private ModelRegistry<deploydb.models.Environment> environmentRegistry
     private ModelRegistry<deploydb.models.Promotion> promotionRegistry
     private ModelRegistry<deploydb.models.pipeline.Pipeline> pipelineRegistry
+    private WebhookManager webhookManager
 
     public StubAppRunner(Class<? extends Application<C>> applicationClass,
                         @Nullable String configPath,
@@ -81,8 +83,9 @@ public class StubAppRunner<C extends Configuration> {
                              * it's up and running
                              */
                             sessionFactory = application.sessionFactory
+                            webhookManager = application.webhooksManager
 
-                            /**
+                             /**
                              * Get a ModelRegistry(s) from the application once it's up and running
                              */
                             serviceRegistry = application.workFlow.serviceRegistry

@@ -1,9 +1,10 @@
 package deploydb
 
+import deploydb.models.Webhook.Webhook
 
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
-
+import deploydb.mappers.DeploymentWebhookMapper
 
 public class WorkFlow {
     private final DeployDBApp deployDBApp
@@ -64,6 +65,7 @@ public class WorkFlow {
                 artifactIdent == (artifact.group + ":" + artifact.name)
             }
         }
+
         if (service == null) {
             /* Artifact is left hanging */
             throw new WebApplicationException(Response.Status.NOT_FOUND)
@@ -112,7 +114,7 @@ public class WorkFlow {
                 throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
             }
 
-            /* Get all promotions in service & pipelines. Using a Set; thus ignoring he duplicates */
+            /* Get all promotions in service & pipelines. Using a Set; thus ignoring the duplicates */
             List<models.Promotion> promotions = service.getPromotions().collect() { String promotionIdent ->
                 this.promotionRegistry.get(promotionIdent)
             }
@@ -183,7 +185,24 @@ public class WorkFlow {
         /* Mark Deployment as ready for deploying */
         deployment.status = Status.CREATED
 
-        /* FIXME - Invoke deployment created webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent).webhooks
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
     }
 
     /**

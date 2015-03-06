@@ -1,13 +1,13 @@
 Feature: Webhook invocation  when deployment is started
 
-  @wip @webhook
+  @wip @feezetime @webhook
   Scenario: Webhooks should be invoked when deployment is started
     Given the webhooks configuration:
     """
       deployment:
         started: "http://{{webhook_url}}"
     """
-    And there is an artifact
+    And there is a deployment
     When I trigger deployment PATCH "/api/deployments/1" with:
     """
       {

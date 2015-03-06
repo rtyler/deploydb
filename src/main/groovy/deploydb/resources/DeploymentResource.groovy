@@ -1,12 +1,14 @@
 package deploydb.resources
 
 import com.codahale.metrics.annotation.Timed
+
 import deploydb.Status
-import deploydb.mappers.DeploymentUpdateMapper
 import deploydb.WorkFlow
 import deploydb.mappers.PromotionResultAddMapper
 import deploydb.models.Deployment
 import deploydb.models.PromotionResult
+import deploydb.mappers.DeploymentUpdateMapper
+
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.jersey.PATCH

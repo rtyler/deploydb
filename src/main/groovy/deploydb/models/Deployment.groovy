@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonIgnore
 import deploydb.Status
 import javax.persistence.CascadeType
+
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -45,38 +46,38 @@ class Deployment extends AbstractModel {
         deploymentStatusTransitionPairs.add(Pair.of(Status.STARTED, Status.FAILED))
     }
 
-    @OneToOne(optional=false)
-    @JoinColumn(name='artifactId', unique=false, nullable=false, updatable=false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = 'artifactId', unique = false, nullable = false, updatable = false)
     @JsonProperty
     Artifact artifact
 
-    @Column(name="environment", nullable=false)
+    @Column(name = "environment", nullable = false)
     @JsonProperty(value = "environment")
     String environmentIdent
 
-    @Column(name="service", nullable=false)
+    @Column(name = "service", nullable = false)
     @JsonProperty(value = "service")
     String serviceIdent
 
-    @Column(name="status", nullable=false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.ORDINAL)
     @JsonProperty
     Status status = Status.NOT_STARTED
 
-    @OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="deployment")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "deployment")
     @JsonProperty(value = "promotions")
-    @OrderBy(value="id")
+    @OrderBy(value = "id")
     Set<PromotionResult> promotionResultSet = new ConcurrentHashSet<>()
 
-    @ManyToOne(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
-    @JoinColumn(name="flowId")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "flowId")
     @JsonIgnore
     Flow flow
 
     /**
      * Empty constructor used by Jackson for object deserialization
      */
-    Deployment() { }
+    Deployment() {}
 
     /**
      * Default constructor to create a valid and saveable Deployment object in
@@ -120,7 +121,7 @@ class Deployment extends AbstractModel {
             return false
         }
 
-        final Deployment that = (Deployment)o
+        final Deployment that = (Deployment) o
 
         return Objects.equals(this.id, that.id) &&
                 Objects.equals(this.artifact, that.artifact) &&
@@ -138,11 +139,9 @@ class Deployment extends AbstractModel {
 
     @Override
     String toString() {
-        String output = ""
-        output += "id = ${id}, environment: ${environmentIdent}, "
-        output += "service = ${serviceIdent}, status: ${status}, "
-        output += "promotionResultSet: ${promotionResultSet}, "
-        output += "flow = ${flow.id}"
-        return output
+        return "id = ${id}, environment: ${environmentIdent}, service = ${serviceIdent}, status: ${status}, "
+        +"promotionResultSet: ${promotionResultSet}, "
+        +"flow = ${flow.id}"
+
     }
 }
