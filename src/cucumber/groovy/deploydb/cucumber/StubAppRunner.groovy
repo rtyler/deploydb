@@ -85,12 +85,7 @@ public class StubAppRunner<C extends Configuration> {
                             sessionFactory = application.sessionFactory
                             webhookManager = application.webhooksManager
 
-                            /* FIXME: Move this to cucumber feature file
-                             * initialize the webhook configuration
-                             */
-                            //application.initializeWebhook("webhooks/test-cucumber.yml")
-
-                            /**
+                             /**
                              * Get a ModelRegistry(s) from the application once it's up and running
                              */
                             serviceRegistry = application.workFlow.serviceRegistry

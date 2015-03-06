@@ -3,7 +3,9 @@ this.metaClass.mixin(cucumber.api.groovy.EN)
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-
+import deploydb.ModelLoader
+import deploydb.models.Environment
+import deploydb.registry.ModelRegistry
 import org.joda.time.DateTime
 
 import deploydb.WebhookManager
@@ -17,6 +19,24 @@ Given(~/^the webhooks configuration:$/) { String configBody ->
         requestWebhookObject.setConfiguredUriPath(path)
         webhookManager.loadConfigurationFromString(configBody)
    }
+}
+
+Given(~/^an environment webhook configuration named "(.*?)":$/) {String envIdent, String configBody ->
+
+    String path = configBody.split("-",2)[1].trim().toURI().getPath()
+
+    withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
+        requestWebhookObject.setConfiguredUriPath(path)
+    }
+
+    withEnvironmentRegistry { ModelRegistry<Environment> environmentRegistry ->
+        ModelLoader<Environment> environmentLoader = new ModelLoader<>(Environment.class)
+        Environment a = environmentLoader.loadFromString(configBody)
+        a.ident = envIdent
+        environmentRegistry.put(envIdent, a)
+    }
+
+
 }
 
 When (~/^I POST to "(.*?)" with an artifact/) { String path ->

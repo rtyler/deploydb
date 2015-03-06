@@ -66,18 +66,25 @@ class WebhookManager implements Managed {
         logger.info("${runnerThread} stopped")
     }
 
-    boolean createDeploymentWebhook(WebhookModelMapper webhookModelMapper, String eventType)  {
-
-        /**
-         *  if global webhook is not defined just return true, there is nothing to do here
+    boolean sendDeploymentWebhook( String eventType, Webhook environmentWebhook,
+                                   WebhookModelMapper webhookModelMapper) {
+        /*
+         *  Initialize the list for URL's configured in webhooks
          */
-        if (webhook.deployment == null) {
-            return true
+        List<String> eventUrlList = []
+
+        /*
+         * Get all the configured webhooks - global + environment
+         */
+        if (environmentWebhook.deployment != null ) {
+            eventUrlList = getMemberOfObject(environmentWebhook.deployment, eventType)
+        }
+        if (webhook.deployment != null) {
+            eventUrlList += getMemberOfObject(webhook.deployment, eventType)
         }
         /*
-         * Need to iterate over the deployment webhooks
+         * Iterate over URL and send the webhook request
          */
-        List<String> eventUrlList = getMemberOfObject(webhook.deployment, eventType)
 
         eventUrlList.each() { urlName ->
             HookRequest hookRequest = new HookRequest(urlName,

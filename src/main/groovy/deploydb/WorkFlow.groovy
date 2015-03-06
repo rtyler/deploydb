@@ -1,5 +1,6 @@
 package deploydb
 
+import deploydb.models.Webhook.Webhook
 
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
@@ -113,7 +114,7 @@ public class WorkFlow {
                 throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
             }
 
-            /* Get all promotions in service & pipelines. Using a Set; thus ignoring he duplicates */
+            /* Get all promotions in service & pipelines. Using a Set; thus ignoring the duplicates */
             List<models.Promotion> promotions = service.getPromotions().collect() { String promotionIdent ->
                 this.promotionRegistry.get(promotionIdent)
             }
@@ -188,7 +189,9 @@ public class WorkFlow {
                 deployment.artifact, deployment.serviceIdent, deployment.environmentIdent, deployment.createdAt,
                 deployment.status)
 
-        if (deployDBApp.webhooksManager.createDeploymentWebhook(deploymentWebhookMapper, "created") == false) {
+        Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent).webhooks
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
+                deploymentWebhookMapper) == false) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
