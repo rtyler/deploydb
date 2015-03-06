@@ -217,7 +217,25 @@ public class WorkFlow {
         /* Update deployment status */
         deployment.status = Status.STARTED
 
-        /* FIXME - Invoke deployment started webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
+                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("started", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
     }
 
     /**
