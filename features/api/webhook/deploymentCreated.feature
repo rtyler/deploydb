@@ -1,8 +1,8 @@
 Feature: Webhook invocation  when deployment is created
 
-  @freezetime
+  @freezetime @webhook
   Scenario: Webhooks should be invoked when artifacts are created
-    Given the webhooks configuration:
+    Given a webhook "created" configuration:
     """
       deployment:
         created:
@@ -13,7 +13,6 @@ Feature: Webhook invocation  when deployment is created
     And a pipeline is configured
     And a service is configured
     When I POST to "/api/artifacts" with an artifact
-    And Wait for 1 seconds
     Then the webhook should be invoked with the JSON:
     """
       {
@@ -33,9 +32,9 @@ Feature: Webhook invocation  when deployment is created
       }
     """
 
-  @freezetime
+  @freezetime @webhook
   Scenario: Environment webhooks should be invoked when artifacts are created
-    Given an environment webhook configuration named "integ":
+    Given an environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -47,7 +46,6 @@ Feature: Webhook invocation  when deployment is created
     And a pipeline is configured
     And a service is configured
     When I POST to "/api/artifacts" with an artifact
-    And Wait for 1 seconds
     Then the webhook should be invoked with the JSON:
     """
       {

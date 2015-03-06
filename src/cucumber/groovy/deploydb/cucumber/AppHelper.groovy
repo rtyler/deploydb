@@ -1,5 +1,8 @@
 package deploydb.cucumber
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.JsonToken
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import deploydb.DeployDBApp
 import webhookTestServer.webhookTestServerApp
 
@@ -159,6 +162,42 @@ class AppHelper {
 
     Response deleteFromPath(String path) {
         return this.makeRequestToPath(path, 'DELETE', null).invoke()
+    }
+
+    /**
+     * get the path from yaml config body
+     */
+    String getUrlPathFromConfigBody(String configBody, String eventType) {
+        YAMLFactory factory = new YAMLFactory()
+        JsonParser jParser = factory.createJsonParser(configBody)
+        String url = ""
+        while (jParser.nextToken() != JsonToken.END_OBJECT) {
+
+            String fieldname = jParser.getCurrentName();
+            if ("deployment".equals(fieldname)) {
+
+                jParser.nextToken(); // current token is "[", move next
+
+                // messages is array, loop until token equal to "]"
+                while (jParser.nextToken() != JsonToken.END_ARRAY) {
+
+                    String nextFieldName = jParser.getCurrentName()
+                    if (eventType.equals(nextFieldName)) {
+                        jParser.nextToken(); // current token is "[", move next
+
+                        // messages is array, loop until token equal to "]"
+                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
+                            url = jParser.getText()
+                            break
+                        }
+                    }
+                }
+
+            }
+
+        }
+        jParser.close();
+        return url.toURI().getPath()
     }
 
     /**

@@ -188,9 +188,7 @@ public class WorkFlow {
         /*
          * Create the webhook mapper for deployment
          */
-        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment.id,
-                deployment.artifact, deployment.serviceIdent, deployment.environmentIdent, deployment.createdAt,
-                deployment.status)
+        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment)
 
         /*
          * Get the environment based webhooks for this deployment

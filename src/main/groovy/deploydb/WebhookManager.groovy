@@ -21,6 +21,11 @@ class WebhookManager implements Managed {
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
     private Webhook webhook
 
+    /*
+     * This function will be used to fetch different webhooks types
+     * stored webhook object given the name of the type - "created",
+     * "started", "completed".
+     */
     def getMemberOfObject(klass, variable) {
         return klass."$variable"
     }
@@ -80,21 +85,14 @@ class WebhookManager implements Managed {
         eventUrlList += webhook.deployment ? getMemberOfObject(webhook.deployment, eventType) : []
 
         /*
-         * Iterate over URL and send the webhook request
+         * If the URL list is non empty, iterate over URLs and send the webhook request
          */
-
-        eventUrlList.each() { urlName ->
+        eventUrlList? eventUrlList.any() { urlName ->
             HookRequest hookRequest = new HookRequest(urlName,
                     webhookModelMapper.toPayload())
 
-            /*
-             * if any one of the push request fail return false
-             */
-            if (! queue.push(hookRequest)) {
-                return false
-            }
-        }
-        return true
+            queue.push(hookRequest)
+        } : true
     }
     /**
      * Return true if the webhook thread is running

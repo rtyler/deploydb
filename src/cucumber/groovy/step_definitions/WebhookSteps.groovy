@@ -1,19 +1,25 @@
 this.metaClass.mixin(cucumber.api.groovy.EN)
 
 
+import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.ModelLoader
 import deploydb.models.Environment
 import deploydb.registry.ModelRegistry
 import org.joda.time.DateTime
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.core.JsonParser
+
+
 
 import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
 
-Given(~/^the webhooks configuration:$/) { String configBody ->
 
-    String path = configBody.split("-",2)[1].trim().toURI().getPath()
+Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBody ->
+
+    String path = getUrlPathFromConfigBody(configBody, eventType)
 
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
         requestWebhookObject.setConfiguredUriPath(path)
@@ -21,10 +27,9 @@ Given(~/^the webhooks configuration:$/) { String configBody ->
    }
 }
 
-Given(~/^an environment webhook configuration named "(.*?)":$/) {String envIdent, String configBody ->
+Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String eventType, String envIdent, String configBody ->
 
-    String path = configBody.split("-",2)[1].trim().toURI().getPath()
-
+    String path = getUrlPathFromConfigBody(configBody, eventType)
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
         requestWebhookObject.setConfiguredUriPath(path)
     }
@@ -51,6 +56,7 @@ When (~/^I POST to "(.*?)" with an artifact/) { String path ->
 }
 
 Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessageBody ->
+    sleep(1000)
     withRequestWebhookObject { RequestWebhookObject requestWebhookObject ->
         ObjectMapper mapper = new ObjectMapper()
 
@@ -68,9 +74,6 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
     }
 }
 
-And (~/^Wait for (\d+) seconds/) { int secondsToWait ->
-    sleep(secondsToWait * 1000)
-}
 
 When(~/I trigger deployment PATCH "(.*?)" with:$/) { String path ->
     response = postJsonToPath(path, requestBody)

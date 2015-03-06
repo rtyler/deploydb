@@ -33,22 +33,15 @@ class DeploymentWebhookMapper implements WebhookModelMapper{
     Status status
 
     /**
-     *  Constructor with all the arguments
-     * @param id Identity of the deployment
-     * @param artifact Deployed artifact
-     * @param service Service that this artifact is part of
-     * @param environment Environment that this deployment is in now
-     * @param createdAt Deployment create time
-     * @param status Status of the Deployment
+     *  Constructor that takes the deployment argument
      */
-    DeploymentWebhookMapper(Long id, Artifact artifact, String service,
-                            String environment, String createdAt, Status status){
-        this.id = id
-        this.artifact = artifact
-        this.service = service
-        this.environment = environment
-        this.createdAt = createdAt
-        this.status = status
+    DeploymentWebhookMapper(deploydb.models.Deployment deployment){
+        this.id = deployment.id
+        this.artifact = deployment.artifact
+        this.service = deployment.serviceIdent
+        this.environment = deployment.environmentIdent
+        this.createdAt = deployment.createdAt
+        this.status = deployment.status
     }
 
     String toPayload() {
