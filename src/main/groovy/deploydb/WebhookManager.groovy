@@ -81,7 +81,8 @@ class WebhookManager implements Managed {
         /*
          * Get all the configured webhooks - global + environment
          */
-        eventUrlList = environmentWebhook.deployment ? getMemberOfObject(environmentWebhook.deployment, eventType) : []
+        eventUrlList = environmentWebhook? environmentWebhook.deployment ?
+                getMemberOfObject(environmentWebhook.deployment, eventType) : [] : []
         eventUrlList += webhook.deployment ? getMemberOfObject(webhook.deployment, eventType) : []
 
         /*

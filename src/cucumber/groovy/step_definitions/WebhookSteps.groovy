@@ -5,12 +5,16 @@ import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.ModelLoader
+import deploydb.Status
+import deploydb.dao.ArtifactDAO
+import deploydb.dao.FlowDAO
+import deploydb.models.Artifact
+import deploydb.models.Deployment
 import deploydb.models.Environment
+import deploydb.models.Flow
+import deploydb.models.PromotionResult
 import deploydb.registry.ModelRegistry
 import org.joda.time.DateTime
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.core.JsonParser
-
 
 
 import deploydb.WebhookManager
@@ -75,6 +79,44 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
 }
 
 
-When(~/I trigger deployment PATCH "(.*?)" with:$/) { String path ->
+When(~/I trigger deployment PATCH with:$/) { String path ->
     response = postJsonToPath(path, requestBody)
+}
+
+And(~/there is a deployment in "(.*?)" state$/) { String deploymentState ->
+
+    withSession {
+
+        /**
+         * Create sample artifact
+         */
+        ArtifactDAO adao = new ArtifactDAO(sessionFactory)
+        Artifact a1 = sampleArtifact()
+        adao.persist(a1)
+
+        /**
+         * Create sample promotionResult(s)
+         */
+        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.STARTED, null)
+        WebhookManager webhookManager = new WebhookManager()
+        /**
+         * Create deployment
+         */
+        Deployment d1 = new Deployment(a1,
+                "pre-prod",
+                "faas",
+                webhookManager.getMemberOfObject(Status, deploymentState))
+        d1.addPromotionResult(p1)
+
+        /* Create a flow */
+        Flow f = new Flow(a1, "faas")
+        f.addDeployment(d1)
+
+        /**
+         * Save flow in DB, which will save the deployments & promotionResults as well
+         */
+        FlowDAO fdao = new FlowDAO(sessionFactory)
+        fdao.persist(f)
+    }
+
 }
