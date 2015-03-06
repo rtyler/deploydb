@@ -9,7 +9,6 @@ import spock.lang.*
 
 import deploydb.models.Artifact
 import deploydb.dao.ArtifactDAO
-import deploydb.WebhookManager
 
 class ArtifactResourceSpec extends Specification {
     def app = new DeployDBApp()

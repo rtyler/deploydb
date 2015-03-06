@@ -76,12 +76,9 @@ class WebhookManager implements Managed {
         /*
          * Get all the configured webhooks - global + environment
          */
-        if (environmentWebhook.deployment != null ) {
-            eventUrlList = getMemberOfObject(environmentWebhook.deployment, eventType)
-        }
-        if (webhook.deployment != null) {
-            eventUrlList += getMemberOfObject(webhook.deployment, eventType)
-        }
+        eventUrlList = environmentWebhook.deployment ? getMemberOfObject(environmentWebhook.deployment, eventType) : []
+        eventUrlList += webhook.deployment ? getMemberOfObject(webhook.deployment, eventType) : []
+
         /*
          * Iterate over URL and send the webhook request
          */
@@ -93,7 +90,7 @@ class WebhookManager implements Managed {
             /*
              * if any one of the push request fail return false
              */
-            if(! queue.push(hookRequest)) {
+            if (! queue.push(hookRequest)) {
                 return false
             }
         }

@@ -5,8 +5,6 @@ import webhookTestServer.models.RequestWebhookObject
 import webhookTestServer.models.ResponseWebhookObject
 import webhookTestServer.health.webhookTestServerHealthCheck
 
-import com.google.common.collect.ImmutableList
-
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 
@@ -15,8 +13,7 @@ import io.dropwizard.setup.Environment
  * will send appropriate responses
  */
 class webhookTestServerApp extends Application<webhookTestServerConfiguration>{
-//    private final ImmutableList models = ImmutableList.of(RequestWebhookObject, ResponseWebhookObject)
-    private RequestWebhookObject requestWebhookObject
+        private RequestWebhookObject requestWebhookObject
     private ResponseWebhookObject responseWebhookObject
 
     static void main(String[] args) throws Exception {

@@ -8,7 +8,7 @@ Feature: Webhook invocation  when deployment is created
         created:
            - http://localhost:10000/job/notify-deployment-started/build
     """
-    Given promotions are configured
+    And promotions are configured
     And an environment is configured
     And a pipeline is configured
     And a service is configured

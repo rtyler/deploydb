@@ -89,7 +89,8 @@ class AppHelper {
      * @param c (required) Closure to execute
      */
     void withWebhookManager(Closure c) {
-        c.call(this.runner.webhookManager, this.webhookRunner.getApplication().requestWebhookObject)
+        c.call(this.runner.webhookManager,
+                this.webhookRunner.getApplication().requestWebhookObject)
     }
 
     /**

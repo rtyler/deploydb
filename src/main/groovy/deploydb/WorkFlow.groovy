@@ -185,11 +185,21 @@ public class WorkFlow {
         /* Mark Deployment as ready for deploying */
         deployment.status = Status.CREATED
 
+        /*
+         * Create the webhook mapper for deployment
+         */
         DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment.id,
                 deployment.artifact, deployment.serviceIdent, deployment.environmentIdent, deployment.createdAt,
                 deployment.status)
 
+        /*
+         * Get the environment based webhooks for this deployment
+         */
         Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent).webhooks
+
+        /*
+         * Use webhook manager to send the webhook
+         */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
                 deploymentWebhookMapper) == false) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
