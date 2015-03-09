@@ -253,7 +253,24 @@ public class WorkFlow {
         /* Update promotion results status */
         deployment.getPromotionResultSet().collect() { pr -> pr.status = Status.STARTED }
 
-        /* FIXME - Invoke deployment completed webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        DeploymentWebhookMapper deploymentWebhookMapper = new DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
+                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("completed", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
     }
 
     /**
