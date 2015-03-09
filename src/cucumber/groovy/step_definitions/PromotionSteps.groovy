@@ -10,7 +10,6 @@ Given(~/^a promotion configuration name "(.*?)":$/) { String ident, String confi
         ModelLoader<Promotion> promotionLoader = new ModelLoader<>(Promotion.class)
         Promotion promotion = promotionLoader.loadFromString(configBody)
         promotion.ident = ident
-
         promotionRegistry.put(promotion.ident, promotion)
     }
 }

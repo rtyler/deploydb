@@ -40,14 +40,21 @@ class ModelLoader<T> {
     /**
      * Instantiate a new Model object by parsing contents of the input file (T) 
      *
+     * @param File, file is present in the resources directory
+     */
+    T load(File inputFile) throws Exception, ConfigurationParsingException,
+               ConfigurationValidationException {
+        return factory.build(inputFile)
+    }
+
+    /**
+     * Instantiate a new Model object by parsing contents of the input file (T)
+     *
      * @param File name, file is present in the resources directory
      */
-    T load(String filename)
-        throws Exception, ConfigurationParsingException,
-               ConfigurationValidationException {
-        File inputFile = new File(Resources.getResource(filename).toURI())
-        T model = factory.build(inputFile)
-        return model
+    T load(String filename) throws Exception, ConfigurationParsingException,
+            ConfigurationValidationException {
+        return load(new File(Resources.getResource(filename).toURI()))
     }
 
     /**
@@ -56,14 +63,12 @@ class ModelLoader<T> {
      *
      * @param Configuration content
      */
-    T loadFromString(String content)
-            throws Exception, ConfigurationParsingException,
+    T loadFromString(String content) throws Exception, ConfigurationParsingException,
                     ConfigurationValidationException {
         File tmpFile = File.createTempFile('tmp', '.yml', new File('./build/tmp/'))
         tmpFile.write(content)
-        T model = factory.build(tmpFile)
         tmpFile.deleteOnExit()
-        return model
+        return load(tmpFile)
     }
 
     /**

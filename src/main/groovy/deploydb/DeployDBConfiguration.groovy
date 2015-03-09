@@ -16,6 +16,10 @@ class DeployDBConfiguration extends Configuration {
     @Valid
     private FlywayFactory flyway = new FlywayFactory()
 
+    @Valid
+    @NotNull
+    private String configDirectory = ""
+
     @JsonProperty("database")
     DataSourceFactory getDataSourceFactory() {
         return database
@@ -34,6 +38,16 @@ class DeployDBConfiguration extends Configuration {
     @JsonProperty("flyway")
     void setFlywayFactory(FlywayFactory flywayFactory) {
         this.flyway = FlywayFactory
+    }
+
+    @JsonProperty("configDirectory")
+    String getConfigDirectory() {
+        return configDirectory
+    }
+
+    @JsonProperty("configDirectory")
+    void setConfigDirectory(String configDirectory) {
+        this.configDirectory = configDirectory
     }
 }
 

@@ -1,9 +1,13 @@
 package deploydb
 
-
+import groovy.io.FileType
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
+/* Define a new exception to break out of loop */
+class BreakLoopException extends Exception{}
 
 public class WorkFlow {
     private final DeployDBApp deployDBApp
@@ -15,21 +19,26 @@ public class WorkFlow {
     private ModelLoader<models.Environment> environmentLoader
     private ModelLoader<models.pipeline.Pipeline> pipelineLoader
     private ModelLoader<models.Service> serviceLoader
+    private ModelLoader<models.Webhook.Webhook> webhookLoader
     private dao.ArtifactDAO artifactDAO
     private dao.DeploymentDAO deploymentDAO
     private dao.FlowDAO flowDAO
+    private static final Logger logger = LoggerFactory.getLogger(WorkFlow.class)
 
     WorkFlow(DeployDBApp app) {
         this.deployDBApp = app
     }
 
-    void initialize() {
+    void initializeDb() {
         /**
          * Instantiate DAO objects
          */
         artifactDAO = new dao.ArtifactDAO(this.deployDBApp.getSessionFactory())
         deploymentDAO = new dao.DeploymentDAO(this.deployDBApp.getSessionFactory())
         flowDAO = new dao.FlowDAO(this.deployDBApp.getSessionFactory())
+    }
+
+    void initializeRegistry() {
 
         /**
          * Instantiate registries for in memory storage
@@ -46,6 +55,194 @@ public class WorkFlow {
         environmentLoader = new ModelLoader<>(models.Environment.class)
         pipelineLoader = new ModelLoader<>(models.pipeline.Pipeline.class)
         serviceLoader = new ModelLoader<>(models.Service.class)
+        webhookLoader = new ModelLoader<>(models.Webhook.Webhook.class)
+    }
+
+    /**
+     * Read configuration into each model
+     *
+     * Throws an exception if dependency between models fails
+     *
+     * @param baseConfigDirName
+     */
+    void loadConfigModels(String baseConfigDirName) {
+
+        /**
+         * Instantiate new registries for in memory storage. We will overwrite the
+         * older registries in the end
+         */
+        registry.ModelRegistry<models.Promotion> tmpPromotionRegistry =
+                new registry.ModelRegistry<models.Promotion>()
+        registry.ModelRegistry<models.Environment> tmpEnvironmentRegistry =
+                new registry.ModelRegistry<models.Environment>()
+        registry.ModelRegistry<models.pipeline.Pipeline> tmpPipelineRegistry =
+                new registry.ModelRegistry<models.pipeline.Pipeline>()
+        registry.ModelRegistry<models.Service> tmpServiceRegistry =
+                new registry.ModelRegistry<models.Service>()
+        models.Webhook.Webhook tmpWebhook
+
+        /* Load promotions */
+        String promotionsDirName = baseConfigDirName + "/promotions"
+        File promotionsDirectory = new File(promotionsDirName);
+        if (promotionsDirectory.exists() && promotionsDirectory.isDirectory()) {
+            logger.info("Loading promotions from directory: ${promotionsDirectory.getCanonicalPath()}");
+
+            /* Skip everything but yaml file */
+            promotionsDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                try {
+                    models.Promotion promotion = this.promotionLoader.load(modelFile)
+                    promotion.ident = this.promotionLoader.getIdent(modelFile.name)
+                    tmpPromotionRegistry.put(promotion.ident, promotion)
+                    logger.debug("Loaded promotions model: ${promotion.ident}")
+
+                } catch (all) {
+                    logger.info("Failed to load promotion model from ${modelFile.name}")
+                }
+            }
+        }
+
+        /* Load environments */
+        String environmentsDirName = baseConfigDirName + "/environments"
+        File environmentsDirectory = new File(environmentsDirName);
+        if (environmentsDirectory.exists() && environmentsDirectory.isDirectory()) {
+            logger.debug("Loading environments from directory: ${environmentsDirectory.getCanonicalPath()}");
+
+            /* Skip everything but yaml file */
+            environmentsDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                try {
+                    models.Environment environment = this.environmentLoader.load(modelFile)
+                    environment.ident = this.environmentLoader.getIdent(modelFile.name)
+                    tmpEnvironmentRegistry.put(environment.ident, environment)
+                    logger.debug("Loaded environments model: ${environment.ident}")
+
+                } catch (all) {
+                    logger.info("Failed to load environment model from ${modelFile.name}")
+                }
+            }
+        }
+
+        /* Load pipelines */
+        String pipelinesDirName = baseConfigDirName + "/pipelines"
+        File pipelinesDirectory = new File(pipelinesDirName);
+        if (pipelinesDirectory.exists() && pipelinesDirectory.isDirectory()) {
+            logger.debug("Loading pipelines from directory: ${pipelinesDirectory.getCanonicalPath()}");
+
+            /* Skip everything but yaml file */
+            pipelinesDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                try {
+                    models.pipeline.Pipeline pipeline = this.pipelineLoader.load(modelFile)
+                    pipeline.ident = this.pipelineLoader.getIdent(modelFile.name)
+
+                    /* Validate */
+                    pipeline.environments.each() {
+                        String environmentIdent,
+                        models.pipeline.Environment pipelineEnvironment ->
+                            /* Make sure that environments in the Pipeline are configured */
+                            if (tmpEnvironmentRegistry.get(environmentIdent) == null) {
+                                throw new IllegalArgumentException(
+                                        "Missing Environment ${environmentIdent} in Pipeline ${pipeline.ident}")
+                            }
+                            /* Make sure that promotions in the Pipeline are configured */
+                            pipelineEnvironment.promotions.each() {
+                                String pipePromotionIdent ->
+                                    if (tmpPromotionRegistry.get(pipePromotionIdent) == null) {
+                                        throw new IllegalArgumentException(
+                                                "Missing Promotion ${pipePromotionIdent} in Pipeline ${pipeline.ident}")
+                                    }
+                            }
+                    }
+
+                    /* Add to registry */
+                    tmpPipelineRegistry.put(pipeline.ident, pipeline)
+                    logger.debug("Loaded pipelines model: ${pipeline.ident}")
+                } catch (IllegalArgumentException e) {
+                    throw e /* Throw the exception again */
+                } catch (all) {
+                    logger.info("Failed to load pipeline model from ${modelFile.name}")
+                }
+            }
+        }
+
+        /* Load services */
+        String servicesDirName = baseConfigDirName + "/services"
+        File servicesDirectory = new File(servicesDirName);
+        if (servicesDirectory.exists() && servicesDirectory.isDirectory()) {
+            logger.debug("Loading services from directory: ${servicesDirectory.getCanonicalPath()}");
+
+            /* Skip everything but yaml file */
+            servicesDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                try {
+                    models.Service service = this.serviceLoader.load(modelFile)
+                    service.ident = this.serviceLoader.getIdent(modelFile.name)
+
+                    /* Validate */
+                    service.pipelines.each() { String pipelineIdent ->
+                        /* Make sure that pipelines in the Service are configured */
+                        if (tmpPipelineRegistry.get(pipelineIdent) == null) {
+                            throw new IllegalArgumentException(
+                                    "Missing pipeline ${pipelineIdent} in Service ${service.ident}")
+                        }
+                    }
+                    service.promotions.each() { String promotionIdent ->
+                        /* Make sure that promotions in the Service are configured */
+                        if (tmpPromotionRegistry.get(promotionIdent) == null) {
+                            throw new IllegalArgumentException(
+                                    "Missing promotion ${promotionIdent} in Service ${service.ident}")
+                        }
+                    }
+
+                    /* Add to registry */
+                    tmpServiceRegistry.put(service.ident, service)
+                    logger.debug("Loaded services model: ${service.ident}")
+
+                } catch (IllegalArgumentException e) {
+                    throw e /* Throw the exception again */
+                } catch (all) {
+                    logger.info("Failed to load service model from ${modelFile.name}")
+                }
+            }
+        }
+
+        /* At least one service MUST be configured for deployDb to function properly */
+        if (tmpServiceRegistry.getAll().isEmpty()) {
+            logger.info("NO SERVICES ARE CONFIGURED. DeployDB would not function properly")
+        }
+
+        /* Load webhook */
+        String webhookDirName = baseConfigDirName + "/webhook"
+        File webhookDirectory = new File(webhookDirName);
+        if (webhookDirectory.exists() && webhookDirectory.isDirectory()) {
+            logger.debug("Loading webhook from directory: ${webhookDirectory.getCanonicalPath()}");
+
+            try {
+                /* Skip everything but yaml file */
+                webhookDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                    try {
+                        tmpWebhook = this.webhookLoader.load(modelFile)
+                        logger.debug("Loaded webhooks model from: ${modelFile.name}")
+
+                        /* Now that we have found a valid webhook, we are done */
+                        throw new BreakLoopException()
+                    } catch (BreakLoopException e) {
+                        throw e
+                    } catch (all) {
+                        logger.info("Failed to load webhook model from ${modelFile.name}")
+                    }
+                }
+            } catch (BreakLoopException e) {
+                /* Nothing to do here */
+            }
+        }
+
+        /**
+         * FIXME - if NO active deployments in progress, then overwrite
+         * the model registries with new ones
+         */
+        promotionRegistry = tmpPromotionRegistry
+        environmentRegistry = tmpEnvironmentRegistry
+        pipelineRegistry = tmpPipelineRegistry
+        serviceRegistry = tmpServiceRegistry
+        //deployDBApp.webhooks.webhook = tmpWebhook
     }
 
     /**
@@ -58,89 +255,96 @@ public class WorkFlow {
      */
     void triggerArtifactCreated(models.Artifact artifact) {
 
-        /* Lookup Service */
-        models.Service service = this.serviceRegistry.getAll().find() { models.Service service ->
+        /* Lookup Service(s) */
+        List<models.Service> services = this.serviceRegistry.getAll().findAll() { models.Service service ->
             service.artifacts.find() { String artifactIdent ->
                 artifactIdent == (artifact.group + ":" + artifact.name)
             }
         }
-        if (service == null) {
-            /* Artifact is left hanging */
+        if (services.flatten().isEmpty() || services.flatten().contains(null)) {
+            String artifactIdent =
+            logger.info("Failed to find Service for Artifact: " +
+                         artifact.group + ":" + artifact.name +
+                        ", aborting artifact deployment")
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
 
-        /* Create a flow */
-        models.Flow flow = new models.Flow(artifact, service.ident)
+        /* For each service, create a separate flow and the following */
+        services.flatten().each() { models.Service service ->
 
-        /* Get all pipelines */
-        List<models.pipeline.Pipeline> pipelines = service.getPipelines().collect() { String pipelineIdent ->
-            this.pipelineRegistry.get(pipelineIdent)
-        }
-        if (pipelines.isEmpty() || pipelines.contains(null)) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND)
-        }
+            /* Create a flow */
+            models.Flow flow = new models.Flow(artifact, service.ident)
 
-        /* Get all environments */
-        List<deploydb.models.Environment> environments = []
-        List<models.Promotion> pipelinePromotions = []
-        pipelines.each() {
-            models.pipeline.Pipeline pipeline ->
-                pipeline.environments.each() {
-                    String environmentIdent,
-                    models.pipeline.Environment pipelineEnvironment ->
-                        environments.add(this.environmentRegistry.get(environmentIdent))
-                        pipelinePromotions = pipelineEnvironment.promotions.collect() {
-                            String pipePromotionIdent ->
-                                this.promotionRegistry.get(pipePromotionIdent)
-                        }
-                }
-        }
-        if (environments.flatten().isEmpty() || environments.flatten().contains(null)) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND)
-        }
-
-        /* For all environments in pipeline, create deployments */
-        environments.each() { models.Environment environment ->
-
-            /* Create deployment */
-            models.Deployment deployment = new models.Deployment(artifact,
-                    environment.ident, service.ident, Status.NOT_STARTED)
-            if (deployment == null) {
-                throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
+            /* Get all pipelines */
+            List<models.pipeline.Pipeline> pipelines = service.getPipelines().collect() { String pipelineIdent ->
+                this.pipelineRegistry.get(pipelineIdent)
             }
-            if (!flow.addDeployment(deployment)) {
-                throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
-            }
-
-            /* Get all promotions in service & pipelines. Using a Set; thus ignoring he duplicates */
-            List<models.Promotion> promotions = service.getPromotions().collect() { String promotionIdent ->
-                this.promotionRegistry.get(promotionIdent)
-            }
-
-            promotions.addAll(pipelinePromotions)
-            if (promotions.isEmpty() || promotions.contains(null)) {
+            if (pipelines.isEmpty() || pipelines.contains(null)) {
                 throw new WebApplicationException(Response.Status.NOT_FOUND)
             }
 
-            /* Create promotion result and add to deployment */
-            promotions.unique().each() { promotion ->
-                models.PromotionResult promotionResult =
-                        new models.PromotionResult(promotion.ident, Status.NOT_STARTED, null)
-                if (promotionResult == null) {
-                    throw new WebApplicationException(Response.Status.NOT_FOUND)
-                }
-                if (!deployment.addPromotionResult(promotionResult)) {
+            /* Get all environments */
+            List<deploydb.models.Environment> environments = []
+            List<models.pipeline.Pipeline> pipelinePromotions = []
+            pipelines.each() {
+                models.pipeline.Pipeline pipeline ->
+                    pipeline.environments.each() {
+                        String environmentIdent,
+                        models.pipeline.Environment pipelineEnvironment ->
+                            environments.add(this.environmentRegistry.get(environmentIdent))
+                            pipelinePromotions = pipelineEnvironment.promotions.collect() {
+                                String pipePromotionIdent ->
+                                    this.promotionRegistry.get(pipePromotionIdent)
+                            }
+                    }
+            }
+            if (environments.flatten().isEmpty() || environments.flatten().contains(null)) {
+                throw new WebApplicationException(Response.Status.NOT_FOUND)
+            }
+
+            /* For all environments in pipeline, create deployments */
+            environments.each() { models.Environment environment ->
+
+                /* Create deployment */
+                models.Deployment deployment = new models.Deployment(artifact,
+                        environment.ident, service.ident, Status.NOT_STARTED)
+                if (deployment == null) {
                     throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
                 }
+                if (!flow.addDeployment(deployment)) {
+                    throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
+                }
+
+                /* Get all promotions in service & pipelines. Using a Set; thus ignoring he duplicates */
+                List<models.Promotion> promotions = service.getPromotions().collect() { String promotionIdent ->
+                    this.promotionRegistry.get(promotionIdent)
+                }
+
+                promotions.addAll(pipelinePromotions)
+                if (promotions.isEmpty() || promotions.contains(null)) {
+                    throw new WebApplicationException(Response.Status.NOT_FOUND)
+                }
+
+                /* Create promotion result and add to deployment */
+                promotions.unique().each() { promotion ->
+                    models.PromotionResult promotionResult =
+                            new models.PromotionResult(promotion.ident, Status.NOT_STARTED, null)
+                    if (promotionResult == null) {
+                        throw new WebApplicationException(Response.Status.NOT_FOUND)
+                    }
+                    if (!deployment.addPromotionResult(promotionResult)) {
+                        throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
+                    }
+                }
             }
+
+            /* Persist the artifact and flow/deployment/promotionResult, with one whammy */
+            this.artifactDAO.persist(artifact)
+            this.flowDAO.persist(flow)
+
+            /* Get deployment from the flow and start it */
+            triggerDeploymentCreated(flow)
         }
-
-        /* Persist the artifact and flow/deployment/promotionResult, with one whammy */
-        this.artifactDAO.persist(artifact)
-        this.flowDAO.persist(flow)
-
-        /* Get deployment from the flow and start it */
-        triggerDeploymentCreated(flow)
     }
 
     /**

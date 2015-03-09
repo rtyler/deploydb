@@ -2,6 +2,12 @@ database:
   driverClass: org.h2.Driver
   user: nobody
   url: "jdbc:h2:mem:"
+
+# DeployDB base configuration directory (cannonical path)
+# YAML configuration files for models - services, environments, pipelines,
+# webhooks and promotions - should be stored in respective sub-directories
+configDirectory: config
+
 logging:
   level: INFO
   loggers:
