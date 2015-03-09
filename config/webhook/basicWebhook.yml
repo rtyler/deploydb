@@ -1,0 +1,11 @@
+deployment:
+  created:
+     - http://localhost:10000/job/notify-deployment-created/build
+  started:
+     - http://localhost:10000/job/notify-deployment-started/build
+  completed:
+     - http://localhost:10000/job/notify-deployment-completed1/build
+     - http://localhost:10000/job/notify-deployment-completed2/build
+promotion:
+  completed:
+     - http://localhost:10000/job/notify-promotion-completed/build

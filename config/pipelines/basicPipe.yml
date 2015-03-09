@@ -1,0 +1,5 @@
+description: "Basic pipeline"
+environments:
+     basicEnv:
+       promotions:
+          - basicPromo
