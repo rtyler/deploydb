@@ -23,24 +23,34 @@ import webhookTestServer.models.RequestWebhookObject
 
 Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBody ->
 
-    String path = getUrlPathFromConfigBody(configBody, eventType)
+    List<String> paths = getUrlPathFromWebhookConfigBody(configBody, eventType)
 
+    /*
+     * Our request object deals with only one webhook request at a time, once we allow
+     * multiple requests, then we can save the array in the RequestWebhook object
+     */
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
-        requestWebhookObject.setConfiguredUriPath(path)
+        requestWebhookObject.setConfiguredUriPath(paths?paths[0] : "")
         webhookManager.loadConfigurationFromString(configBody)
    }
 }
 
-Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String eventType, String envIdent, String configBody ->
+Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String eventType,
+                                                                         String envIdent, String configBody ->
 
-    String path = getUrlPathFromConfigBody(configBody, eventType)
-    withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
-        requestWebhookObject.setConfiguredUriPath(path)
+    ModelLoader<Environment> environmentLoader = new ModelLoader<>(Environment.class)
+    Environment a = environmentLoader.loadFromString(configBody)
+
+    List<String> paths = getUrlPathFromWebhook(a.webhooks, configBody, eventType)
+
+    /*
+    * Our request object deals with only one webhook request at a time, once we allow
+    * multiple requests, then we can save the array in the RequestWebhook object
+    */   withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
+        requestWebhookObject.setConfiguredUriPath(paths?paths[0] : "")
     }
 
     withEnvironmentRegistry { ModelRegistry<Environment> environmentRegistry ->
-        ModelLoader<Environment> environmentLoader = new ModelLoader<>(Environment.class)
-        Environment a = environmentLoader.loadFromString(configBody)
         a.ident = envIdent
         environmentRegistry.put(envIdent, a)
     }

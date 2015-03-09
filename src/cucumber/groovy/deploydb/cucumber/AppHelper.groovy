@@ -1,9 +1,8 @@
 package deploydb.cucumber
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.core.JsonToken
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import deploydb.DeployDBApp
+import deploydb.ModelLoader
+import deploydb.models.Webhook.Webhook
 import webhookTestServer.webhookTestServerApp
 
 import com.github.mustachejava.DefaultMustacheFactory
@@ -20,9 +19,6 @@ import javax.ws.rs.client.Entity
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.context.internal.ManagedSessionContext
-
-import deploydb.models.Service
-import deploydb.models.Environment
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -164,40 +160,24 @@ class AppHelper {
         return this.makeRequestToPath(path, 'DELETE', null).invoke()
     }
 
-    /**
-     * get the path from yaml config body
+    /*
+     *  Get url path from webhook config body
      */
-    String getUrlPathFromConfigBody(String configBody, String eventType) {
-        YAMLFactory factory = new YAMLFactory()
-        JsonParser jParser = factory.createJsonParser(configBody)
-        String url = ""
-        while (jParser.nextToken() != JsonToken.END_OBJECT) {
+    List<String> getUrlPathFromWebhookConfigBody(String configBody, String eventType) {
+        ModelLoader<Webhook> webhookLoader = new
+                ModelLoader<Webhook>(Webhook.class)
+        Webhook webhook = webhookLoader.loadFromString(configBody)
+        return getUrlPathFromWebhook(webhook, configBody, eventType)
+    }
 
-            String fieldname = jParser.getCurrentName();
-            if ("deployment".equals(fieldname)) {
+    /**
+     * Get url paths from webhook
+     */
+    List<String> getUrlPathFromWebhook(Webhook webhook, String configBody, String eventType) {
 
-                jParser.nextToken(); // current token is "[", move next
+        List<String> eventUrlList = this.runner.webhookManager.getMemberOfObject(webhook.deployment, eventType)
 
-                // messages is array, loop until token equal to "]"
-                while (jParser.nextToken() != JsonToken.END_ARRAY) {
-
-                    String nextFieldName = jParser.getCurrentName()
-                    if (eventType.equals(nextFieldName)) {
-                        jParser.nextToken(); // current token is "[", move next
-
-                        // messages is array, loop until token equal to "]"
-                        while (jParser.nextToken() != JsonToken.END_ARRAY) {
-                            url = jParser.getText()
-                            break
-                        }
-                    }
-                }
-
-            }
-
-        }
-        jParser.close();
-        return url.toURI().getPath()
+        return eventUrlList.collect{ it.toURI().getPath() }
     }
 
     /**
