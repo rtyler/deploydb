@@ -29,7 +29,7 @@ public class WorkFlow {
         this.deployDBApp = app
     }
 
-    void initializeDb() {
+    void initializeDao() {
         /**
          * Instantiate DAO objects
          */
@@ -99,7 +99,7 @@ public class WorkFlow {
                 new registry.ModelRegistry<models.pipeline.Pipeline>()
         registry.ModelRegistry<models.Service> tmpServiceRegistry =
                 new registry.ModelRegistry<models.Service>()
-        models.Webhook.Webhook tmpWebhook
+        models.Webhook.Webhook tmpWebhook = null
 
         /* Load promotions */
         String promotionsDirName = baseConfigDirName + "/promotions"

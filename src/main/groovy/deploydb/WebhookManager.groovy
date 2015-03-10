@@ -19,7 +19,7 @@ class WebhookManager implements Managed {
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
-    private Webhook webhook
+    private Webhook webhook = null
 
     /*
      * This function will be used to fetch different webhooks types
@@ -32,11 +32,6 @@ class WebhookManager implements Managed {
 
     WebhookManager( ) {
         runner = new SequentialHookRunner(this.queue)
-
-        /**
-         * Initialize the webhook object
-         */
-        webhook = new Webhook()
 
         runnerThread = new Thread({
             runner.run()
@@ -71,7 +66,10 @@ class WebhookManager implements Managed {
             eventUrlList = environmentWebhook.deployment ?
                     getMemberOfObject(environmentWebhook.deployment, eventType) : []
         }
-        eventUrlList += webhook.deployment ? getMemberOfObject(webhook.deployment, eventType) : []
+        if (webhook != null) {
+            eventUrlList += webhook.deployment ?
+                    getMemberOfObject(webhook.deployment, eventType) : []
+        }
 
         /*
          * If the URL list is non empty, iterate over URLs and send the webhook request

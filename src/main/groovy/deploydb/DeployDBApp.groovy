@@ -11,6 +11,7 @@ import io.dropwizard.hibernate.SessionFactoryFactory
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import io.dropwizard.views.ViewBundle
+import org.flywaydb.core.Flyway
 import org.hibernate.SessionFactory
 import org.joda.time.DateTimeZone
 import org.slf4j.Logger
@@ -88,10 +89,18 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
+        /* Execute migrations */
+        Flyway flyway = new Flyway()
+        flyway.setDataSource(configuration.getDataSourceFactory().getUrl(),
+                             configuration.getDataSourceFactory().getUser(),
+                             configuration.getDataSourceFactory().getPassword());
+        flyway.clean()
+        flyway.migrate()
+
         /**
          * Initialize the workflow object
          */
-        workFlow.initializeDb()
+        workFlow.initializeDao()
         workFlow.initializeRegistry()
 
         /**
