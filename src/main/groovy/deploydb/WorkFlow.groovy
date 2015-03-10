@@ -58,6 +58,26 @@ public class WorkFlow {
         webhookLoader = new ModelLoader<>(models.Webhook.Webhook.class)
     }
 
+    void loadConfigModelsCommon(String modelDirName, Closure c) {
+        File modelDirectory = new File(modelDirName);
+        if (modelDirectory.exists() && modelDirectory.isDirectory()) {
+            logger.debug("Loading model from directory: ${modelDirectory.getCanonicalPath()}");
+
+            /* Skip everything but yaml file */
+            modelDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
+                try {
+                    c.call(modelFile)
+                } catch (BreakLoopException e) {
+                    throw e
+                } catch (IllegalArgumentException e) {
+                    throw e /* Throw the exception again */
+                } catch (all) {
+                    logger.info("Failed to load model from ${modelFile.name}")
+                }
+            }
+        }
+    }
+
     /**
      * Read configuration into each model
      *
@@ -83,124 +103,77 @@ public class WorkFlow {
 
         /* Load promotions */
         String promotionsDirName = baseConfigDirName + "/promotions"
-        File promotionsDirectory = new File(promotionsDirName);
-        if (promotionsDirectory.exists() && promotionsDirectory.isDirectory()) {
-            logger.info("Loading promotions from directory: ${promotionsDirectory.getCanonicalPath()}");
-
-            /* Skip everything but yaml file */
-            promotionsDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
-                try {
-                    models.Promotion promotion = this.promotionLoader.load(modelFile)
-                    promotion.ident = this.promotionLoader.getIdent(modelFile.name)
-                    tmpPromotionRegistry.put(promotion.ident, promotion)
-                    logger.debug("Loaded promotions model: ${promotion.ident}")
-
-                } catch (all) {
-                    logger.info("Failed to load promotion model from ${modelFile.name}")
-                }
-            }
+        loadConfigModelsCommon(promotionsDirName) { File modelFile ->
+            models.Promotion promotion = this.promotionLoader.load(modelFile)
+            promotion.ident = this.promotionLoader.getIdent(modelFile.name)
+            tmpPromotionRegistry.put(promotion.ident, promotion)
+            logger.debug("Loaded promotions model: ${promotion.ident}")
         }
 
         /* Load environments */
         String environmentsDirName = baseConfigDirName + "/environments"
-        File environmentsDirectory = new File(environmentsDirName);
-        if (environmentsDirectory.exists() && environmentsDirectory.isDirectory()) {
-            logger.debug("Loading environments from directory: ${environmentsDirectory.getCanonicalPath()}");
-
-            /* Skip everything but yaml file */
-            environmentsDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
-                try {
-                    models.Environment environment = this.environmentLoader.load(modelFile)
-                    environment.ident = this.environmentLoader.getIdent(modelFile.name)
-                    tmpEnvironmentRegistry.put(environment.ident, environment)
-                    logger.debug("Loaded environments model: ${environment.ident}")
-
-                } catch (all) {
-                    logger.info("Failed to load environment model from ${modelFile.name}")
-                }
-            }
+        loadConfigModelsCommon(environmentsDirName) { File modelFile ->
+            models.Environment environment = this.environmentLoader.load(modelFile)
+            environment.ident = this.environmentLoader.getIdent(modelFile.name)
+            tmpEnvironmentRegistry.put(environment.ident, environment)
+            logger.debug("Loaded environments model: ${environment.ident}")
         }
 
         /* Load pipelines */
         String pipelinesDirName = baseConfigDirName + "/pipelines"
-        File pipelinesDirectory = new File(pipelinesDirName);
-        if (pipelinesDirectory.exists() && pipelinesDirectory.isDirectory()) {
-            logger.debug("Loading pipelines from directory: ${pipelinesDirectory.getCanonicalPath()}");
+        loadConfigModelsCommon(pipelinesDirName) { File modelFile ->
+            models.pipeline.Pipeline pipeline = this.pipelineLoader.load(modelFile)
+            pipeline.ident = this.pipelineLoader.getIdent(modelFile.name)
 
-            /* Skip everything but yaml file */
-            pipelinesDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
-                try {
-                    models.pipeline.Pipeline pipeline = this.pipelineLoader.load(modelFile)
-                    pipeline.ident = this.pipelineLoader.getIdent(modelFile.name)
-
-                    /* Validate */
-                    pipeline.environments.each() {
-                        String environmentIdent,
-                        models.pipeline.Environment pipelineEnvironment ->
-                            /* Make sure that environments in the Pipeline are configured */
-                            if (tmpEnvironmentRegistry.get(environmentIdent) == null) {
+            /* Validate */
+            pipeline.environments.each() {
+                String environmentIdent,
+                models.pipeline.Environment pipelineEnvironment ->
+                    /* Make sure that environments in the Pipeline are configured */
+                    if (tmpEnvironmentRegistry.get(environmentIdent) == null) {
+                        throw new IllegalArgumentException(
+                                "Missing Environment ${environmentIdent} in Pipeline ${pipeline.ident}")
+                    }
+                    /* Make sure that promotions in the Pipeline are configured */
+                    pipelineEnvironment.promotions.each() {
+                        String pipePromotionIdent ->
+                            if (tmpPromotionRegistry.get(pipePromotionIdent) == null) {
                                 throw new IllegalArgumentException(
-                                        "Missing Environment ${environmentIdent} in Pipeline ${pipeline.ident}")
-                            }
-                            /* Make sure that promotions in the Pipeline are configured */
-                            pipelineEnvironment.promotions.each() {
-                                String pipePromotionIdent ->
-                                    if (tmpPromotionRegistry.get(pipePromotionIdent) == null) {
-                                        throw new IllegalArgumentException(
-                                                "Missing Promotion ${pipePromotionIdent} in Pipeline ${pipeline.ident}")
-                                    }
+                                        "Missing Promotion ${pipePromotionIdent} in Pipeline ${pipeline.ident}")
                             }
                     }
-
-                    /* Add to registry */
-                    tmpPipelineRegistry.put(pipeline.ident, pipeline)
-                    logger.debug("Loaded pipelines model: ${pipeline.ident}")
-                } catch (IllegalArgumentException e) {
-                    throw e /* Throw the exception again */
-                } catch (all) {
-                    logger.info("Failed to load pipeline model from ${modelFile.name}")
-                }
             }
+
+            /* Add to registry */
+            tmpPipelineRegistry.put(pipeline.ident, pipeline)
+            logger.debug("Loaded pipelines model: ${pipeline.ident}")
         }
 
         /* Load services */
         String servicesDirName = baseConfigDirName + "/services"
-        File servicesDirectory = new File(servicesDirName);
-        if (servicesDirectory.exists() && servicesDirectory.isDirectory()) {
-            logger.debug("Loading services from directory: ${servicesDirectory.getCanonicalPath()}");
+        loadConfigModelsCommon(servicesDirName) { File modelFile ->
+            models.Service service = this.serviceLoader.load(modelFile)
+            service.ident = this.serviceLoader.getIdent(modelFile.name)
 
-            /* Skip everything but yaml file */
-            servicesDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
-                try {
-                    models.Service service = this.serviceLoader.load(modelFile)
-                    service.ident = this.serviceLoader.getIdent(modelFile.name)
-
-                    /* Validate */
-                    service.pipelines.each() { String pipelineIdent ->
-                        /* Make sure that pipelines in the Service are configured */
-                        if (tmpPipelineRegistry.get(pipelineIdent) == null) {
-                            throw new IllegalArgumentException(
-                                    "Missing pipeline ${pipelineIdent} in Service ${service.ident}")
-                        }
-                    }
-                    service.promotions.each() { String promotionIdent ->
-                        /* Make sure that promotions in the Service are configured */
-                        if (tmpPromotionRegistry.get(promotionIdent) == null) {
-                            throw new IllegalArgumentException(
-                                    "Missing promotion ${promotionIdent} in Service ${service.ident}")
-                        }
-                    }
-
-                    /* Add to registry */
-                    tmpServiceRegistry.put(service.ident, service)
-                    logger.debug("Loaded services model: ${service.ident}")
-
-                } catch (IllegalArgumentException e) {
-                    throw e /* Throw the exception again */
-                } catch (all) {
-                    logger.info("Failed to load service model from ${modelFile.name}")
+            /* Validate */
+            service.pipelines.each() { String pipelineIdent ->
+                /* Make sure that pipelines in the Service are configured */
+                if (tmpPipelineRegistry.get(pipelineIdent) == null) {
+                    throw new IllegalArgumentException(
+                            "Missing pipeline ${pipelineIdent} in Service ${service.ident}")
                 }
             }
+            service.promotions.each() { String promotionIdent ->
+                /* Make sure that promotions in the Service are configured */
+                if (tmpPromotionRegistry.get(promotionIdent) == null) {
+                    throw new IllegalArgumentException(
+                            "Missing promotion ${promotionIdent} in Service ${service.ident}")
+                }
+            }
+
+            /* Add to registry */
+            tmpServiceRegistry.put(service.ident, service)
+            logger.debug("Loaded services model: ${service.ident}")
         }
 
         /* At least one service MUST be configured for deployDb to function properly */
@@ -210,33 +183,21 @@ public class WorkFlow {
 
         /* Load webhook */
         String webhookDirName = baseConfigDirName + "/webhook"
-        File webhookDirectory = new File(webhookDirName);
-        if (webhookDirectory.exists() && webhookDirectory.isDirectory()) {
-            logger.debug("Loading webhook from directory: ${webhookDirectory.getCanonicalPath()}");
+        try {
+            loadConfigModelsCommon(webhookDirName) { File modelFile ->
 
-            try {
-                /* Skip everything but yaml file */
-                webhookDirectory.eachFileMatch(FileType.FILES, ~/^.*?\.yml/) { File modelFile ->
-                    try {
-                        tmpWebhook = this.webhookLoader.load(modelFile)
-                        logger.debug("Loaded webhooks model from: ${modelFile.name}")
+                tmpWebhook = this.webhookLoader.load(modelFile)
+                logger.debug("Loaded webhooks model from: ${modelFile.name}")
 
-                        /* Now that we have found a valid webhook, we are done */
-                        throw new BreakLoopException()
-                    } catch (BreakLoopException e) {
-                        throw e
-                    } catch (all) {
-                        logger.info("Failed to load webhook model from ${modelFile.name}")
-                    }
-                }
-            } catch (BreakLoopException e) {
-                /* Nothing to do here */
+                /* Now that we have found a valid webhook, we are done */
+                throw new BreakLoopException()
             }
+        } catch (BreakLoopException e) {
+            /* Nothing to do here */
         }
 
         /**
-         * FIXME - if NO active deployments in progress, then overwrite
-         * the model registries with new ones
+         * Overwrite the model registries with new ones
          */
         promotionRegistry = tmpPromotionRegistry
         environmentRegistry = tmpEnvironmentRegistry

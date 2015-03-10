@@ -99,7 +99,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         File baseConfigDirectory = new File(configuration.configDirectory);
         if (baseConfigDirectory.exists() && baseConfigDirectory.isDirectory()) {
-            logger.debug("Loading models from directory: ${baseConfigDirectory.getCanonicalPath()}")
+            logger.info("Loading models from directory: ${baseConfigDirectory.getCanonicalPath()}")
             try {
                 workFlow.loadConfigModels(configuration.configDirectory)
             } catch (IllegalArgumentException e) {

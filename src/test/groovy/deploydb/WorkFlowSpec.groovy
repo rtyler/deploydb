@@ -126,11 +126,11 @@ promotion:
             webhookDir.mkdirs()
         }
 
-        File webhookFile = new File(webhookDir, "basicPromo.yml")
+        File webhookFile = new File(webhookDir, "basicWebhook.yml")
         webhookFile.write(fileContents)
     }
 
-    def "Load entire config and make sure loadConfigModel passes"() {
+    def "Load entire config from a directory and make sure it passes"() {
         given:
         createPromotionConfigFile()
         createEnvironmentConfigFile()
