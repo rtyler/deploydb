@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.WebhookModelMapper
 import deploydb.models.Artifact
 import deploydb.Status
+import deploydb.models.PromotionResult
 
 import javax.persistence.Entity
 
@@ -15,22 +16,24 @@ import javax.persistence.Entity
 class DeploymentWebhookMapper implements WebhookModelMapper{
 
     @JsonProperty
-    Long id
+    protected Long id
 
     @JsonProperty
-    Artifact artifact
+    protected Artifact artifact
 
     @JsonProperty
-    String service
+    protected String service
 
     @JsonProperty
-    String environment
+    protected String environment
 
     @JsonProperty
-    String createdAt
+    protected String createdAt
 
     @JsonProperty
-    Status status
+    protected Status status
+
+    DeploymentWebhookMapper() { }
 
     /**
      *  Constructor that takes the deployment argument
@@ -49,6 +52,41 @@ class DeploymentWebhookMapper implements WebhookModelMapper{
         return mapper.writeValueAsString(this) ;
     }
 }
+
+class DeploymentPromotionWebhookMapper extends DeploymentWebhookMapper{
+
+    /**
+     *  Promotion result for webhook mapper
+     */
+    @JsonProperty
+    PromotionResult promotionResult
+
+    /**
+     * Default constructor
+     */
+    DeploymentPromotionWebhookMapper() { }
+    /**
+     *
+     * @param deployment Deployment to map for the webhook
+     * @param promotionResult Promotion result to map for the webhook
+     */
+    DeploymentPromotionWebhookMapper(deploydb.models.Deployment deployment,
+                            PromotionResult promotionResult){
+        this.id = deployment.id
+        this.artifact = deployment.artifact
+        this.service = deployment.serviceIdent
+        this.environment = deployment.environmentIdent
+        this.createdAt = deployment.createdAt
+        this.status = Status.VERIFIED
+        this.promotionResult = promotionResult
+    }
+
+    String toPayload() {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(this) ;
+    }
+}
+
 
 /**
  *  Simple Jackson mapper class to deserialzie
