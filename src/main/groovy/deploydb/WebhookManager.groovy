@@ -33,10 +33,8 @@ class WebhookManager implements Managed {
     WebhookManager( ) {
         runner = new SequentialHookRunner(this.queue)
 
-
-        /*
-         * Instantiate the loader to load the webhook object from
-         * parsed object
+        /**
+         * Initialize the webhook object
          */
         webhook = new Webhook()
 
@@ -45,18 +43,6 @@ class WebhookManager implements Managed {
         })
         runnerThread.name = 'WebhookManager Thread'
         logger.info("Webhook runner thread created: ${runnerThread}")
-    }
-
-    void loadConfiguration(String fileName) {
-        ModelLoader<Webhook> webhookLoader = new
-                ModelLoader<Webhook>(models.Webhook.Webhook.class)
-        webhook = webhookLoader.load(fileName)
-    }
-
-    void loadConfigurationFromString(String configData) {
-        ModelLoader<Webhook> webhookLoader = new
-            ModelLoader<Webhook>(models.Webhook.Webhook.class)
-        webhook = webhookLoader.loadFromString(configData)
     }
 
     @Override

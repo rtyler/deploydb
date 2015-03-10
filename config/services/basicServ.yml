@@ -1,0 +1,8 @@
+description: "Basic Service"
+artifacts:
+  - basic.group.1:bg1
+  - basic.group.2:bg2
+pipelines:
+  - basicPipe
+promotions:
+  - basicPromo

@@ -1,0 +1,7 @@
+description: "Basic Environment"
+webhooks:
+  deployment:
+    created:
+      - http://jenkins.example.com/job/basicEnv-deploy-created/build
+    completed:
+      - http://jenkins.example.com/job/basicEnv-deploy-completed/build

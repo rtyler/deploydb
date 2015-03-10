@@ -16,11 +16,12 @@ import org.joda.time.DateTimeZone
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+
 class DeployDBApp extends Application<DeployDBConfiguration> {
     private final ImmutableList models = ImmutableList.of(
             models.Artifact, models.Deployment,
             models.PromotionResult, models.Flow)
-    private final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
+    private static final Logger logger = LoggerFactory.getLogger(DeployDBApp.class)
     private WebhookManager webhooksManager
     private WorkFlow workFlow
     private provider.V1TypeProvider typeProvider
@@ -53,15 +54,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
             }
 
 
-    /*
-     *  Place holder, call to initialize the webhooksManager, this should
-     *  be folded into overall configuration load code
-     */
-    void initializeWebhook(String configFile)
-    {
-      webhooksManager.loadConfiguration(configFile)
-    }
-
     @Override
     public void initialize(Bootstrap<DeployDBConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle())
@@ -74,7 +66,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          * Force our default timezone to always be UTC
          */
         DateTimeZone.setDefault(DateTimeZone.UTC)
-        logger.debug("Set default timezone to UTC")
+        logger.info("Set default timezone to UTC")
 
         bootstrap.addBundle(new FlywayBundle<DeployDBConfiguration>() {
             @Override
@@ -99,7 +91,24 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         /**
          * Initialize the workflow object
          */
-        workFlow.initialize()
+        workFlow.initializeDb()
+        workFlow.initializeRegistry()
+
+        /**
+         * Load configuration models
+         */
+        File baseConfigDirectory = new File(configuration.configDirectory);
+        if (baseConfigDirectory.exists() && baseConfigDirectory.isDirectory()) {
+            logger.info("Loading models from directory: ${baseConfigDirectory.getCanonicalPath()}")
+            try {
+                workFlow.loadConfigModels(configuration.configDirectory)
+            } catch (IllegalArgumentException e) {
+                logger.error("failed to load models from directory: " +
+                        "${baseConfigDirectory.getCanonicalPath()}, error: ${e.toString()}")
+            }
+        } else {
+            logger.error("No DeployDB configuration found. DeployDB would not function properly")
+        }
 
         /**
          * webhooksManager

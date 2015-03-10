@@ -13,6 +13,7 @@ import deploydb.models.Deployment
 import deploydb.models.Environment
 import deploydb.models.Flow
 import deploydb.models.PromotionResult
+import deploydb.models.Webhook.Webhook
 import deploydb.registry.ModelRegistry
 import org.joda.time.DateTime
 
@@ -31,7 +32,8 @@ Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBo
      */
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
         requestWebhookObject.setConfiguredUriPath(paths?paths[0] : "")
-        webhookManager.loadConfigurationFromString(configBody)
+        ModelLoader<Webhook> webhookLoader = new ModelLoader<>(Webhook.class)
+        webhookManager.webhook = webhookLoader.loadFromString(configBody)
    }
 }
 
