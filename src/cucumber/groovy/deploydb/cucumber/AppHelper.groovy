@@ -1,6 +1,8 @@
 package deploydb.cucumber
 
 import deploydb.DeployDBApp
+import deploydb.ModelLoader
+import deploydb.models.Webhook.Webhook
 import webhookTestServer.webhookTestServerApp
 
 import com.github.mustachejava.DefaultMustacheFactory
@@ -17,9 +19,6 @@ import javax.ws.rs.client.Entity
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.context.internal.ManagedSessionContext
-
-import deploydb.models.Service
-import deploydb.models.Environment
 
 class AppHelper {
     private StubAppRunner runner = null
@@ -74,15 +73,34 @@ class AppHelper {
         c.call(this.runner.promotionRegistry)
     }
 
-    /**
-     *  Execute the {@link Closure} with a proper Pipeline Registry
-     *
-     * @param c (required) Closure to execute
-     */
+   /**
+    *  Execute the {@link Closure} with a proper Pipeline Registry
+    *
+    * @param c (required) Closure to execute
+    */
     void withPipelineRegistry(Closure c) {
         c.call(this.runner.pipelineRegistry)
     }
 
+    /**
+     *  Execute the {@link Closure} with a proper WebhookManager
+     *
+     * @param c (required) Closure to execute
+     */
+    void withWebhookManager(Closure c) {
+        c.call(this.runner.webhookManager,
+                this.webhookRunner.getApplication().requestWebhookObject)
+    }
+
+    /**
+     *  Execute the {@link Closure} with a proper testWebhookServer's
+     *  receivedWebhookObject
+     *
+     * @param c (required) Closure to execute
+     */
+    void withRequestWebhookObject(Closure c) {
+        c.call(this.webhookRunner.getApplication().requestWebhookObject)
+    }
 
     String processTemplate(String buffer, Map scope) {
         DefaultMustacheFactory mf = new DefaultMustacheFactory()
@@ -140,6 +158,26 @@ class AppHelper {
 
     Response deleteFromPath(String path) {
         return this.makeRequestToPath(path, 'DELETE', null).invoke()
+    }
+
+    /*
+     *  Get url path from webhook config body
+     */
+    List<String> getUrlPathFromWebhookConfigBody(String configBody, String eventType) {
+        ModelLoader<Webhook> webhookLoader = new
+                ModelLoader<Webhook>(Webhook.class)
+        Webhook webhook = webhookLoader.loadFromString(configBody)
+        return getUrlPathFromWebhook(webhook, configBody, eventType)
+    }
+
+    /**
+     * Get url paths from webhook
+     */
+    List<String> getUrlPathFromWebhook(Webhook webhook, String configBody, String eventType) {
+
+        List<String> eventUrlList = this.runner.webhookManager.getMemberOfObject(webhook.deployment, eventType)
+
+        return eventUrlList.collect{ it.toURI().getPath() }
     }
 
     /**

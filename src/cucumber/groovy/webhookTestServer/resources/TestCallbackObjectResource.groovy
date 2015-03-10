@@ -1,12 +1,16 @@
 package webhookTestServer.resources
 
-import com.codahale.metrics.annotation.Metered
+import io.dropwizard.hibernate.UnitOfWork
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import webhookTestServer.models.TestCallbackObject
+import webhookTestServer.models.RequestWebhookObject
+import webhookTestServer.models.ResponseWebhookObject
 
 import javax.servlet.http.HttpServletRequest
 import javax.ws.rs.Consumes
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Context
@@ -15,45 +19,48 @@ import javax.ws.rs.core.Response
 /**
  *
  */
+@Path("/")
 @Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class TestCallBackobjectResource {
 
     private final Logger logger = LoggerFactory.getLogger(TestCallBackobjectResource.class)
-    @Context private HttpServletRequest servletRequest
+    private final RequestWebhookObject requestWebhookObject
+    private final ResponseWebhookObject responseWebhookObject
+    private boolean validObject = false
 
-    private final TestCallbackObject callbackObjectUnderTest
+    TestCallBackobjectResource(RequestWebhookObject RequestWebhookObject,
+                               ResponseWebhookObject responseWebhookObject) {
+        this.requestWebhookObject = RequestWebhookObject
+        this.responseWebhookObject = responseWebhookObject
+    }
 
-    @Metered
-    public Response validateAndRespond(){
+    @POST
+    @Path("{subResources:.*}")
+    @UnitOfWork
+    Response createWebhookResource(@Context HttpServletRequest request, String messageBody) {
 
-        String httpMethod = this.servletRequest.getMethod()
-        String requestUri = this.servletRequest.requestURI()
-
-        logger.debug(" method %s requestUri %s", httpMethod, requestUri)
+        String requestUri = request.getRequestURI()
 
         /*
-         * If the name and payload is not valid request, then we throw BAD_REQUEST
+         * If the received request URI is not same as configured, then we throw BAD_REQUEST
          */
-        if (! callbackObjectUnderTest.validMethodAndUri(httpMethod, requestUri)){
+        if (requestWebhookObject.configuredUriPath != requestUri){
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
-
+        /*
+         * save the received message body
+         */
+        requestWebhookObject.setRequestMessageBody(messageBody)
 
         /*
          * If the payload is valid, then we respond with configured data and response code
          */
-        return Response.status(callbackObjectUnderTest.responseCode.toInteger())
-                       .entity(callbackObjectUnderTest.responseData)
-                       .sleep(callbackObjectUnderTest.delayBeforeResponseInSecs/1000)
+        this.validObject = true
+        return Response.status(responseWebhookObject.responseCode.toInteger())
+                       .entity(responseWebhookObject.responseData)
+                       .sleep(responseWebhookObject.delayBeforeResponseInSecs)
     }
-
-    /*
-     *  Empty constructor for object deserialization
-     */
-    TestCallBackobjectResource(){
-    }
-
-
 
 }

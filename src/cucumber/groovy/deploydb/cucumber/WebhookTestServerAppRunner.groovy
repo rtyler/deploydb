@@ -14,6 +14,8 @@ import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.flywaydb.core.Flyway
 import org.hibernate.SessionFactory
+import webhookTestServer.models.RequestWebhookObject
+import webhookTestServer.models.ResponseWebhookObject
 
 import javax.annotation.Nullable
 
@@ -28,6 +30,8 @@ public class WebhookTestServerAppRunner<C extends Configuration> {
     private Application<C> application
     private Environment environment
     private Server jettyServer
+    private RequestWebhookObject requestWebhookObject
+    private ResponseWebhookObject responseWebhookObject
 
     public WebhookTestServerAppRunner(Class<? extends Application<C>> applicationClass,
                          @Nullable String configPath,
@@ -76,6 +80,8 @@ public class WebhookTestServerAppRunner<C extends Configuration> {
 
             application.initialize(bootstrap)
             final ServerCommand<C> command = new ServerCommand<>(application)
+            this.requestWebhookObject = application.requestWebhookObject
+            this.responseWebhookObject = application.responseWebhookObject
 
             ImmutableMap.Builder<String, Object> file = ImmutableMap.builder()
 

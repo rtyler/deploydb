@@ -1,6 +1,6 @@
 package deploydb
 
-import deploydb.registry.ModelRegistry
+import com.github.lookout.whoas.HookRequest
 import deploydb.models.Webhook.Webhook
 
 import io.dropwizard.lifecycle.Managed
@@ -19,10 +19,25 @@ class WebhookManager implements Managed {
     private SequentialHookRunner runner
     private InMemoryQueue queue = new InMemoryQueue()
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
-    private ModelRegistry<Webhook> webhookModelRegistry
+    private Webhook webhook
 
-    WebhookManager() {
+    /*
+     * This function will be used to fetch different webhooks types
+     * stored webhook object given the name of the type - "created",
+     * "started", "completed".
+     */
+    def getMemberOfObject(klass, variable) {
+        return klass."$variable"
+    }
+
+    WebhookManager( ) {
         runner = new SequentialHookRunner(this.queue)
+
+        /**
+         * Initialize the webhook object
+         */
+        webhook = new Webhook()
+
         runnerThread = new Thread({
             runner.run()
         })
@@ -42,6 +57,32 @@ class WebhookManager implements Managed {
         logger.info("${runnerThread} stopped")
     }
 
+    boolean sendDeploymentWebhook( String eventType, Webhook environmentWebhook,
+                                   WebhookModelMapper webhookModelMapper) {
+        /*
+         *  Initialize the list for URL's configured in webhooks
+         */
+        List<String> eventUrlList = []
+
+        /*
+         * Get all the configured webhooks - global + environment
+         */
+        if (environmentWebhook != null) {
+            eventUrlList = environmentWebhook.deployment ?
+                    getMemberOfObject(environmentWebhook.deployment, eventType) : []
+        }
+        eventUrlList += webhook.deployment ? getMemberOfObject(webhook.deployment, eventType) : []
+
+        /*
+         * If the URL list is non empty, iterate over URLs and send the webhook request
+         */
+        eventUrlList? eventUrlList.any() { urlName ->
+            HookRequest hookRequest = new HookRequest(urlName,
+                    webhookModelMapper.toPayload())
+
+            queue.push(hookRequest)
+        } : true
+    }
     /**
      * Return true if the webhook thread is running
      */

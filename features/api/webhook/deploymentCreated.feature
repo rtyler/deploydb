@@ -1,14 +1,18 @@
 Feature: Webhook invocation  when deployment is created
 
-  @wip @webhook
+  @freezetime @webhook
   Scenario: Webhooks should be invoked when artifacts are created
-    Given the webhooks configuration:
+    Given a webhook "created" configuration:
     """
       deployment:
-        created: "http://{{webhook_url}}"
+        created:
+           - http://localhost:10000/job/notify-deployment-started/build
     """
-    And Given a service is configured
-    When I POST to "/api/v1/artifacts" with an artifact
+    And promotions are configured
+    And an environment is configured
+    And a pipeline is configured
+    And a service is configured
+    When I POST to "/api/artifacts" with an artifact
     Then the webhook should be invoked with the JSON:
     """
       {
@@ -16,14 +20,47 @@ Feature: Webhook invocation  when deployment is created
         "artifact" : {
           "id" : 1,
           "group" : "com.example.cucumber",
-          "name" : "cucumber-artifact",
+          "name" : "cukes",
           "version" : "1.0.1",
           "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
           "createdAt" : "{{created_timestamp}}"
         },
-        "service" : "fun as service"
-        "environment" : "dev-apha",
-        "status" : "NOTSTARTED",
+        "status" : "CREATED",
+        "service" : "faas",
+        "environment" : "integ",
+        "createdAt" : "{{created_timestamp}}"
+      }
+    """
+
+  @freezetime @webhook
+  Scenario: Environment webhooks should be invoked when artifacts are created
+    Given an environment webhook "created" configuration named "integ":
+    """
+    description: "DeployDB Primary Integration"
+    webhooks:
+      deployment:
+        created:
+          - http://localhost:10000/job/notify-deployment-started/build
+    """
+    And promotions are configured
+    And a pipeline is configured
+    And a service is configured
+    When I POST to "/api/artifacts" with an artifact
+    Then the webhook should be invoked with the JSON:
+    """
+      {
+        "id" : 1,
+        "artifact" : {
+          "id" : 1,
+          "group" : "com.example.cucumber",
+          "name" : "cukes",
+          "version" : "1.0.1",
+          "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar",
+          "createdAt" : "{{created_timestamp}}"
+        },
+        "status" : "CREATED",
+        "service" : "faas",
+        "environment" : "integ",
         "createdAt" : "{{created_timestamp}}"
       }
     """

@@ -20,6 +20,7 @@ class workFlowWithArgsSpec extends Specification {
     private WorkFlow workFlow
 
     def setup() {
+        app.webhooksManager = new WebhookManager()
         workFlow = new WorkFlow(app)
         workFlow.initializeRegistry()
     }
@@ -147,7 +148,7 @@ promotion:
         workFlow.pipelineRegistry.get("basicPipe").ident == "basicPipe"
         workFlow.serviceRegistry.getAll().size() == 1
         workFlow.serviceRegistry.get("basicServ").ident == "basicServ"
-        //workFlow.deployDBApp.webhook != null
+        workFlow.deployDBApp.webhooksManager != null
     }
 
     def "If promotion is missing, then loading pipeline in loadConfigModel throws an exception"() {

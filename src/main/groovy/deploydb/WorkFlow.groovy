@@ -242,7 +242,7 @@ public class WorkFlow {
         environmentRegistry = tmpEnvironmentRegistry
         pipelineRegistry = tmpPipelineRegistry
         serviceRegistry = tmpServiceRegistry
-        //deployDBApp.webhooks.webhook = tmpWebhook
+        deployDBApp.webhooksManager.webhook = tmpWebhook
     }
 
     /**
@@ -315,17 +315,16 @@ public class WorkFlow {
                     throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR)
                 }
 
-                /* Get all promotions in service & pipelines. Using a Set; thus ignoring he duplicates */
+                /* Get all promotions in service & pipelines */
                 List<models.Promotion> promotions = service.getPromotions().collect() { String promotionIdent ->
                     this.promotionRegistry.get(promotionIdent)
                 }
-
                 promotions.addAll(pipelinePromotions)
                 if (promotions.isEmpty() || promotions.contains(null)) {
                     throw new WebApplicationException(Response.Status.NOT_FOUND)
                 }
 
-                /* Create promotion result and add to deployment */
+                /* Create promotion result and add to deployment. Using unique() to ignore duplicates */
                 promotions.unique().each() { promotion ->
                     models.PromotionResult promotionResult =
                             new models.PromotionResult(promotion.ident, Status.NOT_STARTED, null)
@@ -387,7 +386,25 @@ public class WorkFlow {
         /* Mark Deployment as ready for deploying */
         deployment.status = Status.CREATED
 
-        /* FIXME - Invoke deployment created webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        mappers.DeploymentWebhookMapper deploymentWebhookMapper = new mappers.DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent).webhooks
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
     }
 
     /**
@@ -402,7 +419,26 @@ public class WorkFlow {
         /* Update deployment status */
         deployment.status = Status.STARTED
 
-        /* FIXME - Invoke deployment started webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        mappers.DeploymentWebhookMapper deploymentWebhookMapper =
+                new mappers.DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
+                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("started", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
     }
 
     /**
@@ -420,7 +456,25 @@ public class WorkFlow {
         /* Update promotion results status */
         deployment.getPromotionResultSet().collect() { pr -> pr.status = Status.STARTED }
 
-        /* FIXME - Invoke deployment completed webhooks */
+        /*
+         * Create the webhook mapper for deployment
+         */
+        mappers.DeploymentWebhookMapper deploymentWebhookMapper =
+                new mappers.DeploymentWebhookMapper(deployment)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
+                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendDeploymentWebhook("completed", environmentWebhook,
+                deploymentWebhookMapper) == false) {
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
     }
 
     /**
