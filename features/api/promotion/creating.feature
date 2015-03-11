@@ -4,6 +4,7 @@ Feature: Promotion Result APIs
   I should be able to add Promotion result for a Deployment in the system
 
 
+  @freezetime @wip
   Scenario: Adding a result for a Promotion associated with a Deployment
 
     Given there is a deployment
@@ -15,7 +16,17 @@ Feature: Promotion Result APIs
         "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results"
       }
     """
-    Then the response should be 204
+    Then the response should be 201
+    And the body should be JSON:
+    """
+      {
+        "id" : 1,
+        "promotion" : "jenkins-smoke",
+        "status" : "SUCCESS",
+        "infoUrl" : "http://local.lookout.com/jenkins/job-id/2/results",
+        "createdAt" : "{{created_timestamp}}"
+      }
+    """
 
 
   Scenario: Adding a result with invalid status for a Promotion associated with a Deployment
