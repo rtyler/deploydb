@@ -100,7 +100,8 @@ class WebhookManager implements Managed {
          */
         if (environmentWebhook != null) {
             eventUrlList = getMemberOfObject(environmentWebhook, webhookType) ?
-                    getMemberOfObject( getMemberOfObject(environmentWebhook, webhookType) , eventType) : []
+                    getMemberOfObject(getMemberOfObject(environmentWebhook, webhookType),
+                                      eventType) : []
         }
         if (webhook != null) {
             eventUrlList += getMemberOfObject(webhook, webhookType) ?

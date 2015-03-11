@@ -351,7 +351,8 @@ public class WorkFlow {
         /*
          * Create the webhook mapper for deployment
          */
-        mappers.DeploymentWebhookMapper deploymentWebhookMapper = new mappers.DeploymentWebhookMapper(deployment)
+        mappers.DeploymentWebhookMapper deploymentWebhookMapper =
+                new mappers.DeploymentWebhookMapper(deployment)
 
         /*
          * Get the environment based webhooks for this deployment
@@ -364,6 +365,7 @@ public class WorkFlow {
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment started ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
@@ -390,14 +392,16 @@ public class WorkFlow {
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("started", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment started ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
@@ -427,14 +431,16 @@ public class WorkFlow {
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("completed", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment completed ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
     }
@@ -465,25 +471,28 @@ public class WorkFlow {
      *
      * @param deployment
      */
-    void triggerPromotionSuccess(models.Deployment deployment, models.PromotionResult promotionResult) {
+    void triggerPromotionSuccess(models.Deployment deployment,
+                                 models.PromotionResult promotionResult) {
 
         /*
          * Create the webhook mapper for deployment
         */
-        mappers.DeploymentPromotionWebhookMapper deploymentPromotionWebhookMapper =
-                new mappers.DeploymentPromotionWebhookMapper(deployment, promotionResult)
+        mappers.PromotionWebhookMapper promotionWebhookMapper =
+                new mappers.PromotionWebhookMapper(deployment, promotionResult)
 
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendPromotionWebhook("completed", environmentWebhook,
-                deploymentPromotionWebhookMapper) == false) {
+                                                       promotionWebhookMapper) == false) {
+            logger.info("Failed to send promotion success webhook for ${promotionResult.promotion}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
@@ -520,20 +529,22 @@ public class WorkFlow {
         /*
          * Create the webhook mapper for deployment
         */
-        mappers.DeploymentPromotionWebhookMapper deploymentPromotionWebhookMapper =
-                new mappers.DeploymentPromotionWebhookMapper(deployment, promotionResult)
+        mappers.PromotionWebhookMapper promotionWebhookMapper =
+                new mappers.PromotionWebhookMapper(deployment, promotionResult)
 
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendPromotionWebhook("completed", environmentWebhook,
-                deploymentPromotionWebhookMapper) == false) {
+                promotionWebhookMapper) == false) {
+            logger.info("Failed to send promotion failed webhook for ${promotionResult.promotion}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
