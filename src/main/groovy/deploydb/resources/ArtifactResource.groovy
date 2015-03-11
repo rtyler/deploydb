@@ -45,8 +45,8 @@ public class ArtifactResource {
 
         this.workFlow.triggerArtifactCreated(artifact)
 
-        String createdUri = request.getRequestURL() + "/${artifact.id}"
-        return Response.created(createdUri.toURI()).entity(artifact).build()
+        return Response.created((request.getRequestURL() + "/${artifact.id}").toURI())
+                .entity(artifact).build()
     }
 
     @GET

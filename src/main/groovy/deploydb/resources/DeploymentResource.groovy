@@ -187,8 +187,8 @@ public class DeploymentResource {
         /**
          * Prep the response
          */
-        String createdUri = request.getRequestURL() + "/${promotionResult.id}"
-        return Response.created(createdUri.toURI()).entity(promotionResult).build()
+        return Response.created((request.getRequestURL() + "/${promotionResult.id}").toURI())
+                .entity(promotionResult).build()
     }
 
     /**
