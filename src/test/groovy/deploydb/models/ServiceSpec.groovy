@@ -55,13 +55,12 @@ promotions:
         serviceRegistry.getAll() == [service]
     }
 
-    def "Loading an empty service config file throws a null pointer exception"() {
+    def "Loading an empty service config file throws a parsing  exception"() {
         when:
-        String fileContents = ""
-        Service service = serviceLoader.loadFromString(fileContents)
+        Service service = serviceLoader.loadFromString('')
 
         then:
-        thrown(NullPointerException)
+        thrown(ConfigurationParsingException)
     }
 
     def "Loading a malformed service config file throws throws a parsing exception"() {

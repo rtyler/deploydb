@@ -7,7 +7,7 @@ import io.dropwizard.cli.ServerCommand
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
-import io.dropwizard.testing.junit.ConfigOverride
+import io.dropwizard.testing.ConfigOverride
 
 import com.google.common.base.Strings
 import com.google.common.collect.ImmutableMap
