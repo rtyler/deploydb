@@ -1,5 +1,6 @@
 package deploydb
 
+import deploydb.models.PromotionResult
 import groovy.io.FileType
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
@@ -350,7 +351,8 @@ public class WorkFlow {
         /*
          * Create the webhook mapper for deployment
          */
-        mappers.DeploymentWebhookMapper deploymentWebhookMapper = new mappers.DeploymentWebhookMapper(deployment)
+        mappers.DeploymentWebhookMapper deploymentWebhookMapper =
+                new mappers.DeploymentWebhookMapper(deployment)
 
         /*
          * Get the environment based webhooks for this deployment
@@ -363,6 +365,7 @@ public class WorkFlow {
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("created", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment started ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
@@ -389,14 +392,16 @@ public class WorkFlow {
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("started", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment started ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
 
@@ -426,14 +431,16 @@ public class WorkFlow {
         /*
          * Get the environment based webhooks for this deployment
          */
-        models.Webhook.Webhook environmentWebhook = this.environmentRegistry.get(deployment.environmentIdent)?
-                this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
 
         /*
          * Use webhook manager to send the webhook
          */
         if (deployDBApp.webhooksManager.sendDeploymentWebhook("completed", environmentWebhook,
                 deploymentWebhookMapper) == false) {
+            logger.info("Failed to send deployment completed ${deployment.id}")
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
         }
     }
@@ -464,15 +471,37 @@ public class WorkFlow {
      *
      * @param deployment
      */
-    void triggerPromotionSuccess(models.Deployment deployment) {
+    void triggerPromotionSuccess(models.Deployment deployment,
+                                 models.PromotionResult promotionResult) {
 
-        /* FIXME - Invoke deployment/promotion verified(success) webhooks */
+        /*
+         * Create the webhook mapper for deployment
+        */
+        mappers.PromotionWebhookMapper promotionWebhookMapper =
+                new mappers.PromotionWebhookMapper(deployment, promotionResult)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendPromotionWebhook("completed", environmentWebhook,
+                                                       promotionWebhookMapper) == false) {
+            logger.info("Failed to send promotion success webhook for ${promotionResult.promotion}")
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
 
         /* Find out if any other promotions are waiting for results */
-        models.PromotionResult promotionResult = deployment.getPromotionResultSet().find() {
+        models.PromotionResult startedPromotionResult = deployment.getPromotionResultSet().find() {
             pr -> pr.promotionIdent == Status.STARTED
         }
-        if (promotionResult != null) {
+        if (startedPromotionResult != null) {
             /* Wait for more promotion results */
             return
         }
@@ -495,9 +524,29 @@ public class WorkFlow {
      *
      * @param deployment
      */
-    void triggerPromotionFailed(models.Deployment deployment) {
+    void triggerPromotionFailed(models.Deployment deployment, PromotionResult promotionResult) {
 
-        /* FIXME - Invoke promotion verified(failed) webhooks */
+        /*
+         * Create the webhook mapper for deployment
+        */
+        mappers.PromotionWebhookMapper promotionWebhookMapper =
+                new mappers.PromotionWebhookMapper(deployment, promotionResult)
+
+        /*
+         * Get the environment based webhooks for this deployment
+         */
+        models.Webhook.Webhook environmentWebhook =
+                this.environmentRegistry.get(deployment.environmentIdent)?
+                    this.environmentRegistry.get(deployment.environmentIdent).webhooks : null
+
+        /*
+         * Use webhook manager to send the webhook
+         */
+        if (deployDBApp.webhooksManager.sendPromotionWebhook("completed", environmentWebhook,
+                promotionWebhookMapper) == false) {
+            logger.info("Failed to send promotion failed webhook for ${promotionResult.promotion}")
+            throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
 
         /* Update deployment status */
         deployment.status = Status.FAILED

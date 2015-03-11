@@ -175,7 +175,17 @@ class AppHelper {
      */
     List<String> getUrlPathFromWebhook(Webhook webhook, String configBody, String eventType) {
 
-        List<String> eventUrlList = this.runner.webhookManager.getMemberOfObject(webhook.deployment, eventType)
+        List<String> eventUrlList = []
+
+        /*
+         * For a valid webhook configuration, deployment and promotion are valid objects
+         */
+        if (webhook.deployment != null) {
+            eventUrlList = this.runner.webhookManager.getMemberOfObject(webhook.deployment, eventType)
+        }
+        if (webhook.promotion != null) {
+            eventUrlList += this.runner.webhookManager.getMemberOfObject(webhook.promotion, eventType)
+        }
 
         return eventUrlList.collect{ it.toURI().getPath() }
     }

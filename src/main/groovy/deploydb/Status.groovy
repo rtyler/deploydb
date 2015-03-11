@@ -14,6 +14,7 @@ enum Status {
     STARTED,
     COMPLETED,
     SUCCESS,
-    FAILED
+    FAILED,
+    VERIFIED
 }
 
