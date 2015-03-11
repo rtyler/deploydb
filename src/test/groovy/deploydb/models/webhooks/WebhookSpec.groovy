@@ -40,12 +40,12 @@ class WebhookWithArgsSpec extends Specification {
         webhook.promotion.completed == ['http://jenkins.example.com/job/notify-promotion-completed/build']
     }
 
-    def "Loading an empty webhook throws null pointer exception"() {
+    def "Loading an empty webhook throws parsing exception"() {
         when:
         Webhook webhook = webhookModelLoader.load('webhooks/test-empty.yml')
 
         then:
-        thrown(NullPointerException)
+        thrown(ConfigurationParsingException)
     }
 
     def "Loading of empty models webhook config file succeeds"() {

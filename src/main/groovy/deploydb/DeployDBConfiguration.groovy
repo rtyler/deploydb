@@ -5,6 +5,7 @@ import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.flyway.FlywayFactory
 import com.github.lookout.whoas.WhoasFactory
 
+import com.google.common.collect.ImmutableMap
 import com.fasterxml.jackson.annotation.JsonProperty
 import javax.validation.Valid
 import javax.validation.constraints.NotNull
@@ -23,6 +24,9 @@ class DeployDBConfiguration extends Configuration {
     @Valid
     @NotNull
     private String configDirectory = ""
+
+    private ImmutableMap<String, ImmutableMap<String, String>> \
+                            viewRendererConfiguration = ImmutableMap.of()
 
     @JsonProperty("database")
     DataSourceFactory getDataSourceFactory() {
@@ -62,6 +66,9 @@ class DeployDBConfiguration extends Configuration {
     @JsonProperty("whoas")
     void setWhoasFactory(WhoasFactory whoasFactory) {
         this.whoasFactory = whoasFactory
+
+    ImmutableMap<String, ImmutableMap<String, String>> getViewRendererConfiguration() {
+        return viewRendererConfiguration
     }
 }
 

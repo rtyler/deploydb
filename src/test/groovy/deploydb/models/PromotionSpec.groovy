@@ -36,12 +36,12 @@ class PromotionWithArgsSpec extends Specification {
         promotionRegistry.getAll()== [promotion]
     }
 
-    def "Loading of empty model promotion throws a null pointer exception"(){
+    def "Loading of empty model promotion throws a parsing exception"(){
         when:
         Promotion promotion = promotionLoader.loadFromString("")
 
         then:
-        thrown(NullPointerException)
+        thrown(ConfigurationParsingException)
     }
 
     def "Loading a malformed promotion throws a parsing exception"(){
