@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import deploydb.WebhookModelMapper
 import deploydb.models.Artifact
 import deploydb.Status
-
 import javax.persistence.Entity
 
 /**
@@ -15,22 +14,24 @@ import javax.persistence.Entity
 class DeploymentWebhookMapper implements WebhookModelMapper{
 
     @JsonProperty
-    Long id
+    protected Long id
 
     @JsonProperty
-    Artifact artifact
+    protected Artifact artifact
 
     @JsonProperty
-    String service
+    protected String service
 
     @JsonProperty
-    String environment
+    protected String environment
 
     @JsonProperty
-    String createdAt
+    protected String createdAt
 
     @JsonProperty
-    Status status
+    protected Status status
+
+    DeploymentWebhookMapper() { }
 
     /**
      *  Constructor that takes the deployment argument
@@ -49,6 +50,8 @@ class DeploymentWebhookMapper implements WebhookModelMapper{
         return mapper.writeValueAsString(this) ;
     }
 }
+
+
 
 /**
  *  Simple Jackson mapper class to deserialzie

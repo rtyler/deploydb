@@ -52,7 +52,39 @@ class WebhookManager implements Managed {
         logger.info("${runnerThread} stopped")
     }
 
-    boolean sendDeploymentWebhook( String eventType, Webhook environmentWebhook,
+    /**
+     *
+     * @param eventType The tyoe of webhook event - created, started, completed
+     * @param environmentWebhook  Environment webhook associated with the deployment
+     * @param webhookModelMapper The mapper class to translate from model to webhook
+     * @return Fail if push of hook request fails
+     */
+    boolean sendDeploymentWebhook(String eventType, Webhook environmentWebhook,
+                                  WebhookModelMapper webhookModelMapper) {
+        return sendDeployDbWebhook(eventType, "deployment", environmentWebhook, webhookModelMapper)
+    }
+
+    /**
+     *
+     * @param eventType The tyoe of webhook event -  completed
+     * @param environmentWebhook  Environment webhook associated with the promotion
+     * @param webhookModelMapper The mapper class to translate from model to webhook
+     * @return Fail if push of hook request fails
+     */
+    boolean sendPromotionWebhook(String eventType, Webhook environmentWebhook,
+                                  WebhookModelMapper webhookModelMapper) {
+        return sendDeployDbWebhook(eventType, "promotion", environmentWebhook, webhookModelMapper)
+    }
+
+    /**
+     *
+     * @param eventType The tyoe of webhook event -  created, started, completed
+     * @param webhookType The type of webhook - deployment, promotion
+     * @param environmentWebhook  Environment webhook associated with th model
+     * @param webhookModelMapper The mapper class to translate from model to webhook
+     * @return Fail if push of hook request fails
+     */
+    boolean sendDeployDbWebhook( String eventType, String webhookType, Webhook environmentWebhook,
                                    WebhookModelMapper webhookModelMapper) {
         /*
          *  Initialize the list for URL's configured in webhooks
@@ -61,14 +93,19 @@ class WebhookManager implements Managed {
 
         /*
          * Get all the configured webhooks - global + environment
+         * For each type of webhook - global or environment
+         * Get the webhook.deployment or webhook.promotion and then get the
+         * webhook.deployment.created|started|completed or
+         * webhook.promotion.created|started|completed
          */
         if (environmentWebhook != null) {
-            eventUrlList = environmentWebhook.deployment ?
-                    getMemberOfObject(environmentWebhook.deployment, eventType) : []
+            eventUrlList = getMemberOfObject(environmentWebhook, webhookType) ?
+                    getMemberOfObject(getMemberOfObject(environmentWebhook, webhookType),
+                                      eventType) : []
         }
         if (webhook != null) {
-            eventUrlList += webhook.deployment ?
-                    getMemberOfObject(webhook.deployment, eventType) : []
+            eventUrlList += getMemberOfObject(webhook, webhookType) ?
+                    getMemberOfObject( getMemberOfObject(webhook, webhookType), eventType) : []
         }
 
         /*

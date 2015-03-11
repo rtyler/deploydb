@@ -173,9 +173,9 @@ public class DeploymentResource {
          * Inject the trigger in pseudo state machine
          */
         if (promotionResultAddMapper.status == Status.SUCCESS) {
-            this.workFlow.triggerPromotionSuccess(deploy)
+            this.workFlow.triggerPromotionSuccess(deploy, promotionResult)
         } else if (promotionResultAddMapper.status == Status.FAILED) {
-            this.workFlow.triggerPromotionFailed(deploy)
+            this.workFlow.triggerPromotionFailed(deploy, promotionResult)
         }
     }
 }
