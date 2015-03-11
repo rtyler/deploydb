@@ -6,6 +6,8 @@ import deploydb.WorkFlow
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.hibernate.UnitOfWork
+
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
@@ -38,11 +40,13 @@ public class ArtifactResource {
     @POST
     @UnitOfWork
     @Timed(name='put-requests')
-    Response createArtifact(@Valid Artifact artifact) {
+    Response createArtifact(@Context HttpServletRequest request,
+                            @Valid Artifact artifact) {
 
         this.workFlow.triggerArtifactCreated(artifact)
 
-        return Response.status(201).entity(artifact).build()
+        String createdUri = request.getRequestURL() + "/${artifact.id}"
+        return Response.created(createdUri.toURI()).entity(artifact).build()
     }
 
     @GET

@@ -94,15 +94,6 @@ class Deployment extends AbstractModel {
     }
 
     /**
-     * Find Promotion Result in the Set with matching promotionIdent
-     * @param S
-     * @return
-     */
-    PromotionResult getPromotionResult(String promotionIdent) {
-        this.promotionResultSet.find { pr -> pr.promotionIdent == promotionIdent }
-    }
-
-    /**
      * Add Promotion Result to collection
      */
     boolean addPromotionResult(PromotionResult promotionResult) {
@@ -139,9 +130,9 @@ class Deployment extends AbstractModel {
 
     @Override
     String toString() {
-        return "id = ${id}, environment: ${environmentIdent}, service = ${serviceIdent}, status: ${status}, "
-        +"promotionResultSet: ${promotionResultSet}, "
-        +"flow = ${flow.id}"
+        return "id: ${id}, environment: ${environmentIdent}, service: ${serviceIdent}, " +
+                "status: ${status}, " + "promotionResultSet: ${promotionResultSet}, " +
+                "flow: ${flow.id}"
 
     }
 }

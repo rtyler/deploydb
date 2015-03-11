@@ -15,6 +15,7 @@ import io.dropwizard.jersey.PATCH
 import io.dropwizard.hibernate.UnitOfWork
 import org.apache.commons.lang3.tuple.Pair
 
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
@@ -25,6 +26,7 @@ import javax.ws.rs.Produces
 import javax.ws.rs.PathParam
 import javax.ws.rs.QueryParam
 import javax.ws.rs.WebApplicationException
+import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
@@ -102,8 +104,8 @@ public class DeploymentResource {
     @Path('{id}')
     @UnitOfWork
     @Timed(name='patch-requests')
-    void updateDeployment(@PathParam('id') LongParam deploymentId,
-                          @Valid DeploymentUpdateMapper deploymentUpdateMapper) {
+    Deployment updateDeployment(@PathParam('id') LongParam deploymentId,
+                                @Valid DeploymentUpdateMapper deploymentUpdateMapper) {
         Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
 
         if (deploy == null) {
@@ -131,6 +133,8 @@ public class DeploymentResource {
         } else if (deploymentUpdateMapper.status == Status.FAILED) {
             this.workFlow.triggerDeploymentFailed(deploy)
         }
+
+        return deploy
     }
 
     /**
@@ -140,8 +144,10 @@ public class DeploymentResource {
     @Path('{id}/promotions')
     @UnitOfWork
     @Timed(name='post-requests')
-    void addPromotionResult(@PathParam('id') LongParam deploymentId,
-                            @Valid PromotionResultAddMapper promotionResultAddMapper) {
+    Response addPromotionResult(@Context HttpServletRequest request,
+                                @PathParam('id') LongParam deploymentId,
+                                @Valid PromotionResultAddMapper promotionResultAddMapper) {
+
         Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
 
         if (deploy == null) {
@@ -151,8 +157,8 @@ public class DeploymentResource {
         /**
          * Get Promotion Result model from deployment and throw error if not found
          */
-        PromotionResult promotionResult = deploy.getPromotionResult(
-                promotionResultAddMapper.promotionIdent)
+        PromotionResult promotionResult = deploy.promotionResultSet.find() {
+            pr -> pr.promotionIdent == promotionResultAddMapper.promotionIdent }
         if (promotionResult == null) {
             throw new WebApplicationException(Response.Status.NOT_FOUND)
         }
@@ -177,5 +183,38 @@ public class DeploymentResource {
         } else if (promotionResultAddMapper.status == Status.FAILED) {
             this.workFlow.triggerPromotionFailed(deploy)
         }
+
+        /**
+         * Prep the response
+         */
+        String createdUri = request.getRequestURL() + "/${promotionResult.id}"
+        return Response.created(createdUri.toURI()).entity(promotionResult).build()
+    }
+
+    /**
+     * Returns the Promotional result object in Deployment
+     */
+    @GET
+    @Path("{id}/promotions/{pid}")
+    @UnitOfWork
+    @Timed(name = "get-requests")
+    PromotionResult getPromotionResults(@PathParam("id") LongParam deploymentId,
+                                        @PathParam("pid") LongParam promotionResultId) {
+        Deployment deploy = this.workFlow.deploymentDAO.get(deploymentId.get())
+
+        if (deploy == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        /**
+         * Get Promotion Result model from deployment and throw error if not found
+         */
+        PromotionResult promotionResult = deploy.promotionResultSet.find() {
+            pr -> pr.id == promotionResultId.get() }
+        if (promotionResult == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND)
+        }
+
+        return promotionResult
     }
 }

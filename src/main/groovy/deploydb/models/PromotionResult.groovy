@@ -98,9 +98,7 @@ class PromotionResult extends AbstractModel {
 
     @Override
     String toString() {
-        String output = ""
-        output += "id = ${this.id}, promotion: ${promotionIdent}, status: ${status}, "
-        output += "infoUrl = ${infoUrl}, deployment: $deployment.id"
-        return output
+        return "id: ${this.id}, promotion: ${promotionIdent}, status: ${status}, " +
+                "infoUrl: ${infoUrl}, deployment: $deployment.id"
     }
 }
