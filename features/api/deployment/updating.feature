@@ -5,7 +5,7 @@ Feature: Deployment UPDATE APIs
 
 
   @freezetime @wip
-  Scenario: Updating a deployment with a status STARTED
+  Scenario: Updating a deployment with a status COMPLETED
 
     Given there is a deployment
     When I PATCH "/api/deployments/1" with:
@@ -43,7 +43,7 @@ Feature: Deployment UPDATE APIs
 
 
   @freezetime @wip
-  Scenario: Updating a deployment with a status COMPLETED
+  Scenario: Updating a deployment with a status FAILED
 
     Given there is a deployment
     When I PATCH "/api/deployments/1" with:
