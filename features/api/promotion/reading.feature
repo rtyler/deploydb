@@ -48,7 +48,7 @@ Feature: Promotion READ APIs
     Then the response should be 404
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Fetching a result for a Promotion associated with a Deployment
 
     Given there is a deployment
@@ -66,14 +66,13 @@ Feature: Promotion READ APIs
     """
 
 
-  @wip
   Scenario: Fetching Promotion result for a Deployment that doesn't exist
 
     When I GET "/api/deployments/1/promotions/1"
     Then the response should be 404
 
 
-  @error @wip
+  @error
   Scenario: Fetching a result for a Promotion which is not associated with the Deployment
 
     Given there is a deployment
