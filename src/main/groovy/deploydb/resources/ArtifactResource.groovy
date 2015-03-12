@@ -24,13 +24,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 
+
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class ArtifactResource {
     private final WorkFlow workFlow
     private final Logger logger = LoggerFactory.getLogger(ArtifactResource.class)
-
     ArtifactResource(WorkFlow workFlow) {
         this.workFlow = workFlow
     }
@@ -66,7 +66,8 @@ public class ArtifactResource {
     List<Artifact> byName(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName,
                          @QueryParam("pageNumber") @DefaultValue("0") IntParam artifactPageNumber,
-                         @QueryParam("perPageSize") @DefaultValue("5") IntParam artifactPerPageSize){
+                         @QueryParam("perPageSize") @DefaultValue("5") deploydb.ModelPageSizeParam
+                                 artifactPerPageSize) {
         List<Artifact> artifacts =
                 this.workFlow.artifactDAO.findByGroupAndName(
                         artifactGroup, artifactName, artifactPageNumber.get(),
