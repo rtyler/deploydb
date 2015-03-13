@@ -131,7 +131,7 @@ class Deployment extends AbstractModel {
     @Override
     String toString() {
         return "id: ${id}, environment: ${environmentIdent}, service: ${serviceIdent}, " +
-                "status: ${status}, " + "promotionResultSet: ${promotionResultSet}, " +
+                "status: ${status}, promotionResultSet: ${promotionResultSet}, " +
                 "flow: ${flow.id}"
 
     }
