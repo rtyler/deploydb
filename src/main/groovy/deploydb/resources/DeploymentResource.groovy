@@ -49,7 +49,8 @@ public class DeploymentResource {
     @Timed(name = "get-requests")
     List<Deployment> getAll(
             @QueryParam("pageNumber") @DefaultValue("0") IntParam pageNumber,
-            @QueryParam("perPageSize") @DefaultValue("20") IntParam perPageSize) {
+            @QueryParam("perPageSize") @DefaultValue("20") deploydb.ModelPageSizeParam
+                    perPageSize) {
 
         /**
          * Fetch deployment by page
