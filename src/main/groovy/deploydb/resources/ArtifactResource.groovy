@@ -23,8 +23,6 @@ import javax.ws.rs.core.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-
-
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])

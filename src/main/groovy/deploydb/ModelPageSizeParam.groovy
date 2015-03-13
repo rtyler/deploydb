@@ -12,7 +12,7 @@ public class ModelPageSizeParam extends AbstractParam<Integer> {
 
     @Override
     protected String errorMessage(String input, Exception e) {
-        return '"' + input + "\" is not a number.";
+        return '"' + input + "\" is not a valid page size value.";
     }
 
     @Override
