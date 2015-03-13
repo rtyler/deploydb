@@ -1,7 +1,7 @@
 database:
   driverClass: org.h2.Driver
   user: nobody
-  url: "jdbc:h2:~/deployDB.example.file"
+  url: "jdbc:h2:./deployDB.example.db"
 
 # DeployDB base configuration directory (cannonical path)
 # YAML configuration files for models - services, environments, pipelines,
