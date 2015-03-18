@@ -21,10 +21,6 @@ import org.joda.time.DateTime
 import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
 
-def getClassVariable(klass, variable) {
-    return klass."$variable"
-}
-
 Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBody ->
 
     List<String> paths = getUrlPathFromWebhookConfigBody(configBody, eventType)
@@ -119,7 +115,7 @@ And(~/there is a deployment in "(.*?)" state$/) { String deploymentState ->
         Deployment d1 = new Deployment(a1,
                 "pre-prod",
                 "faas",
-                getClassVariable(Status, deploymentState))
+                Status."${deploymentState}")
         d1.addPromotionResult(p1)
 
         /* Create a flow */

@@ -41,8 +41,8 @@ class WebhookManager implements Managed {
      */
     WebhookManager(DeployDBConfiguration deployDBConfiguration ) {
 
-        queue = deployDBConfiguration.getWhoasFactory().buildQueue()
-        runner =  deployDBConfiguration.getWhoasFactory().buildRunner(queue)
+        queue = deployDBConfiguration.whoasFactory.buildQueue()
+        runner =  deployDBConfiguration.whoasFactory.buildRunner(queue)
 
         runnerThread = new Thread({
             runner.run()
