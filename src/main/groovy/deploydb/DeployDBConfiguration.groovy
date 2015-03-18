@@ -3,6 +3,7 @@ package deploydb
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.flyway.FlywayFactory
+import com.github.lookout.whoas.WhoasFactory
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import javax.validation.Valid
@@ -15,6 +16,9 @@ class DeployDBConfiguration extends Configuration {
 
     @Valid
     private FlywayFactory flyway = new FlywayFactory()
+
+    @Valid
+    private WhoasFactory whoasFactory = new WhoasFactory()
 
     @Valid
     @NotNull
@@ -48,6 +52,16 @@ class DeployDBConfiguration extends Configuration {
     @JsonProperty("configDirectory")
     void setConfigDirectory(String configDirectory) {
         this.configDirectory = configDirectory
+    }
+
+    @JsonProperty("whoas")
+    WhoasFactory getWhoasFactory() {
+        return whoasFactory
+    }
+
+    @JsonProperty("whoas")
+    void setWhoasFactory(WhoasFactory whoasFactory) {
+        this.whoasFactory = whoasFactory
     }
 }
 

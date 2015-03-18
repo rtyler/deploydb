@@ -5,8 +5,6 @@ import deploydb.models.Webhook.Webhook
 
 import io.dropwizard.lifecycle.Managed
 
-import com.github.lookout.whoas.InMemoryQueue
-import com.github.lookout.whoas.SequentialHookRunner
 import com.github.lookout.whoas.AbstractHookRunner
 import com.github.lookout.whoas.AbstractHookQueue
 
@@ -16,8 +14,8 @@ import org.slf4j.LoggerFactory
 
 class WebhookManager implements Managed {
     private Thread runnerThread
-    private SequentialHookRunner runner
-    private InMemoryQueue queue = new InMemoryQueue()
+    private AbstractHookRunner runner = null
+    private AbstractHookQueue queue = null
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
     private Webhook webhook = null
 
@@ -30,8 +28,21 @@ class WebhookManager implements Managed {
         return klass."$variable"
     }
 
-    WebhookManager( ) {
-        runner = new SequentialHookRunner(this.queue)
+    /*
+     * Constructor with no arguments, As you can see it doesn't do much.
+     * Will be used only during unit tests
+     */
+    WebhookManager() { }
+
+    /**
+     *  Constructor to create based on configuration of queues and runner
+     *
+     * @param deployDBConfiguration
+     */
+    WebhookManager(DeployDBConfiguration deployDBConfiguration ) {
+
+        queue = deployDBConfiguration.getWhoasFactory().buildQueue()
+        runner =  deployDBConfiguration.getWhoasFactory().buildRunner(queue)
 
         runnerThread = new Thread({
             runner.run()
@@ -122,6 +133,13 @@ class WebhookManager implements Managed {
      * Return true if the webhook thread is running
      */
     Boolean getRunning() {
+        /*
+         * The runner thread is null during unit testing because default constructor is called.
+         * If the runner thread is null, then getRunning should return false
+         */
+        if(runnerThread == null) {
+            return false
+        }
         return runnerThread.isAlive()
     }
 

@@ -60,7 +60,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new AssetsBundle())
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
-        webhooksManager = new WebhookManager()
         workFlow = new WorkFlow(this)
 
         /*
@@ -89,6 +88,12 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
+
+        /*
+         *
+         */
+        webhooksManager = new WebhookManager(configuration)
+
         /* Execute migrations */
         Flyway flyway = new Flyway()
         flyway.setDataSource(configuration.getDataSourceFactory().getUrl(),
