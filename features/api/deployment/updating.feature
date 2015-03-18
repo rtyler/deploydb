@@ -4,7 +4,7 @@ Feature: Deployment UPDATE APIs
   I should be able to update existing deployments in the system
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Updating a deployment with a status COMPLETED
 
     Given there is a deployment
@@ -42,7 +42,7 @@ Feature: Deployment UPDATE APIs
     """
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Updating a deployment with a status FAILED
 
     Given there is a deployment

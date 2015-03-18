@@ -6,6 +6,8 @@ import deploydb.WorkFlow
 import io.dropwizard.jersey.params.IntParam
 import io.dropwizard.jersey.params.LongParam
 import io.dropwizard.hibernate.UnitOfWork
+
+import javax.servlet.http.HttpServletRequest
 import javax.validation.Valid
 import javax.ws.rs.Consumes
 import javax.ws.rs.DefaultValue
@@ -23,14 +25,12 @@ import javax.ws.rs.core.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-
 @Path("/api/artifacts")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(['application/json', 'application/vnd.deploydb.v1+json'])
 public class ArtifactResource {
     private final WorkFlow workFlow
     private final Logger logger = LoggerFactory.getLogger(ArtifactResource.class)
-
     ArtifactResource(WorkFlow workFlow) {
         this.workFlow = workFlow
     }
@@ -38,11 +38,13 @@ public class ArtifactResource {
     @POST
     @UnitOfWork
     @Timed(name='put-requests')
-    Response createArtifact(@Valid Artifact artifact) {
+    Response createArtifact(@Context HttpServletRequest request,
+                            @Valid Artifact artifact) {
 
         this.workFlow.triggerArtifactCreated(artifact)
 
-        return Response.status(201).entity(artifact).build()
+        return Response.created((request.getRequestURL() + "/${artifact.id}").toURI())
+                .entity(artifact).build()
     }
 
     @GET
@@ -66,7 +68,8 @@ public class ArtifactResource {
     List<Artifact> byName(@PathParam('group') String artifactGroup,
                          @PathParam("name") String artifactName,
                          @QueryParam("pageNumber") @DefaultValue("0") IntParam artifactPageNumber,
-                         @QueryParam("perPageSize") @DefaultValue("5") IntParam artifactPerPageSize){
+                         @QueryParam("perPageSize") @DefaultValue("5") deploydb.ModelPageSizeParam
+                                 artifactPerPageSize) {
         List<Artifact> artifacts =
                 this.workFlow.artifactDAO.findByGroupAndName(
                         artifactGroup, artifactName, artifactPageNumber.get(),

@@ -244,9 +244,9 @@ Feature: Deployment READ APIs
       }
     """
 
-  @freezetime @wip
+  @error
   Scenario: Fetching an deployment by pageNumber=0 and perPageSize=0 returns 0 deployments
 
     Given there are deployments
     When I GET "/api/deployments?pageNumber=0&perPageSize=0"
-    Then the response should be 200
+    Then the response should be 400

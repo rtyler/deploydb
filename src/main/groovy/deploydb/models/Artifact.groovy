@@ -82,4 +82,11 @@ class Artifact extends AbstractModel {
         return Objects.hash(this.id, this.group, this.name,
                             this.version, this.sourceUrl)
     }
+
+    @Override
+    String toString() {
+        return "id: ${id}, group: ${group}, name: ${name}, " +
+                "version: ${version}, sourceUrl: ${sourceUrl}"
+
+    }
 }

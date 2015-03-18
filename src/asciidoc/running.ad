@@ -1,0 +1,34 @@
+== Running The Application
+
+To test the example application on localhost run the following commands.
+
+* To package the example run.
+
+----
+  gradlew shadowJar
+----
+
+* To setup the h2 database run (stored in current directory as deploydb.example.db).
+
+----
+  java -jar build/libs/deploydb-0.1.0.jar db migrate deploydb.example.yml
+----
+
+* To run the server (it reads configuration from config/ directory).
+
+----
+  java -jar build/libs/deploydb-0.1.0.jar server example.yml
+----
+
+* To create artifact (That triggers deployment create)
+
+----
+  curl -X POST -H  "Content-Type: application/json" http://localhost:8080/api/artifacts -d '{"group" : "basic.group.1", "name": "bg1", "version" : "1.2.3.4", "sourceUrl" : "http://example.com/cucumber.jar"}'
+----
+
+* To get all deployments
+
+----
+  curl -X GET http://localhost:8080/api/deployments
+----
+

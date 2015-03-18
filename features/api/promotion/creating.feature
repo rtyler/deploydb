@@ -4,7 +4,7 @@ Feature: Promotion Result APIs
   I should be able to add Promotion result for a Deployment in the system
 
 
-  @freezetime @wip
+  @freezetime
   Scenario: Adding a result for a Promotion associated with a Deployment
 
     Given there is a deployment
