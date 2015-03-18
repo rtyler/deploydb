@@ -47,7 +47,7 @@ dependencies {
     compile withSources('io.dropwizard.modules:dropwizard-flyway:0.7.0-1')
 
     /* Webhook support */
-    compile 'com.github.lookout:whoas:0.1.2'
+    compile 'com.github.lookout:whoas:0.1.4'
 
     compile withSources('com.h2database:h2:1.3.+')
     compile withSources('joda-time:joda-time:2.6+')

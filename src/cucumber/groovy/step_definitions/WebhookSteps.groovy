@@ -21,7 +21,6 @@ import org.joda.time.DateTime
 import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
 
-
 Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBody ->
 
     List<String> paths = getUrlPathFromWebhookConfigBody(configBody, eventType)
@@ -110,14 +109,13 @@ And(~/there is a deployment in "(.*?)" state$/) { String deploymentState ->
          * Create sample promotionResult(s)
          */
         PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.STARTED, null)
-        WebhookManager webhookManager = new WebhookManager()
         /**
          * Create deployment
          */
         Deployment d1 = new Deployment(a1,
                 "pre-prod",
                 "faas",
-                webhookManager.getMemberOfObject(Status, deploymentState))
+                Status."${deploymentState}")
         d1.addPromotionResult(p1)
 
         /* Create a flow */

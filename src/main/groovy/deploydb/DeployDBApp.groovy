@@ -59,7 +59,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         bootstrap.addBundle(new AssetsBundle())
         bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
-        webhooksManager = new WebhookManager()
         workFlow = new WorkFlow(this)
 
         /*
@@ -87,7 +86,13 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
-        /**
+
+        /*
+         * Create webhook manager based on configuration
+         */
+        webhooksManager = new WebhookManager(configuration)
+
+         /**
          * Initialize the workflow object
          */
         workFlow.initializeDao()
