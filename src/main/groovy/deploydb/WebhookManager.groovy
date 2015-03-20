@@ -122,12 +122,21 @@ class WebhookManager implements Managed {
         /*
          * If the URL list is non empty, iterate over URLs and send the webhook request
          */
-        eventUrlList? eventUrlList.any() { urlName ->
+        if (eventUrlList.isEmpty()) {
+            return true
+        }
+
+        /*
+         * Iterate over URLs and send the webhook request. If atleast one of webhook request
+         * successfully pushed then return success
+         */
+        boolean pushReturn = false
+        eventUrlList.each() { urlName ->
             HookRequest hookRequest = new HookRequest(urlName,
                     webhookModelMapper.toPayload())
-
-            queue.push(hookRequest)
-        } : true
+            pushReturn |= queue.push(hookRequest)
+        }
+        return pushReturn
     }
     /**
      * Return true if the webhook thread is running
