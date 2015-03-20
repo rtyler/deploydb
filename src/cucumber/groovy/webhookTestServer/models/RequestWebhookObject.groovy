@@ -1,5 +1,6 @@
 package webhookTestServer.models
 
+
 /**
  * Class to represent the received object in webhook
  */
@@ -8,30 +9,27 @@ class RequestWebhookObject {
     /*
      * UriPath of the RequestWebhookObject
      */
-    String configuredUriPath
+    List<String> configuredUriPaths = []
 
     /**
      *  Request message body of the object
      */
-    String requestMessageBody
+    List<String> requestMessageBodies = []
 
     /**
      *  Constructor with no arguments
      */
     RequestWebhookObject() { }
 
+    void addConfiguredUriPaths(List<String> paths) {
+        this.configuredUriPaths += paths
+    }
+
     void setRequestMessageBody(String requestMessageBody) {
-        this.requestMessageBody = requestMessageBody
+        this.requestMessageBodies.add(requestMessageBody)
     }
 
     String getRequestMessageBody() {
-        return this.requestMessageBody
-    }
-
-    /*
-     * Constructor to initialize from application
-     */
-    RequestWebhookObject(String configuredUriPath) {
-        this.configuredUriPath = configuredUriPath
+        return this.requestMessageBodies[0]
     }
 }

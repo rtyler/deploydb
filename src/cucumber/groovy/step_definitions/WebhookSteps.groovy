@@ -25,12 +25,17 @@ Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBo
 
     List<String> paths = getUrlPathFromWebhookConfigBody(configBody, eventType)
 
-    /*
-     * Our request object deals with only one webhook request at a time, once we allow
-     * multiple requests, then we can save the array in the RequestWebhook object
-     */
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
-        requestWebhookObject.setConfiguredUriPath(paths?paths[0] : "")
+        /*
+         * Save the configured webhook uri(s) in requestWebhookObject. These paths will be compared
+         * when deploydb invokes webhooks.
+         */
+        requestWebhookObject.addConfiguredUriPaths(paths)
+
+        /*
+         * Load the webhook configuration in webhookManager
+        */
+
         ModelLoader<Webhook> webhookLoader = new ModelLoader<>(Webhook.class)
         webhookManager.webhook = webhookLoader.loadFromString(configBody)
    }
@@ -45,12 +50,16 @@ Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String 
     List<String> paths = getUrlPathFromWebhook(a.webhooks, configBody, eventType)
 
     /*
-    * Our request object deals with only one webhook request at a time, once we allow
-    * multiple requests, then we can save the array in the RequestWebhook object
-    */   withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
-        requestWebhookObject.setConfiguredUriPath(paths?paths[0] : "")
+     * Save the configured webhook uri(s) in requestWebhookObject. These paths will be compared
+     * when deploydb invokes webhooks.
+     */
+    withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
+        requestWebhookObject.addConfiguredUriPaths(paths)
     }
 
+    /*
+     * Load the environment configuration
+     */
     withEnvironmentRegistry { ModelRegistry<Environment> environmentRegistry ->
         a.ident = envIdent
         environmentRegistry.put(envIdent, a)
@@ -89,6 +98,24 @@ Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessage
     }
 }
 
+Then(~/^the webhook ([1-9][0-9]*) should be invoked with the JSON:$/) { int webhookNumber, String expectedMessageBody ->
+    sleep(1000)
+    withRequestWebhookObject { RequestWebhookObject requestWebhookObject ->
+        ObjectMapper mapper = new ObjectMapper()
+
+        String requestMessageBody = requestWebhookObject.getRequestMessageBodies()[webhookNumber -1]
+
+        templateVariables = [
+                'created_timestamp' : DateTime.now(),
+        ]
+        expectedMessageBody = processTemplate(expectedMessageBody, templateVariables)
+
+        JsonNode expectedNode = mapper.readTree(expectedMessageBody)
+        JsonNode requestNode = mapper.readTree(requestMessageBody)
+
+        assert expectedNode == requestNode
+    }
+}
 
 When(~/I trigger deployment PATCH with:$/) { String path ->
     response = postJsonToPath(path, requestBody)
