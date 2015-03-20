@@ -8,6 +8,11 @@ database:
 # webhooks and promotions - should be stored in respective sub-directories
 #configDirectory: config
 
+whoas:
+  queue:
+    type: "com.github.lookout.whoas.InMemoryQueue"
+  runnerType: "com.github.lookout.whoas.SequentialHookRunner"
+
 logging:
   level: INFO
   loggers:
@@ -20,7 +25,3 @@ logging:
       archivedLogFilenamePattern: ./logs/deploydb-cucumber-%d.log
       archivedFileCount: 5
       timeZone: UTC
-
-whoas:
-  queueType: "com.github.lookout.whoas.InMemoryQueue"
-  runnerType: "com.github.lookout.whoas.SequentialHookRunner"
