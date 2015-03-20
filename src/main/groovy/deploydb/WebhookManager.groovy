@@ -53,12 +53,14 @@ class WebhookManager implements Managed {
 
     @Override
     void start() {
+        queue.start()
         runnerThread.start()
         logger.info("${runnerThread} started")
     }
 
     @Override
     void stop() {
+        queue.stop()
         runner.stop()
         logger.info("${runnerThread} stopped")
     }
