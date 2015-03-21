@@ -1,1 +1,0 @@
-ALTER TABLE flows ADD COLUMN status INT(11) NOT NULL;

@@ -41,7 +41,7 @@ class DeployDBConfiguration extends Configuration {
 
     @JsonProperty("flyway")
     void setFlywayFactory(FlywayFactory flywayFactory) {
-        this.flyway = FlywayFactory
+        this.flyway = flywayFactory
     }
 
     @JsonProperty("configDirectory")
