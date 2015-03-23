@@ -6,8 +6,8 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     """
       deployment:
         created:
-           - http://localhost:10000/job/notify-deployment-started/build
-           - http://localhost:10000/job/notify-deployment-started_another/build
+           - http://localhost:10000/job/notify-deployment-created/build
+           - http://localhost:10000/job/another-notify-deployment-created/build
     """
     And promotions are configured
     And an environment is configured
@@ -59,8 +59,8 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     webhooks:
       deployment:
         created:
-          - http://localhost:10000/job/notify-deployment-started/build
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/notify-deployment-created/build
+          - http://localhost:10000/job/another-notify-deployment-created/build
     """
     And promotions are configured
     And a pipeline is configured
@@ -110,7 +110,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     """
       deployment:
         created:
-           - http://localhost:10000/job/notify-deployment-started/build
+           - http://localhost:10000/job/notify-deployment-created/build
     """
     And an environment webhook "created" configuration named "integ":
     """
@@ -118,7 +118,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     webhooks:
       deployment:
         created:
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/another-notify-deployment-created/build
     """
     And promotions are configured
     And a pipeline is configured
@@ -176,7 +176,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     webhooks:
       promotion:
         completed:
-          - http://localhost:10000/job/notify-promotion-completed_another/build
+          - http://localhost:10000/job/another-notify-promotion-completed/build
     """
     And there is a deployment in "COMPLETED" state
     When I POST to "/api/deployments/1/promotions" with:
@@ -239,7 +239,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     """
 
   @freezetime @webhook
-  Scenario: Only Global webhook should be invoked when environment webhooks is missing created event
+  Scenario: Only Global webhook should be invoked when environment webhooks doesn't contain deployment created event
     Given a webhook "created" configuration:
     """
       deployment:
@@ -254,7 +254,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     webhooks:
       deployment:
         completed:
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/notify-deployment-completed/build
     """
     And promotions are configured
     And a pipeline is configured
@@ -280,14 +280,14 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     """
 
   @freezetime @webhook
-  Scenario: Only environment webhooks should be invoked when global webhooks is missing created event
+  Scenario: Only environment webhooks should be invoked when global webhooks doesn't contain deployment created event
     Given a webhook "created" configuration:
     """
       deployment:
         started:
           - http://localhost:10000/job/notify-deployment-started/build
         completed:
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/notify-deployment-completed/build
     """
     And an environment webhook "created" configuration named "integ":
     """
@@ -296,9 +296,9 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
       deployment:
         created:
           - http://localhost:10000/notify-deployment-created/build
-          - http://localhost:10000/notify-deployment-created_another/build
+          - http://localhost:10000/another-notify-deployment-created/build
         completed:
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/notify-deployment-completed/build
     """
     And promotions are configured
     And a pipeline is configured
@@ -343,7 +343,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
 
   @freezetime @webhook
-  Scenario: Only global webhooks should be invoked when environment webhooks is missing started event
+  Scenario: Only global webhooks should be invoked when environment webhooks doesn't contain deployment started event
     Given a webhook "started" configuration:
     """
       deployment:
@@ -351,10 +351,10 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
           - http://localhost:10000/job/notify-deployment-created/build
         started:
           - http://localhost:10000/job/notify-deployment-started/build
-          - http://localhost:10000/job/notify-deployment-started_another/build
+          - http://localhost:10000/job/another-notify-deployment-started/build
         completed:
           - http://localhost:10000/job/notify-deployment-completed/build
-          - http://localhost:10000/job/notify-deployment-completed_another/build
+          - http://localhost:10000/job/another-notify-deployment-completed/build
       promotion:
         completed:
           - http://localhost:10000/job/notify-completed-completed/build
@@ -414,13 +414,13 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
     """
 
   @freezetime @webhook
-  Scenario: Global webhooks should be invoked when environment webhook is missing for promotion success
+  Scenario: Global webhooks should be invoked when environment webhook doesn't contain promotion event for promotion success
     Given a webhook "completed" configuration:
     """
       promotion:
         completed:
           - http://localhost:10000/job/notify-promotion-completed/build
-          - http://localhost:10000/job/notify-promotion-completed_another/build
+          - http://localhost:10000/job/another-notify-promotion-completed/build
     """
     And an environment webhook "completed" configuration named "pre-prod":
     """
@@ -488,13 +488,13 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
 
   @freezetime @webhook
-  Scenario: Environment webhooks should be invoked when global webhook is missing for promotion success
+  Scenario: Environment webhooks should be invoked when global webhook doesn't contain promotion event for promotion success
     Given a webhook "completed" configuration:
     """
       deployment:
         completed:
           - http://localhost:10000/job/notify-deployment-completed/build
-          - http://localhost:10000/job/notify-deployment-completed_another/build
+          - http://localhost:10000/job/another-notify-deployment-completed/build
     """
     And an environment webhook "completed" configuration named "pre-prod":
     """
@@ -503,7 +503,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
       promotion:
         completed:
           - http://localhost:10000/job/notify-promotion-completed/build
-          - http://localhost:10000/job/notify-promotion-completed_another/build
+          - http://localhost:10000/job/another-notify-promotion-completed/build
 
     """
     And there is a deployment in "COMPLETED" state
