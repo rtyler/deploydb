@@ -1,15 +1,26 @@
 package db.migration
 
-import org.flywaydb.core.api.migration.jdbc.JdbcMigration
-import java.sql.Connection
-import java.sql.PreparedStatement
+import java.sql.DatabaseMetaData
 
 
 /**
  * Example of a Java-based migration.
  */
-public class V5__create_flows_table implements JdbcMigration {
-    public void migrate(Connection connection) throws Exception {
+class V5__create_flows_table extends DeployDBMigration {
+
+    /** Return migration number to differentiate from other versions */
+    @Override
+    Integer getChecksum() {
+        return 5
+    }
+
+    /**
+     * Gather sql commands for this migration
+     *
+     * @param metadata
+     * @return List of sql commands
+     */
+    List<String> prepareCommands(DatabaseMetaData metadata) {
 
         /* Sql commands */
         List<String> commands = []
@@ -41,15 +52,7 @@ public class V5__create_flows_table implements JdbcMigration {
             ALTER TABLE deployments ADD FOREIGN KEY (flowId) REFERENCES flows(id);
         """
 
-        /* Apply V5 commands */
-        for (String command : commands) {
-            PreparedStatement statement = connection.prepareStatement(command)
-            try {
-                statement.execute()
-            } finally {
-                statement.close()
-            }
-        }
+        return commands
     }
 }
 

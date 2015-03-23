@@ -1,15 +1,26 @@
 package db.migration
 
-import org.flywaydb.core.api.migration.jdbc.JdbcMigration
-import java.sql.Connection
-import java.sql.PreparedStatement
+import java.sql.DatabaseMetaData
 
 
 /**
  * Example of a Java-based migration.
  */
-public class V6__create_promotion_results_table implements JdbcMigration {
-    public void migrate(Connection connection) throws Exception {
+class V6__create_promotion_results_table extends DeployDBMigration {
+
+    /** Return migration number to differentiate from other versions */
+    @Override
+    Integer getChecksum() {
+        return 6
+    }
+
+    /**
+     * Gather sql commands for this migration
+     *
+     * @param metadata
+     * @return List of sql commands
+     */
+    List<String> prepareCommands(DatabaseMetaData metadata) {
 
         /* Sql commands */
         List<String> commands = []
@@ -39,14 +50,6 @@ public class V6__create_promotion_results_table implements JdbcMigration {
             ALTER TABLE deployments ADD COLUMN service VARCHAR(8192) NOT NULL;
         """
 
-        /* Apply V6 commands */
-        for (String command : commands) {
-            PreparedStatement statement = connection.prepareStatement(command)
-            try {
-                statement.execute()
-            } finally {
-                statement.close()
-            }
-        }
+        return commands
     }
 }

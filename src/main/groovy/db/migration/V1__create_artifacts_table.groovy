@@ -1,21 +1,32 @@
 package db.migration
 
-import org.flywaydb.core.api.migration.jdbc.JdbcMigration
-import java.sql.Connection
-import java.sql.PreparedStatement
+import java.sql.DatabaseMetaData
 
 
 /**
  * Example of a Java-based migration.
  */
-public class V1__create_artifacts_table implements JdbcMigration {
-    public void migrate(Connection connection) throws Exception {
+class V1__create_artifacts_table extends DeployDBMigration {
+
+    /** Return migration number to differentiate from other versions */
+    @Override
+    Integer getChecksum() {
+        return 1
+    }
+
+    /**
+     * Gather sql commands for this migration
+     *
+     * @param metadata
+     * @return List of sql commands
+     */
+    List<String> prepareCommands(DatabaseMetaData metadata) {
 
         /* Sql commands */
         List<String> commands = []
 
         /*
-         * This migration creates some of the basic initial data structures
+         * Add artifacts table
          */
         commands += """
             CREATE TABLE artifacts (
@@ -29,14 +40,6 @@ public class V1__create_artifacts_table implements JdbcMigration {
             );
         """
 
-        /* Apply V1 commands */
-        for (String command : commands) {
-            PreparedStatement statement = connection.prepareStatement(command)
-            try {
-                statement.execute()
-            } finally {
-                statement.close()
-            }
-        }
+        return commands
     }
 }

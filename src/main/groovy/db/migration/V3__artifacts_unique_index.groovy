@@ -1,25 +1,32 @@
 package db.migration
 
-import org.flywaydb.core.api.migration.jdbc.JdbcMigration
-import java.sql.Connection
-import java.sql.PreparedStatement
 import java.sql.DatabaseMetaData
 
 
 /**
  * Example of a Java-based migration.
  */
-public class V3__artifacts_unique_index implements JdbcMigration {
-    public void migrate(Connection connection) throws Exception {
+class V3__artifacts_unique_index extends DeployDBMigration {
 
-        /* Get db meta data, to fetch driver name and customize the sql command */
-        DatabaseMetaData dbMetaData = connection.getMetaData()
+    /** Return migration number to differentiate from other versions */
+    @Override
+    Integer getChecksum() {
+        return 3
+    }
+
+    /**
+     * Gather sql commands for this migration
+     *
+     * @param metadata
+     * @return List of sql commands
+     */
+    List<String> prepareCommands(DatabaseMetaData metadata) {
 
         /* Sql commands */
         List<String> commands = []
 
         /* Change groupName data type*/
-        if (dbMetaData.getDriverName().toLowerCase().contains("h2")) {
+        if (isH2(metadata.driverName)) {
             commands += """
                 ALTER TABLE artifacts ALTER COLUMN groupName VARCHAR(8192);
             """
@@ -30,7 +37,7 @@ public class V3__artifacts_unique_index implements JdbcMigration {
         }
 
         /* Change name data type */
-        if (dbMetaData.getDriverName().toLowerCase().contains("h2")) {
+        if (isH2(metadata.driverName)) {
             commands += """
                 ALTER TABLE artifacts ALTER COLUMN name VARCHAR(8192);
             """
@@ -41,7 +48,7 @@ public class V3__artifacts_unique_index implements JdbcMigration {
         }
 
         /* No need for this index anymore */
-        if (dbMetaData.getDriverName().toLowerCase().contains("h2")) {
+        if (isH2(metadata.driverName)) {
             commands += """
                 DROP INDEX version_index;
             """
@@ -57,7 +64,7 @@ public class V3__artifacts_unique_index implements JdbcMigration {
          * For non-h2 databases, limit size of the key to 150 characters. In general,
          * It has to be less than max-allowed/3; max-allowed for mysql is 767.
          **/
-        if (dbMetaData.getDriverName().toLowerCase().contains("h2")) {
+        if (isH2(metadata.driverName)) {
             commands += """
                 CREATE UNIQUE INDEX artifact_version_index ON artifacts(groupName, name, version);
             """
@@ -67,14 +74,6 @@ public class V3__artifacts_unique_index implements JdbcMigration {
             """
         }
 
-        /* Apply V3 commands */
-        for (String command : commands) {
-            PreparedStatement statement = connection.prepareStatement(command)
-            try {
-                statement.execute()
-            } finally {
-                statement.close()
-            }
-        }
+        return commands
     }
 }
