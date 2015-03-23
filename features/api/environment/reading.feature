@@ -25,10 +25,10 @@ Feature: Environment READ APIs
         "description" : "DeployDB Primary Integration",
         "webhooks" : {
           "deployment" : {
-              "started" : [],
+              "started" : null,
               "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
               "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"],
-              "verified" : []
+              "verified" : null
           },
           "promotion" : null
         }
@@ -57,10 +57,10 @@ Feature: Environment READ APIs
         "description" : "DeployDB Primary Integration",
         "webhooks" : {
           "deployment" : {
-              "started" : [],
+              "started" : null,
               "created" : ["http://jenkins.example.com/job/integ-deploy-created/build"],
               "completed" : ["http://jenkins.example.com/job/integ-deploy-completed/build"],
-              "verified" : []
+              "verified" : null
           },
           "promotion" : null
         }
