@@ -110,6 +110,73 @@ class WebhookManagerSpec extends Specification {
         counter == 4
     }
 
+    def "sendDeploymentWebhook() should push correct hook request when eventType is configured only in global webhooks"() {
+
+        given:
+        // webhook for "created"
+        deploydb.models.Webhook.Deployment webhookDeployment =
+                new deploydb.models.Webhook.Deployment(null,
+                        ["http://www.localhost.com/test-build", "http://www.localhost.com/test1-build"],
+                        [], [])
+        WebhookManager m = new WebhookManager()
+        m.queue = new InMemoryQueue()
+        // environment webhook for "created"
+        deploydb.models.Webhook.Deployment environWebhookDeployment =
+                new deploydb.models.Webhook.Deployment(
+                        ["http://www.localhost.com/test-build", "http://www.localhost.com/test1-build"],
+                        [],
+                        [], [])
+        m.webhook = new deploydb.models.Webhook.Webhook(webhookDeployment, null)
+        deploydb.models.Webhook.Webhook ewh = new deploydb.models.Webhook.Webhook(environWebhookDeployment, null)
+
+        // mock the queue push
+        int counter = 0
+        m.queue.metaClass.push = {HookRequest hookRequest ->
+            counter++
+            true
+        }
+
+        when:
+        m.sendDeploymentWebhook("created", ewh, new DeploymentWebhookMapper())
+
+        then:
+        counter == 2
+    }
+
+    def "sendDeploymentWebhook() should push correct hook request when eventType is configured only in environment webhooks"() {
+
+        given:
+        // webhook for "created"
+        deploydb.models.Webhook.Deployment webhookDeployment =
+                new deploydb.models.Webhook.Deployment(
+                        ["http://www.localhost.com/test-build", "http://www.localhost.com/test1-build"],
+                        [],
+                        [], [])
+        WebhookManager m = new WebhookManager()
+        m.queue = new InMemoryQueue()
+        // environment webhook for "created"
+        deploydb.models.Webhook.Deployment environWebhookDeployment =
+                new deploydb.models.Webhook.Deployment([],
+                        ["http://www.localhost.com/test-build", "http://www.localhost.com/test1-build"],
+                        [], [])
+
+        m.webhook = new deploydb.models.Webhook.Webhook(webhookDeployment, null)
+        deploydb.models.Webhook.Webhook ewh = new deploydb.models.Webhook.Webhook(environWebhookDeployment, null)
+
+        // mock the queue push
+        int counter = 0
+        m.queue.metaClass.push = {HookRequest hookRequest ->
+            counter++
+            true
+        }
+
+        when:
+        m.sendDeploymentWebhook("created", ewh, new DeploymentWebhookMapper())
+
+        then:
+        counter == 2
+    }
+
     def "sendPromotionWebhook() should return true if no webhooks are configured"() {
         given:
         WebhookManager m = new WebhookManager()

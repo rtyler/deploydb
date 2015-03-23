@@ -12,7 +12,7 @@ class Promotion {
      * List of URIs for promotion completed state
      */
     @JsonProperty
-    List<String> completed
+    List<String> completed = []
 
     /**
      * Empty constructor. Used by Jackson for object deserialization

@@ -11,25 +11,25 @@ class Deployment {
      * List of URI associated with deployment started state
      */
     @JsonProperty
-    List<String> started
+    List<String> started = []
 
     /**
      * List of URI associated with deployment created state
      */
     @JsonProperty
-    List<String> created
+    List<String> created = []
 
     /**
      * List of URI associated with deployment completed state
      */
     @JsonProperty
-    List<String> completed
+    List<String> completed = []
 
     /**
      * List of URI associated with deployment verified state
      */
     @JsonProperty
-    List<String> verified
+    List<String> verified = []
 
     /**
      * Empty constructor used by Jackson for object deserialization
