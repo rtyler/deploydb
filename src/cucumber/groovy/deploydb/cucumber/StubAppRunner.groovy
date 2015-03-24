@@ -4,6 +4,8 @@ import deploydb.WebhookManager
 import io.dropwizard.Application
 import io.dropwizard.Configuration
 import io.dropwizard.cli.ServerCommand
+import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.flyway.FlywayFactory
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
@@ -73,8 +75,10 @@ public class StubAppRunner<C extends Configuration> {
             application = newApplication()
 
             final Bootstrap<C> bootstrap = new Bootstrap<C>(application) {
+
                 @Override
                 public void run(C configuration, Environment environment) throws Exception {
+
                     environment.lifecycle().addServerLifecycleListener(new ServerLifecycleListener() {
                         @Override
                         public void serverStarted(Server server) {
@@ -85,7 +89,7 @@ public class StubAppRunner<C extends Configuration> {
                             sessionFactory = application.sessionFactory
                             webhookManager = application.webhooksManager
 
-                             /**
+                            /**
                              * Get a ModelRegistry(s) from the application once it's up and running
                              */
                             serviceRegistry = application.workFlow.serviceRegistry
@@ -98,30 +102,30 @@ public class StubAppRunner<C extends Configuration> {
                             * application, otherwise the Hibernate code running inside of
                             * DeployDB won't be able to "see" the in-memory DB
                             */
-                            Flyway flyway = new Flyway()
-                            flyway.setDataSource('jdbc:h2:mem:cucumber', 'nobody', '')
+                            Flyway flyway = configuration.flyway.build(
+                                    configuration.database.build(metricRegistry, "Flyway"));
                             flyway.clean()
                             flyway.migrate()
                         }
                     })
 
-                StubAppRunner.this.configuration = configuration
-                StubAppRunner.this.environment = environment
-                super.run(configuration, environment)
+                    StubAppRunner.this.configuration = configuration
+                    StubAppRunner.this.environment = environment
+                    super.run(configuration, environment)
+                }
             }
-        }
 
-        application.initialize(bootstrap)
-        final ServerCommand<C> command = new ServerCommand<>(application)
+            application.initialize(bootstrap)
+            final ServerCommand<C> command = new ServerCommand<>(application)
 
-        ImmutableMap.Builder<String, Object> file = ImmutableMap.builder()
+            ImmutableMap.Builder<String, Object> file = ImmutableMap.builder()
 
-        if (!Strings.isNullOrEmpty(configPath)) {
-            file.put("file", configPath)
-        }
-        final Namespace namespace = new Namespace(file.build())
+            if (!Strings.isNullOrEmpty(configPath)) {
+                file.put("file", configPath)
+            }
+            final Namespace namespace = new Namespace(file.build())
 
-        command.run(bootstrap, namespace)
+            command.run(bootstrap, namespace)
         }
         catch (Exception e) {
             throw new RuntimeException(e)
