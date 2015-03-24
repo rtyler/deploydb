@@ -180,11 +180,16 @@ class AppHelper {
         /*
          * For a valid webhook configuration, deployment and promotion are valid objects
          */
-        if (webhook.deployment != null) {
+        if (webhook != null && webhook.deployment != null) {
             eventUrlList = this.runner.webhookManager.getMemberOfObject(webhook.deployment, eventType)
         }
-        if (webhook.promotion != null) {
-            eventUrlList += this.runner.webhookManager.getMemberOfObject(webhook.promotion, eventType)
+        if (webhook != null && webhook.promotion != null) {
+            /*
+             * Only event type valid for promotion is "completed", ignore all other types
+             */
+            if (eventType == "completed") {
+                eventUrlList += this.runner.webhookManager.getMemberOfObject(webhook.promotion, eventType)
+            }
         }
 
         return eventUrlList.collect{ it.toURI().getPath() }
