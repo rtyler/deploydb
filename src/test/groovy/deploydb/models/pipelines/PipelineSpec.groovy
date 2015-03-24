@@ -60,12 +60,12 @@ class PipelineWithArgsSpec extends Specification {
         pipelineRegistry.getAll() == [pipeline]
     }
 
-    def "Loading of empty model pipeline throws a null pointer exception"() {
+    def "Loading of empty model pipeline throws a parsing exception"() {
         when:
         Pipeline pipeline = pipelineLoader.loadFromString("")
 
         then:
-        thrown(NullPointerException)
+        thrown(ConfigurationParsingException)
     }
 
     def "Loading a malformed pipeline throws a parsing exception"() {

@@ -50,19 +50,17 @@ webhooks:
         environmentRegistry.getAll() == [environment]
     }
 
-    def "Loading an empty environment config file throws a null pointer exception"() {
+    def "Loading an empty environment config file throws a parsing exception"() {
         when:
-        String fileContents = ""
-        Environment environment = environmentLoader.loadFromString(fileContents)
+        Environment environment = environmentLoader.loadFromString("")
 
         then:
-        thrown(NullPointerException)
+        thrown(ConfigurationParsingException)
     }
 
     def "Loading a malformed environment config file throws throws a parsing exception"() {
         when:
-        String fileContents = "j&&&&"
-        Environment environment = environmentLoader.loadFromString(fileContents)
+        Environment environment = environmentLoader.loadFromString('j&&&&')
 
         then:
         thrown(ConfigurationParsingException)
