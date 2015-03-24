@@ -111,14 +111,15 @@ class WebhookManager implements Managed {
          * webhook.deployment.created|started|completed or
          * webhook.promotion.created|started|completed
          */
-        if (environmentWebhook != null) {
-            eventUrlList = getMemberOfObject(environmentWebhook, webhookType) ?
-                    getMemberOfObject(getMemberOfObject(environmentWebhook, webhookType),
-                                      eventType) : []
+        if (environmentWebhook != null &&
+            getMemberOfObject(environmentWebhook, webhookType) != null &&
+            getMemberOfObject(getMemberOfObject(environmentWebhook, webhookType), eventType) != null) {
+            eventUrlList =  getMemberOfObject(getMemberOfObject(environmentWebhook, webhookType), eventType)
         }
-        if (webhook != null) {
-            eventUrlList += getMemberOfObject(webhook, webhookType) ?
-                    getMemberOfObject( getMemberOfObject(webhook, webhookType), eventType) : []
+        if (webhook != null &&
+            getMemberOfObject(webhook, webhookType) != null &&
+            getMemberOfObject( getMemberOfObject(webhook, webhookType), eventType) != null) {
+            eventUrlList += getMemberOfObject( getMemberOfObject(webhook, webhookType), eventType)
         }
 
         /*

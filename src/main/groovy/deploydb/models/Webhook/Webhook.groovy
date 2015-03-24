@@ -59,8 +59,6 @@ class Webhook {
 
     @Override
     String toString() {
-        String output
-        output += "deployment = ${deployment}, promotion: ${promotion}"
-        return output
+        return "deployment: ${deployment}, promotion: ${promotion}"
     }
 }
