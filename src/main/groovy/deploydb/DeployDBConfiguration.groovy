@@ -66,6 +66,7 @@ class DeployDBConfiguration extends Configuration {
     @JsonProperty("whoas")
     void setWhoasFactory(WhoasFactory whoasFactory) {
         this.whoasFactory = whoasFactory
+    }
 
     ImmutableMap<String, ImmutableMap<String, String>> getViewRendererConfiguration() {
         return viewRendererConfiguration
