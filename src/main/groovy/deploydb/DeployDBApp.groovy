@@ -1,6 +1,7 @@
 package deploydb
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.ImmutableMap
 import io.dropwizard.Application
 import io.dropwizard.assets.AssetsBundle
 import io.dropwizard.db.DataSourceFactory
@@ -57,9 +58,16 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void initialize(Bootstrap<DeployDBConfiguration> bootstrap) {
         bootstrap.addBundle(new AssetsBundle())
-        bootstrap.addBundle(new ViewBundle())
         bootstrap.addBundle(hibernate)
         workFlow = new WorkFlow(this)
+
+
+        bootstrap.addBundle(new ViewBundle<DeployDBConfiguration>() {
+            @Override
+            ImmutableMap<String, ImmutableMap<String, String>> getViewConfiguration(DeployDBConfiguration config) {
+                return config.viewRendererConfiguration
+            }
+        })
 
         /*
          * Force our default timezone to always be UTC

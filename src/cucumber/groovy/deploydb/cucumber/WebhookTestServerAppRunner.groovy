@@ -8,7 +8,7 @@ import io.dropwizard.cli.ServerCommand
 import io.dropwizard.lifecycle.ServerLifecycleListener
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
-import io.dropwizard.testing.junit.ConfigOverride
+import io.dropwizard.testing.ConfigOverride
 import net.sourceforge.argparse4j.inf.Namespace
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector

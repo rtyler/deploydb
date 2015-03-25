@@ -21,7 +21,5 @@ logging:
     - type: file
       currentLogFilename: ./logs/deploydb-cucumber.log
       threshold: ALL
-      archive: true
-      archivedLogFilenamePattern: ./logs/deploydb-cucumber-%d.log
-      archivedFileCount: 5
+      archive: false
       timeZone: UTC
