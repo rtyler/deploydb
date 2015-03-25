@@ -1,0 +1,53 @@
+= #DeployDB Web UI Design
+
+Below is a rough outline of what a few of the key DeployDB web-based views
+should entail.
+
+
+== Developer View
+
+*Goal:* Provide quick feedback to the status of a particularly versioned
+Artifact as it progress through its deployment pipeline
+
+image::images/webui-20150325-devview.png[Developer View]
+
+In this view the user should be presented with a horizontal layout of the
+different Environments that the requested Artifact must progress through.
+
+Referencing the above mockup, the Artifact (`verspaetung-0.2.1+0c3d.jar`) is in
+the current state:
+
+* It has been deployed to the "ephemeral-alpha" Environment
+** The Promotions: "healthchecks", "readonly-smoke-tests" and
+   "mutable-smoke-tests" have passed.
+* It has been deployed to the "integration" Environment
+** The Promotions: "healthchecks" and "readonly-smoke-tests" have passed
+** The Promotions: "mutable-smoke-tests" have failed
+* The Artifact has not _yet_ been deployed to the "production" Environment
+
+
+== Manager View
+
+
+*Goal:* Provide an overview of which Services, composed of which Artifacts, are
+deployed into the available Environments
+
+
+image::images/webui-20150324-managerview.png[Manager View]
+
+
+In the above mockup, there are three Environments that are available with
+various Services contained within them. Inside of each of those Services there
+are multiple Artifacts that make them up.
+
+This view is giving a manager, QA or non-technical user an overview of which
+versions of which Artifacts can be found in which Environments. In this case
+the "Verspätung" service has a _newer_ version of the
+`com.github.lookout:verspaetung` Artifact in "ephemeral-alpha" than the
+"integration", and "integration" has a newer version than "production."
+
+The `cookbooks:deploydb-cookbook`Artifact in the "ephemeral-alpha" Environment
+is also of a newer version than "integration" and its Promotions have failed,
+resulting in the Artifact's progression through the Environments (left to
+right) to stop.
+
