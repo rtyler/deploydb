@@ -7,7 +7,6 @@ import webhookTestServer.models.RequestWebhookObject
 import webhookTestServer.models.ResponseWebhookObject
 
 import javax.servlet.http.HttpServletRequest
-import javax.ws.rs.Consumes
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -20,7 +19,6 @@ import javax.ws.rs.core.Response
  *
  */
 @Path("/")
-@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class TestCallBackobjectResource {
 
@@ -47,6 +45,10 @@ public class TestCallBackobjectResource {
          */
         if (! requestWebhookObject.configuredUriPaths.contains(requestUri)) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST)
+        }
+
+        if (requestWebhookObject.contentTypeParam != request.getContentType()){
+            throw new WebApplicationException(Response.Status.UNSUPPORTED_MEDIA_TYPE)
         }
 
         /*

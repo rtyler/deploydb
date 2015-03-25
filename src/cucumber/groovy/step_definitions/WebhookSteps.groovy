@@ -21,7 +21,8 @@ import org.joda.time.DateTime
 import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
 
-Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBody ->
+Given(~/^a (.*?) webhook "(.*?)" configuration:$/) { String webhookType,
+                                                     String eventType, String configBody ->
 
     List<String> paths = getUrlPathFromWebhookConfigBody(configBody, eventType)
 
@@ -38,11 +39,20 @@ Given(~/^a webhook "(.*?)" configuration:$/) { String eventType, String configBo
 
         ModelLoader<Webhook> webhookLoader = new ModelLoader<>(Webhook.class)
         webhookManager.webhook = webhookLoader.loadFromString(configBody)
-   }
+
+        /*
+         * Set the content type from the webhook and the event type. The content type will be
+         * checked when deploydb invokes webhooks
+         */
+        requestWebhookObject.contentTypeParam = "application/vnd.deploydb."+
+                                                 webhookType+eventType+".v1+json"
+    }
 }
 
-Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String eventType,
-                                                                         String envIdent, String configBody ->
+Given(~/^an (.*?) environment webhook "(.*?)" configuration named "(.*?)":$/) {String webhookType,
+                                                                               String eventType,
+                                                                               String envIdent,
+                                                                               String configBody ->
 
     ModelLoader<Environment> environmentLoader = new ModelLoader<>(Environment.class)
     Environment a = environmentLoader.loadFromString(configBody)
@@ -55,6 +65,12 @@ Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String 
      */
     withWebhookManager { WebhookManager webhookManager, RequestWebhookObject requestWebhookObject ->
         requestWebhookObject.addConfiguredUriPaths(paths)
+        /*
+         * Set the content type from the webhook and the event type. The content type will be
+         * checked when deploydb invokes webhooks
+         */
+        requestWebhookObject.contentTypeParam = "application/vnd.deploydb."+
+                webhookType+eventType+".v1+json"
     }
 
     /*
@@ -64,8 +80,6 @@ Given(~/^an environment webhook "(.*?)" configuration named "(.*?)":$/) {String 
         a.ident = envIdent
         environmentRegistry.put(envIdent, a)
     }
-
-
 }
 
 When (~/^I POST to "(.*?)" with an artifact/) { String path ->

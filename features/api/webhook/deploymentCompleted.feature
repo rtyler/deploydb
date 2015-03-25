@@ -2,7 +2,7 @@ Feature: Webhook invocation  when deployment is completed
 
   @freezetime @webhook
   Scenario: Webhooks should be invoked when deployment is completed
-    Given a webhook "completed" configuration:
+    Given a deployment webhook "completed" configuration:
     """
       deployment:
         completed:
@@ -37,7 +37,7 @@ Feature: Webhook invocation  when deployment is completed
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when artifacts are completed
-    Given an environment webhook "completed" configuration named "pre-prod":
+    Given an deployment environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:

@@ -2,7 +2,7 @@ Feature: Webhook invocation  when deployment is created
 
   @freezetime @webhook
   Scenario: Webhooks should be invoked when artifacts are created
-    Given a webhook "created" configuration:
+    Given a deployment webhook "created" configuration:
     """
       deployment:
         created:
@@ -34,7 +34,7 @@ Feature: Webhook invocation  when deployment is created
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when artifacts are created
-    Given an environment webhook "created" configuration named "integ":
+    Given an deployment environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:

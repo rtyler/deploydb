@@ -2,7 +2,7 @@ Feature: Webhook invocation when promotion is completed with failed state
 
   @freezetime @webhook
   Scenario: Webhooks should be invoked when promotion is completed in failed state
-    Given a webhook "completed" configuration:
+    Given a promotion webhook "completed" configuration:
     """
       promotion:
         completed:
@@ -45,7 +45,7 @@ Feature: Webhook invocation when promotion is completed with failed state
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when promotions are completed in failed state
-    Given an environment webhook "completed" configuration named "pre-prod":
+    Given an promotion environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:

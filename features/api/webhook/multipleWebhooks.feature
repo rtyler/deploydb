@@ -2,7 +2,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Multiple Webhooks should be invoked when artifacts are created
-    Given a webhook "created" configuration:
+    Given a deployment webhook "created" configuration:
     """
       deployment:
         created:
@@ -53,7 +53,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Multiple environment webhooks should be invoked when artifacts are created
-    Given an environment webhook "created" configuration named "integ":
+    Given an deployment environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -106,13 +106,13 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Global webhook and environment webhook should be invoked when artifacts are created
-    Given a webhook "created" configuration:
+    Given a deployment webhook "created" configuration:
     """
       deployment:
         created:
            - http://localhost:10000/job/notify-deployment-created/build
     """
-    And an environment webhook "created" configuration named "integ":
+    And an deployment environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -164,13 +164,13 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Both global and environment webhooks should be invoked when promotion is completed with success
-    Given a webhook "completed" configuration:
+    Given a promotion webhook "completed" configuration:
     """
       promotion:
         completed:
           - http://localhost:10000/job/notify-promotion-completed/build
     """
-    And an environment webhook "completed" configuration named "pre-prod":
+    And an promotion environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -240,7 +240,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Only Global webhook should be invoked when environment webhooks doesn't contain deployment created event
-    Given a webhook "created" configuration:
+    Given a deployment webhook "created" configuration:
     """
       deployment:
         created:
@@ -248,7 +248,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
         started:
           - http://localhost:10000/job/notify-deployment-started/build
     """
-    And an environment webhook "created" configuration named "integ":
+    And an deployment environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -281,7 +281,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Only environment webhooks should be invoked when global webhooks doesn't contain deployment created event
-    Given a webhook "created" configuration:
+    Given a deployment webhook "created" configuration:
     """
       deployment:
         started:
@@ -289,7 +289,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
         completed:
           - http://localhost:10000/job/notify-deployment-completed/build
     """
-    And an environment webhook "created" configuration named "integ":
+    And an deployment environment webhook "created" configuration named "integ":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -344,7 +344,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Only global webhooks should be invoked when environment webhooks doesn't contain deployment started event
-    Given a webhook "started" configuration:
+    Given a deployment webhook "started" configuration:
     """
       deployment:
         created:
@@ -359,7 +359,7 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
         completed:
           - http://localhost:10000/job/notify-completed-completed/build
     """
-    And an environment webhook "started" configuration named "pre-prod":
+    And an deployment environment webhook "started" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:
@@ -415,14 +415,14 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Global webhooks should be invoked when environment webhook doesn't contain promotion event for promotion success
-    Given a webhook "completed" configuration:
+    Given a promotion webhook "completed" configuration:
     """
       promotion:
         completed:
           - http://localhost:10000/job/notify-promotion-completed/build
           - http://localhost:10000/job/another-notify-promotion-completed/build
     """
-    And an environment webhook "completed" configuration named "pre-prod":
+    And an promotion environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     """
@@ -489,14 +489,14 @@ Feature: Webhook invocation  when deployment is created with multiple webhooks
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when global webhook doesn't contain promotion event for promotion success
-    Given a webhook "completed" configuration:
+    Given a promotion webhook "completed" configuration:
     """
       deployment:
         completed:
           - http://localhost:10000/job/notify-deployment-completed/build
           - http://localhost:10000/job/another-notify-deployment-completed/build
     """
-    And an environment webhook "completed" configuration named "pre-prod":
+    And an promotion environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:

@@ -2,7 +2,7 @@ Feature: Webhook invocation  when deployment is started
 
   @freezetime @webhook
   Scenario: Webhooks should be invoked when deployment is started
-    Given a webhook "started" configuration:
+    Given a deployment webhook "started" configuration:
     """
       deployment:
         started:
@@ -36,7 +36,7 @@ Feature: Webhook invocation  when deployment is started
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when artifacts are started
-    Given an environment webhook "started" configuration named "pre-prod":
+    Given an deployment environment webhook "started" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:

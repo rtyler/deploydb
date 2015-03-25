@@ -17,6 +17,11 @@ class RequestWebhookObject {
     List<String> requestMessageBodies = []
 
     /**
+     * ContentType header param
+     */
+    String contentTypeParam
+    
+    /**
      *  Constructor with no arguments
      */
     RequestWebhookObject() { }
