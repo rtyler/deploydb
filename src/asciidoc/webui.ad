@@ -1,0 +1,22 @@
+= #DeployDB Web UI Design
+
+Below is a rough outline of what a few of the key DeployDB web-based views
+should entail.
+
+
+== Developer View
+
+*Goal:* Provide quick feedback to the status of a particularly versioned
+Artifact as it progress through its deployment pipeline
+
+== Manager View
+
+
+*Goal:* Provide an overview of which Services, composed of which Artifacts, are
+deployed into the available Environments
+
+
+image::images/webui-20150324-managerview.png[Manager View]
+
+
+

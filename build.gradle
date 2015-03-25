@@ -140,7 +140,9 @@ asciidoctor {
     outputDir 'docs'
     attributes 'toc': 'right',
                 'source-highlighter': 'coderay',
-                'toc-title': 'Table of Contents'
+                'toc-title': 'Table of Contents',
+                'sectanchors' : '',
+                'sectlinks' : ''
     shouldRunAfter test
 }
 
