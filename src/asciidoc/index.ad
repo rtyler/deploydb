@@ -9,14 +9,19 @@ image:https://travis-ci.org/lookout/deploydb.svg?branch=master["Build Status", l
 
 == Important Links
 
-
 * link:https://github.com/lookout/deploydb[Source code]
 * link:https://github.com/lookout/deploydb/issues[Issue Tracker]
-* link:internals.html[DeployDB Internals]
-* link:hacking.html[Hacking on DeployDB]
+* link:https://bintray.com/lookout/systems/DeployDB/_latestVersion[Latest released version]
+
+=== Internals/Hacking
+
+* <<hacking.ad#,Hacking DeployDB>>
 * link:restapi/index.html[REST API documentation]
 * link:groovydoc/index.html[Groovydocs]
-* link:workflow.html[DeployDB WorkFlow]
+* <<internals.ad#,Data model/Internals>>
+* <<workflow.ad#,Workflow>>
+* <<webui.ad#,Web UI Design/concepts>>
+
 
 ---
 
