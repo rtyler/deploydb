@@ -16,7 +16,7 @@ import deploydb.models.PromotionResult
 import deploydb.models.Webhook.Webhook
 import deploydb.registry.ModelRegistry
 import org.joda.time.DateTime
-
+import cucumber.api.DataTable
 
 import deploydb.WebhookManager
 import webhookTestServer.models.RequestWebhookObject
@@ -170,4 +170,17 @@ And(~/there is a deployment in "(.*?)" state$/) { String deploymentState ->
         fdao.persist(f)
     }
 
+}
+
+And (~/the webhook should have the headers:$/){ DataTable headers ->
+
+    withRequestWebhookObject { RequestWebhookObject requestWebhookObject ->
+        List<List<String>> rawHeaders = headers.raw()
+        Boolean foundHeader = true
+        rawHeaders.subList(1, rawHeaders.size()).each { List<String> row ->
+            foundHeader &= requestWebhookObject.validateHeader(row[0], row[1])
+        }
+
+        assert foundHeader
+    }
 }

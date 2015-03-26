@@ -31,6 +31,10 @@ Feature: Webhook invocation  when deployment is created
         "createdAt" : "{{created_timestamp}}"
       }
     """
+    And the webhook should have the headers:
+      | Header Name       | Value                                                |
+      | Content-Type      | application/vnd.deploydb.deploymentcreated.v1+json   |
+
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when artifacts are created

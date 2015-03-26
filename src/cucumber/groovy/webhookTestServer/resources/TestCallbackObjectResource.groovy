@@ -51,6 +51,15 @@ public class TestCallBackobjectResource {
             throw new WebApplicationException(Response.Status.UNSUPPORTED_MEDIA_TYPE)
         }
 
+
+        /*
+         * Now save the headers so we can check with in the steps file
+         */
+        Enumeration<String> headerNames = request.getHeaderNames()
+        headerNames.each {
+            requestWebhookObject.headers.put(it.toString(), request.getHeader(it.toString()))
+        }
+
         /*
          * save the received message body
          */

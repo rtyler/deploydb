@@ -70,3 +70,6 @@ Feature: Webhook invocation  when deployment is completed
         "createdAt" : "{{created_timestamp}}"
       }
     """
+    And the webhook should have the headers:
+      | Header Name       | Value                                                |
+      | Content-Type      | application/vnd.deploydb.deploymentcompleted.v1+json |

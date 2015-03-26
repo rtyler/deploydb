@@ -42,6 +42,10 @@ Feature: Webhook invocation when promotion is completed with failed state
         }
       }
     """
+    And the webhook should have the headers:
+      | Header Name       | Value                                                |
+      | Content-Type      | application/vnd.deploydb.promotioncompleted.v1+json  |
+
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when promotions are completed in failed state

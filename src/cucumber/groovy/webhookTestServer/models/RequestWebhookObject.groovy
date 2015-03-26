@@ -1,5 +1,7 @@
 package webhookTestServer.models
 
+import com.google.common.collect.HashMultimap
+
 
 /**
  * Class to represent the received object in webhook
@@ -20,7 +22,12 @@ class RequestWebhookObject {
      * ContentType header param
      */
     String contentTypeParam
-    
+
+    /**
+     * Save all the header we received and we can compare them in steps
+     */
+    HashMultimap<String, String> headers = new HashMultimap<>()
+
     /**
      *  Constructor with no arguments
      */
@@ -36,5 +43,9 @@ class RequestWebhookObject {
 
     String getRequestMessageBody() {
         return this.requestMessageBodies[0]
+    }
+
+    Boolean validateHeader(String headerName, String headerValue) {
+        return headers.containsEntry(headerName, headerValue)
     }
 }
