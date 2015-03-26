@@ -2,7 +2,7 @@ Feature: Webhook invocation when promotion is completed with success state
 
   @freezetime @webhook
   Scenario: Webhooks should be invoked when promotion is completed in success state
-    Given a webhook "completed" configuration:
+    Given a promotion webhook "completed" configuration:
     """
       promotion:
         completed:
@@ -42,10 +42,14 @@ Feature: Webhook invocation when promotion is completed with success state
         }
       }
     """
+    And the webhook should have the headers:
+      | Header Name       | Value                                                |
+      | Content-Type      | application/vnd.deploydb.promotioncompleted.v1+json  |
+
 
   @freezetime @webhook
   Scenario: Environment webhooks should be invoked when promotions are completed in success state
-    Given an environment webhook "completed" configuration named "pre-prod":
+    Given an promotion environment webhook "completed" configuration named "pre-prod":
     """
     description: "DeployDB Primary Integration"
     webhooks:

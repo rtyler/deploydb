@@ -18,6 +18,10 @@ class WebhookManager implements Managed {
     private AbstractHookQueue queue = null
     private final Logger logger = LoggerFactory.getLogger(WebhookManager.class)
     private Webhook webhook = null
+    /*
+     * We should we move this to application and make sure through out the code we use this variable
+     */
+    private final String apiVersion = "v1"
 
     /*
      * This function will be used to fetch different webhooks types
@@ -136,7 +140,10 @@ class WebhookManager implements Managed {
         boolean pushReturn = false
         eventUrlList.each() { urlName ->
             HookRequest hookRequest = new HookRequest(urlName,
-                    webhookModelMapper.toPayload())
+                                                      webhookModelMapper.toPayload(),
+                                                      "application/vnd.deploydb."+
+                                                          webhookType+eventType+"."+
+                                                          apiVersion+"+json")
             pushReturn |= queue.push(hookRequest)
         }
         return pushReturn
