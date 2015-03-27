@@ -93,6 +93,6 @@ Then(~/^the body should be JSON:$/) { String expectedBody ->
     assert bodyNode == expectedNode
 }
 
-Given(~/^DeployDb config is available at path "(.*?)"$/) { String configDir ->
+Given(~/^DeployDb configuration directory path is "(.*?)"$/) { String configDir ->
     setConfigDirectory(configDir)
 }
