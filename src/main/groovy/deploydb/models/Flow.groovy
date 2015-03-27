@@ -6,6 +6,8 @@ import deploydb.Status
 import javax.persistence.Column
 import javax.persistence.CascadeType;
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
@@ -36,6 +38,7 @@ class Flow extends AbstractModel {
     String service
 
     @Column(name="status")
+    @Enumerated(EnumType.ORDINAL)
     @JsonIgnore
     Status status = Status.CREATED
 

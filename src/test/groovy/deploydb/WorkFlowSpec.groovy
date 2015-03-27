@@ -1,5 +1,7 @@
 package deploydb
 
+import deploydb.dao.FlowDAO
+import deploydb.models.Flow
 import spock.lang.*
 
 class WorkFlowSpec extends Specification {
@@ -18,11 +20,14 @@ class workFlowWithArgsSpec extends Specification {
     private String baseCfgDirName = "./build/tmp/config"
     private DeployDBApp app = new DeployDBApp()
     private WorkFlow workFlow
+    private FlowDAO dao = Mock(FlowDAO)
 
     def setup() {
         app.webhooksManager = new WebhookManager()
+        app.configDirectory = baseCfgDirName
         workFlow = new WorkFlow(app)
         workFlow.initializeRegistry()
+        workFlow.flowDAO = dao
     }
 
     def cleanup() {
@@ -137,7 +142,7 @@ promotion:
         createPipelineConfigFile()
         createServiceConfigFile()
         createWebhookConfigFile()
-        workFlow.loadConfigModels(baseCfgDirName)
+        workFlow.loadConfigModels(false)
 
         expect:
         workFlow.promotionRegistry.getAll().size() == 1
@@ -151,34 +156,72 @@ promotion:
         workFlow.deployDBApp.webhooksManager != null
     }
 
-    def "If promotion is missing, then loading pipeline in loadConfigModel throws an exception"() {
+    def "If promotion is missing, then loading pipeline in loadConfigModels throws an exception"() {
         when:
         createEnvironmentConfigFile()
         createPipelineConfigFile()
-        workFlow.loadConfigModels(baseCfgDirName)
+        workFlow.loadConfigModels(false)
 
         then:
         thrown(IllegalArgumentException)
     }
 
-    def "If environment is missing, then loading pipeline in loadConfigModel throws an exception"() {
+    def "If environment is missing, then loading pipeline in loadConfigModels throws an exception"() {
         when:
         createPromotionConfigFile()
         createPipelineConfigFile()
-        workFlow.loadConfigModels(baseCfgDirName)
+        workFlow.loadConfigModels(false)
 
         then:
         thrown(IllegalArgumentException)
     }
 
-    def "If pipeline is missing, then loading service in loadConfigModel throws an exception"() {
+    def "If pipeline is missing, then loading service in loadConfigModels throws an exception"() {
         when:
         createPromotionConfigFile()
         createEnvironmentConfigFile()
         createServiceConfigFile()
-        workFlow.loadConfigModels(baseCfgDirName)
+        workFlow.loadConfigModels(false)
 
         then:
         thrown(IllegalArgumentException)
+    }
+
+
+    def "Reload entire config from a directory and make sure it passes"() {
+        given:
+        createPromotionConfigFile()
+        createEnvironmentConfigFile()
+        createPipelineConfigFile()
+        createServiceConfigFile()
+        createWebhookConfigFile()
+        workFlow.loadConfigModels(false)
+        1 * dao.getActiveFlowsCount() >> 0
+
+        when:
+        workFlow.loadConfigModels(true)
+
+        then:
+        workFlow.promotionRegistry.getAll().size() == 1
+        workFlow.promotionRegistry.get("basicPromo").ident == "basicPromo"
+        workFlow.environmentRegistry.getAll().size() == 1
+        workFlow.environmentRegistry.get("basicEnv").ident == "basicEnv"
+        workFlow.pipelineRegistry.getAll().size() == 1
+        workFlow.pipelineRegistry.get("basicPipe").ident == "basicPipe"
+        workFlow.serviceRegistry.getAll().size() == 1
+        workFlow.serviceRegistry.get("basicServ").ident == "basicServ"
+        workFlow.deployDBApp.webhooksManager != null
+    }
+
+    def "Attempt to reload config with active flows throws an exception"() {
+        given:
+        //List<models.Flow> flows = [new models.Flow()]
+        1 * dao.getActiveFlowsCount() >> 1
+
+        when:
+        workFlow.loadConfigModels(true)
+
+        then:
+        thrown(Exception)
     }
 }

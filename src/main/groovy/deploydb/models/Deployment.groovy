@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.annotation.JsonIgnore
 import deploydb.Status
 import javax.persistence.CascadeType
-
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Enumerated
@@ -125,7 +124,7 @@ class Deployment extends AbstractModel {
     @Override
     int hashCode() {
         return Objects.hash(this.id, this.artifact, this.environmentIdent,
-                this.serviceIdent, this.status, this.promotionResultSet)
+                this.serviceIdent, this.status)
     }
 
     @Override

@@ -90,7 +90,7 @@ When (~/^I POST to "(.*?)" with an artifact/) { String path ->
 "sourceUrl" : "http://example.com/maven/com.example.cucumber/cucumber-artifact/1.0.1/cucumber-artifact-1.0.1.jar"
 }"""
 
-    response = postJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody, false)
 }
 
 Then(~/^the webhook should be invoked with the JSON:$/) { String expectedMessageBody ->
@@ -132,7 +132,7 @@ Then(~/^the webhook ([1-9][0-9]*) should be invoked with the JSON:$/) { int webh
 }
 
 When(~/I trigger deployment PATCH with:$/) { String path ->
-    response = postJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody, false)
 }
 
 And(~/there is a deployment in "(.*?)" state$/) { String deploymentState ->

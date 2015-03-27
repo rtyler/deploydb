@@ -26,6 +26,7 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     private WebhookManager webhooksManager
     private WorkFlow workFlow
     private provider.V1TypeProvider typeProvider
+    private String configDirectory
 
     static void main(String[] args) throws Exception {
         new DeployDBApp().run(args)
@@ -94,7 +95,6 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
     @Override
     public void run(DeployDBConfiguration configuration,
                     Environment environment) {
-
         /*
          * Create webhook manager based on configuration
          */
@@ -109,17 +109,12 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
         /**
          * Load configuration models
          */
-        File baseConfigDirectory = new File(configuration.configDirectory);
-        if (baseConfigDirectory.exists() && baseConfigDirectory.isDirectory()) {
-            logger.info("Loading models from directory: ${baseConfigDirectory.getCanonicalPath()}")
-            try {
-                workFlow.loadConfigModels(configuration.configDirectory)
-            } catch (IllegalArgumentException e) {
-                logger.error("failed to load models from directory: " +
-                        "${baseConfigDirectory.getCanonicalPath()}, error: ${e.toString()}")
-            }
-        } else {
-            logger.error("No DeployDB configuration found. DeployDB would not function properly")
+        this.configDirectory = configuration.configDirectory
+        try {
+            workFlow.loadConfigModels(false)
+        } catch (Exception e) {
+            logger.error("failed to read config from directory: " +
+                    "${configDirectory}, error: ${e.toString()}")
         }
 
         /**
@@ -132,6 +127,9 @@ class DeployDBApp extends Application<DeployDBConfiguration> {
          */
         environment.healthChecks().register('sanity', new health.SanityHealthCheck())
         environment.healthChecks().register('webhook', new health.WebhookHealthCheck(webhooksManager))
+
+        /** Add admin task for config reload */
+        environment.admin().addTask(new ConfigReloadTask(workFlow));
 
         /**
          * Instantiate Resources classes for Jersey handlers
