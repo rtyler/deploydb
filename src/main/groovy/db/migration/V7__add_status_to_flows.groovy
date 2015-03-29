@@ -29,7 +29,7 @@ class V7__add_status_to_flows extends DeployDBMigration {
          * Add status column to flows table
          */
         commands += """
-            ALTER TABLE flows ADD COLUMN status INT(11) NOT NULL;
+            ALTER TABLE flows ADD COLUMN status INT NOT NULL;
         """
 
         return commands
