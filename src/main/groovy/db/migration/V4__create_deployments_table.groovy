@@ -37,7 +37,7 @@ class V4__create_deployments_table extends DeployDBMigration {
                 status INT(11) NOT NULL,
 
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-                deletedAt TIMESTAMP DEFAULT NULL,
+                deletedAt TIMESTAMP NULL,
 
                 PRIMARY KEY (id)
             );
