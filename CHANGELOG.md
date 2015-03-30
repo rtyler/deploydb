@@ -1,6 +1,6 @@
 # DeployDB Changelog
 
-## 0.2.0
+## 0.2.0 - Antares
 
 * [#3](https://github.com/lookout/deploydb/issues/3) - Model what "Promotion Criteria" looks like
 * [#9](https://github.com/lookout/deploydb/issues/9) - Allow defining a Pipeline via YAML
@@ -32,7 +32,7 @@
 * [#124](https://github.com/lookout/deploydb/pull/124) - Remove integer type lengths in schema migrations
 
 
-## 0.1.0
+## 0.1.0 - Minimum Loveable Pipeline
 
 * [#27](https://github.com/lookout/deploydb/pull/27) - Fix for issue #23
 * [#28](https://github.com/lookout/deploydb/issues/28) - Decouple docs generation from test tasks
