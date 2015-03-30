@@ -30,15 +30,15 @@ class V6__create_promotion_results_table extends DeployDBMigration {
          */
         commands += """
             CREATE TABLE promotionResults (
-                id BIGINT(11) AUTO_INCREMENT,
+                id BIGINT AUTO_INCREMENT,
 
                 promotion VARCHAR(8192) NOT NULL,
-                status INT(11) NOT NULL,
+                status INT NOT NULL,
                 infoUrl TEXT,
-                deploymentId BIGINT(11) NOT NULL,
+                deploymentId BIGINT NOT NULL,
 
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-                deletedAt TIMESTAMP DEFAULT NULL,
+                deletedAt TIMESTAMP NULL,
 
                 PRIMARY KEY (id),
                 FOREIGN KEY (deploymentId) REFERENCES deployments(id)

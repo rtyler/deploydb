@@ -30,14 +30,14 @@ class V4__create_deployments_table extends DeployDBMigration {
          */
         commands += """
             CREATE TABLE deployments (
-                id BIGINT(11) AUTO_INCREMENT,
+                id BIGINT AUTO_INCREMENT,
 
-                artifactId BIGINT(11) NOT NULL,
+                artifactId BIGINT NOT NULL,
                 environment VARCHAR(8192) NOT NULL,
-                status INT(11) NOT NULL,
+                status INT NOT NULL,
 
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-                deletedAt TIMESTAMP DEFAULT NULL,
+                deletedAt TIMESTAMP NULL,
 
                 PRIMARY KEY (id)
             );

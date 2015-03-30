@@ -30,13 +30,13 @@ class V5__create_flows_table extends DeployDBMigration {
          */
         commands += """
             CREATE TABLE flows (
-                id BIGINT(11) AUTO_INCREMENT,
+                id BIGINT AUTO_INCREMENT,
 
-                artifactId BIGINT(11) NOT NULL,
+                artifactId BIGINT NOT NULL,
                 service TEXT NOT NULL,
 
                 createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-                deletedAt TIMESTAMP DEFAULT NULL,
+                deletedAt TIMESTAMP NULL,
 
                 PRIMARY KEY (id)
             );
@@ -44,7 +44,7 @@ class V5__create_flows_table extends DeployDBMigration {
 
         /* Add flowId to deployments table */
         commands += """
-            ALTER TABLE deployments ADD COLUMN flowId BIGINT(11);
+            ALTER TABLE deployments ADD COLUMN flowId BIGINT;
         """
 
         /* Add foreign key */
