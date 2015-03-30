@@ -1,6 +1,38 @@
 # DeployDB Changelog
 
-# 0.1.0
+## 0.2.0
+
+* [#3](https://github.com/lookout/deploydb/issues/3) - Model what "Promotion Criteria" looks like
+* [#9](https://github.com/lookout/deploydb/issues/9) - Allow defining a Pipeline via YAML
+* [#14](https://github.com/lookout/deploydb/issues/14) - DeployDB needs some persistent queueing abstraction
+* [#26](https://github.com/lookout/deploydb/issues/26) - Invalid JSON in cucumber tests doesn't properly raise exceptions
+* [#32](https://github.com/lookout/deploydb/issues/32) - Fix the request artifact with support for pageNumber=0 and pageSize=0
+* [#35](https://github.com/lookout/deploydb/issues/35) - Administrators should be able to configure webhooks for deployment creation
+* [#44](https://github.com/lookout/deploydb/issues/44) - DeployDB should be able to reload configuration with an API call
+* [#77](https://github.com/lookout/deploydb/issues/77) - 201 CREATED responses should include LOCATION header of newly created resource which can be GET'd later.
+* [#92](https://github.com/lookout/deploydb/issues/92) - Upgrade to Dropwizard 0.8.0 final
+* [#95](https://github.com/lookout/deploydb/issues/95) - Add REST API to GET Results of a promotion associated with the deployment
+* [#99](https://github.com/lookout/deploydb/issues/99) - Add restart logic and DB persistence
+* [#102](https://github.com/lookout/deploydb/pull/102) - Upgrade to Dropwizard 0.8 final
+* [#103](https://github.com/lookout/deploydb/issues/103) - When used with MySql on AWS, Some SQL commands failed to execute 
+* [#104](https://github.com/lookout/deploydb/pull/104) - Added instructions for how to run the deployDb application
+* [#106](https://github.com/lookout/deploydb/issues/106) - Webhooks should have a `type` field to differentiate event types
+* [#107](https://github.com/lookout/deploydb/issues/107) - Add deploydb support for whoas configuration
+* [#110](https://github.com/lookout/deploydb/issues/110) - When multiple webhooks are configured, only one webhook is invoked
+* [#111](https://github.com/lookout/deploydb/issues/111) - Webhook invocation fails when environment webhook has empty event type like started
+* [#113](https://github.com/lookout/deploydb/pull/113) - Fix the multiple webhooks invocation use case
+* [#114](https://github.com/lookout/deploydb/pull/114) - Using flyway java(groovy) migrations for sql compatibility with diff DBs
+* [#115](https://github.com/lookout/deploydb/pull/115) - Issue 111 webhook invocation fails for for empty started config
+* [#116](https://github.com/lookout/deploydb/pull/116) - Upgrade to Dropwizard 0.8 final
+* [#119](https://github.com/lookout/deploydb/pull/119) - Issue 106 webhook content type for events
+* [#120](https://github.com/lookout/deploydb/issues/120) - Define new REST API to reload configuration with an API call
+* [#121](https://github.com/lookout/deploydb/pull/121) - Defined REST API for configuration reload
+* [#122](https://github.com/lookout/deploydb/pull/122) - Added configReload admin task to reload the config, if no deployments are in progress
+* [#123](https://github.com/lookout/deploydb/pull/123) - Fix V2,4-6 migrations to work against MySQL
+* [#124](https://github.com/lookout/deploydb/pull/124) - Remove integer type lengths in schema migrations
+
+
+## 0.1.0
 
 * [#27](https://github.com/lookout/deploydb/pull/27) - Fix for issue #23
 * [#28](https://github.com/lookout/deploydb/issues/28) - Decouple docs generation from test tasks
