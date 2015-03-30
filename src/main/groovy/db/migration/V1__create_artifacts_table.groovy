@@ -30,7 +30,7 @@ class V1__create_artifacts_table extends DeployDBMigration {
          */
         commands += """
             CREATE TABLE artifacts (
-                id BIGINT(11) AUTO_INCREMENT,
+                id BIGINT AUTO_INCREMENT,
 
                 groupName TEXT NOT NULL,
 
