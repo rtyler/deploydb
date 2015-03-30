@@ -145,8 +145,8 @@ class AppHelper {
     /**
      * Execute a POST to the test server for step definitions
      */
-    Response postJsonToPath(String path, String requestBody) {
-        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody)).invoke()
+    Response postJsonToPath(String path, String requestBody, Boolean isAdmin) {
+        return this.makeRequestToPath(path, 'POST', Entity.json(requestBody), isAdmin).invoke()
     }
 
     /**
@@ -201,6 +201,11 @@ class AppHelper {
      */
     Response getFromPath(String path, boolean isAdmin) {
         return this.makeRequestToPath(path, 'GET', null , isAdmin).invoke()
+    }
+
+    /** Set config directory */
+    void setConfigDirectory(String configDirectory) {
+        this.runner.setConfigDirectory(configDirectory)
     }
 
     void startAppWithConfiguration(String config) {

@@ -22,7 +22,7 @@ When(~/^I DELETE "(.*?)"$/) { String path ->
 }
 
 When(~/^I POST to "(.*?)" with:$/) { String path, String requestBody ->
-    response = postJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody, false)
 }
 
 When(~/^I POST to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String path, String var, int varSize ->
@@ -42,7 +42,7 @@ When(~/^I POST to "(.*?)" with a (.*?) over ([1-9][0-9]*) characters$/) { String
       }
     """
 
-    response = postJsonToPath(path, requestBody)
+    response = postJsonToPath(path, requestBody, false)
 }
 
 When(~/^I PATCH "(.*?)" with:$/) { String path, String requestBody ->
@@ -50,7 +50,11 @@ When(~/^I PATCH "(.*?)" with:$/) { String path, String requestBody ->
 }
 
 When(~/^I POST to "(.*?)"$/) { String path ->
-    response = postJsonToPath(path, requestBody)
+    response = postJsonToPath(path, null, false)
+}
+
+When(~/^I POST to "(.*?)" from the admin app$/) { String path ->
+    response = postJsonToPath(path, null, true)
 }
 
 When(~/^I GET "(.*?)" with custom headers:$/) { String path, DataTable headers ->
@@ -71,7 +75,8 @@ Then(~/^the response should be (\d+)$/) { int statusCode ->
 }
 
 Then(~/^the response body should be:$/) { String expectedBody ->
-    assert response.readEntity(String.class) == expectedBody
+    String responseBody = response.readEntity(String.class)
+    assert responseBody.trim() == expectedBody.trim()
 }
 
 Then(~/^the body should be JSON:$/) { String expectedBody ->
@@ -86,4 +91,8 @@ Then(~/^the body should be JSON:$/) { String expectedBody ->
     JsonNode bodyNode = mapper.readTree(body)
 
     assert bodyNode == expectedNode
+}
+
+Given(~/^DeployDb configuration directory path is "(.*?)"$/) { String configDir ->
+    setConfigDirectory(configDir)
 }

@@ -157,18 +157,4 @@ class DeploymentWithArgsSpec extends Specification {
         expect:
         d1.hashCode() != d2.hashCode()
     }
-
-    def "hashCode compare fails for deployments with different promotionResults"() {
-        given:
-        PromotionResult p1 = new PromotionResult("jenkins-smoke", Status.CREATED, "")
-        Deployment d1 = new Deployment()
-        d1.addPromotionResult(p1)
-
-        PromotionResult p2 = new PromotionResult("jenkins-smoke", Status.FAILED, "")
-        Deployment d2 = new Deployment()
-        d2.addPromotionResult(p2)
-
-        expect:
-        d1.hashCode() != d2.hashCode()
-    }
 }

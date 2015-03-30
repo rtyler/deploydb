@@ -155,4 +155,8 @@ public class StubAppRunner<C extends Configuration> {
     public <A extends Application<C>> A getApplication() {
         return (A) application
     }
+
+    void setConfigDirectory(String configDirectory) {
+        application.configDirectory = configDirectory
+    }
 }

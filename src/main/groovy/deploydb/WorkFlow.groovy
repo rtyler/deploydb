@@ -1,11 +1,11 @@
 package deploydb
 
-import deploydb.models.PromotionResult
 import groovy.io.FileType
 import javax.ws.rs.WebApplicationException
 import javax.ws.rs.core.Response
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
 
 /* Define a new exception to break out of loop */
 class BreakLoopException extends Exception{}
@@ -59,7 +59,7 @@ public class WorkFlow {
         webhookLoader = new ModelLoader<>(models.Webhook.Webhook.class)
     }
 
-    void loadConfigModelsCommon(String modelDirName, Closure c) {
+    private void loadConfigModelsCommon(String modelDirName, Closure c) {
         File modelDirectory = new File(modelDirName);
         if (modelDirectory.exists() && modelDirectory.isDirectory()) {
             logger.debug("Loading model from directory: ${modelDirectory.getCanonicalPath()}");
@@ -86,7 +86,24 @@ public class WorkFlow {
      *
      * @param baseConfigDirName
      */
-    void loadConfigModels(String baseConfigDirName) {
+    void loadConfigModels(Boolean reloadConfig) {
+
+        /**
+         * Abort reloading the configuration (trigerred by REST API) in case we
+         * have active flows.
+         */
+        if (reloadConfig && this.flowDAO.getActiveFlowsCount() != 0) {
+            throw new Exception("Configuration reload is not allowed while deployments are in progress")
+        }
+
+        /** Validate base config directory */
+        File baseConfigDirectory = new File(this.deployDBApp.configDirectory);
+        if (!baseConfigDirectory.exists() || !baseConfigDirectory.isDirectory()) {
+            throw new Exception("No DeployDB configuration found. DeployDB would not function properly")
+        }
+
+        /* Load config */
+        logger.info("Loading models from directory: ${baseConfigDirectory.getCanonicalPath()}")
 
         /**
          * Instantiate new registries for in memory storage. We will overwrite the
@@ -103,7 +120,7 @@ public class WorkFlow {
         models.Webhook.Webhook tmpWebhook = null
 
         /* Load promotions */
-        String promotionsDirName = baseConfigDirName + "/promotions"
+        String promotionsDirName = this.deployDBApp.configDirectory + "/promotions"
         loadConfigModelsCommon(promotionsDirName) { File modelFile ->
             models.Promotion promotion = this.promotionLoader.load(modelFile)
             promotion.ident = this.promotionLoader.getIdent(modelFile.name)
@@ -112,7 +129,7 @@ public class WorkFlow {
         }
 
         /* Load environments */
-        String environmentsDirName = baseConfigDirName + "/environments"
+        String environmentsDirName = this.deployDBApp.configDirectory + "/environments"
         loadConfigModelsCommon(environmentsDirName) { File modelFile ->
             models.Environment environment = this.environmentLoader.load(modelFile)
             environment.ident = this.environmentLoader.getIdent(modelFile.name)
@@ -121,7 +138,7 @@ public class WorkFlow {
         }
 
         /* Load pipelines */
-        String pipelinesDirName = baseConfigDirName + "/pipelines"
+        String pipelinesDirName = this.deployDBApp.configDirectory + "/pipelines"
         loadConfigModelsCommon(pipelinesDirName) { File modelFile ->
             models.pipeline.Pipeline pipeline = this.pipelineLoader.load(modelFile)
             pipeline.ident = this.pipelineLoader.getIdent(modelFile.name)
@@ -151,7 +168,7 @@ public class WorkFlow {
         }
 
         /* Load services */
-        String servicesDirName = baseConfigDirName + "/services"
+        String servicesDirName = this.deployDBApp.configDirectory + "/services"
         loadConfigModelsCommon(servicesDirName) { File modelFile ->
             models.Service service = this.serviceLoader.load(modelFile)
             service.ident = this.serviceLoader.getIdent(modelFile.name)
@@ -183,7 +200,7 @@ public class WorkFlow {
         }
 
         /* Load webhook */
-        String webhookDirName = baseConfigDirName + "/webhook"
+        String webhookDirName = this.deployDBApp.configDirectory + "/webhook"
         try {
             loadConfigModelsCommon(webhookDirName) { File modelFile ->
 
@@ -524,7 +541,7 @@ public class WorkFlow {
      *
      * @param deployment
      */
-    void triggerPromotionFailed(models.Deployment deployment, PromotionResult promotionResult) {
+    void triggerPromotionFailed(models.Deployment deployment, models.PromotionResult promotionResult) {
 
         /*
          * Create the webhook mapper for deployment
