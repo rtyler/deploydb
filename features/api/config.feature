@@ -15,7 +15,9 @@ Feature: DeployDB config APIs
     """
 
 
-  Scenario: When system has deployments in progress, attempt to reload config should fail
+  Scenario: If deployments are NOT verified i.e. are in progress, then attempt to reload
+            config should fail. A deployment is considered as in progress, if the status
+            is NOT SUCCESS or FAILED
 
     Given there is a deployment
     When I POST to "/tasks/configReload" from the admin app

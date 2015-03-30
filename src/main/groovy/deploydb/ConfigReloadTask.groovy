@@ -17,6 +17,11 @@ class ConfigReloadTask extends Task {
     private WorkFlow workFlow
     private static final Logger logger = LoggerFactory.getLogger(ConfigReloadTask.class)
 
+    /**
+     * Constructor
+     *
+     * @param workFlow - store the workFlow for executing load config
+     */
     ConfigReloadTask(WorkFlow workFlow) {
         super('configReload')
         this.workFlow = workFlow
@@ -34,13 +39,11 @@ class ConfigReloadTask extends Task {
                 this.workFlow.loadConfigModels(true)
                 transaction.commit()
                 output.println("Done!")
-                output.flush()
             }
             catch (Exception e) {
                 transaction.rollback()
                 logger.error("failed to reload the config: " + e.getMessage())
                 output.println("Failed: Configuration reload is not allowed while deployments are in progress")
-                output.flush()
             }
         } finally {
             session.close()
