@@ -11,7 +11,7 @@ apply plugin: 'groovy'
 apply plugin: 'application'
 apply plugin: 'codenarc'
 
-version = '0.2.0'
+version = '0.2.1'
 group = 'com.github.lookout'
 description = 'DeployDB is a tool to provide a single source of truth for artifact-based deployments'
 // Needed for the application plugin's `run` task
@@ -172,6 +172,18 @@ task generateLocalJavadocCache(type: Javadoc) {
 ////////////////////////////////////////////////////////////////////////////////
 // PUBLISHING TASKS
 ////////////////////////////////////////////////////////////////////////////////
+
+artifacts {
+    archives distShadowTar, distShadowZip, shadowJar
+}
+/* Disabling the addition of a jar to the archives which gets in the way of our
+ * means to publish artifacts. It appears that the java plugin doesn't give you
+ * the means to remove the 'default jar' from the artifacts list by any other
+ * means
+ */
+jar.enabled = false
+configurations.archives.artifacts.removeAll { it.archiveTask.is jar }
+
 
 task publishDocs(type: Exec) {
     /* If for whatever reason you need to force-push the gh-pages branch this
